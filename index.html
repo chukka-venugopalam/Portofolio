@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Chukka Venugopalam | Portfolio</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+background:#f8fafc;
+color:#1e293b;
+line-height:1.6;
+}
+
+.container{
+max-width:1000px;
+margin:auto;
+padding:20px;
+}
+
+nav{
+background:white;
+box-shadow:0 2px 8px rgba(0,0,0,0.05);
+position:sticky;
+top:0;
+}
+
+.nav-container{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:15px 20px;
+max-width:1000px;
+margin:auto;
+}
+
+nav a{
+text-decoration:none;
+margin-left:20px;
+color:#334155;
+font-weight:500;
+}
+
+nav a:hover{
+color:#2563eb;
+}
+
+.hero{
+text-align:center;
+padding:90px 20px;
+}
+
+.hero h1{
+font-size:42px;
+margin-bottom:10px;
+}
+
+.hero p{
+font-size:18px;
+color:#64748b;
+}
+
+.btn{
+display:inline-block;
+margin-top:20px;
+padding:12px 24px;
+background:#2563eb;
+color:white;
+border-radius:6px;
+text-decoration:none;
+}
+
+section{
+padding:60px 20px;
+}
+
+h2{
+text-align:center;
+margin-bottom:35px;
+}
+
+.about{
+text-align:center;
+max-width:700px;
+margin:auto;
+color:#475569;
+}
+
+.skills{
+max-width:600px;
+margin:auto;
+}
+
+.skill{
+margin-bottom:18px;
+}
+
+.bar{
+background:#e2e8f0;
+height:10px;
+border-radius:5px;
+overflow:hidden;
+}
+
+.progress{
+height:10px;
+background:#2563eb;
+}
+
+.projects{
+display:flex;
+flex-wrap:wrap;
+gap:25px;
+justify-content:center;
+}
+
+.card{
+background:white;
+width:300px;
+padding:20px;
+border-radius:10px;
+box-shadow:0 4px 12px rgba(0,0,0,0.05);
+transition:0.25s;
+}
+
+.card:hover{
+transform:translateY(-6px);
+}
+
+.card h3{
+margin-bottom:10px;
+}
+
+.card p{
+font-size:14px;
+color:#475569;
+}
+
+.card a{
+display:inline-block;
+margin-top:10px;
+color:#2563eb;
+text-decoration:none;
+}
+
+.contact{
+text-align:center;
+}
+
+footer{
+background:white;
+padding:20px;
+text-align:center;
+margin-top:40px;
+color:#64748b;
+}
+
+</style>
+</head>
+
+
+<body>
+
+<!-- NAVBAR -->
+
+<nav>
+<div class="nav-container">
+
+<h3>Venugopalam</h3>
+
+<div>
+<a href="#about">About</a>
+<a href="#skills">Skills</a>
+<a href="#projects">Projects</a>
+<a href="#contact">Contact</a>
+</div>
+
+</div>
+</nav>
+
+
+<!-- HERO -->
+
+<section class="hero">
+
+<h1>Hi, I'm Chukka Venugopalam</h1>
+
+<p>B.Tech Computer Science Engineering Student</p>
+
+<p>Interested in Algorithms, Systems Programming and Software Development</p>
+
+<a class="btn" href="https://github.com/hellishheaven" target="_blank">
+View GitHub
+</a>
+
+</section>
+
+
+<!-- ABOUT -->
+
+<section id="about">
+
+<div class="container">
+
+<h2>About Me</h2>
+
+<p class="about">
+
+I am a 2nd year Computer Science Engineering student at  
+ANIL NEERUKONDA INSTITUTE OF TECHNOLOGY AND SCIENCES.
+
+I enjoy learning core computer science concepts and building projects
+to understand how systems and algorithms work in practice.
+
+Currently I am focusing on strengthening my fundamentals in
+Data Structures, Algorithms and Operating Systems while building
+projects and preparing for technical internships.
+
+</p>
+
+</div>
+
+</section>
+
+
+<!-- SKILLS -->
+
+<section id="skills">
+
+<div class="container">
+
+<h2>Technical Skills</h2>
+
+<div class="skills">
+
+<div class="skill">
+<p>C++ (Strong)</p>
+<div class="bar"><div class="progress" style="width:80%"></div></div>
+</div>
+
+<div class="skill">
+<p>C (Intermediate)</p>
+<div class="bar"><div class="progress" style="width:60%"></div></div>
+</div>
+
+<div class="skill">
+<p>Python (Basic)</p>
+<div class="bar"><div class="progress" style="width:40%"></div></div>
+</div>
+
+<div class="skill">
+<p>HTML / CSS / JavaScript (Basic)</p>
+<div class="bar"><div class="progress" style="width:35%"></div></div>
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- PROJECTS -->
+
+<section id="projects">
+
+<div class="container">
+
+<h2>Projects</h2>
+
+<div class="projects">
+
+<div class="card">
+
+<h3>OS Scheduling & Memory Simulator</h3>
+
+<p>
+
+C++ simulation of CPU scheduling algorithms (FCFS, SJF, Round Robin)
+and page replacement algorithms (FIFO, LRU, Optimal) to analyze system
+performance and memory behavior.
+
+</p>
+
+<a href="https://github.com/hellishheaven/os-scheduling-memory-simulator" target="_blank">
+View Project
+</a>
+
+</div>
+
+
+<div class="card">
+
+<h3>Graph Algorithms Toolkit</h3>
+
+<p>
+
+Implementation of core graph algorithms including BFS, DFS, Dijkstra,
+Kruskal MST and Topological Sort using adjacency list representation
+and efficient data structures.
+
+</p>
+
+<a href="https://github.com/hellishheaven/advanced-graph-algorithms-cpp" target="_blank">
+View Project
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- CONTACT -->
+
+<section id="contact">
+
+<div class="container">
+
+<h2>Contact</h2>
+
+<div class="contact">
+
+<p>Email: hellishheaven2005@gmail.com</p>
+
+<p>Phone: 9908214586</p>
+
+<p>GitHub: https://github.com/hellishheaven</p>
+
+</div>
+
+</div>
+
+</section>
+
+
+<footer>
+
+<p>© 2026 Chukka Venugopalam</p>
+
+</footer>
+
+
+</body>
+</html>
