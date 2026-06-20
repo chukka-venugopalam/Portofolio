@@ -1,4 +1,3 @@
-// mdx-components.tsx
 import type { MDXComponents } from "mdx/types";
 import Image, { type ImageProps } from "next/image";
 import { SectionHeader } from "@/components/ui/SectionHeader";

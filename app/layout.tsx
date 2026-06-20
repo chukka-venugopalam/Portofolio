@@ -1,8 +1,7 @@
-// app/layout.tsx
 import type { Metadata } from "next";
 import { Inter, Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import Script from "next/script";
-import { getThemeFromCookie } from "@/lib/theme";
+import { getThemeFromCookie } from "@/lib/theme.server";
 import { buildPersonJsonLd } from "@/lib/seo/structured-data";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { Navbar } from "@/components/layout/Navbar";
