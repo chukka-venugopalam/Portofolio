@@ -1,0 +1,40 @@
+---
+name: "Concept Intelligence Platform"
+slug: "concept-intelligence-platform"
+status: "exploring"
+oneLiner: "An AI-assisted diagnostic tool that finds the gaps in how you understand a DSA topic, not just whether you solved it."
+techTags: ["Next.js", "FastAPI", "PostgreSQL", "Supabase", "Gemini 1.5 Flash", "Python"]
+links: {}
+startedDate: "2026-05-01"
+lastUpdated: "2026-06-01"
+featured: false
+---
+
+## The Problem
+
+Most interview prep tools measure completion, not understanding. You can watch every NeetCode video, solve two hundred LeetCode problems, and mark every topic "done" — and still freeze the moment an interviewer asks you to explain *why* your solution works, or what would break if one assumption changed. There's a real gap between recognizing a pattern and actually understanding the concept underneath it, and most tools have no way to tell the difference. They check whether you got the right answer. They don't check whether you understood it.
+
+I noticed this in my own prep: I could pass LeetCode's test cases on a binary search tree problem and still not be able to cleanly explain, out loud, why the BST property applies to every descendant and not just direct children. That gap — between "I can solve it" and "I can explain it" — is exactly what technical interviews actually test, and exactly what existing tools don't measure.
+
+## What It Does
+
+A learner picks a DSA topic (the MVP scope is Arrays & Hashing, Linked Lists, Binary Trees, and Graphs) and is asked to explain it in their own words, the way they would in a real technical interview. The platform then asks two or three targeted follow-up questions based on gaps it detects in that explanation, followed by a short error-correction task. From those three pieces of evidence, it produces an Understanding Profile: a score broken into Coverage, Depth, Accuracy, and Connectivity, plus a concrete list of what's understood, what's weak, what's missing entirely, and any specific misconceptions — each one traceable back to something the learner actually said. It closes with a recommended study order based on concept prerequisites, not a generic "review everything" suggestion.
+
+The intent isn't to replace LeetCode or NeetCode — it's the diagnostic step neither of those tools has: confirming the understanding behind the answer, not just the answer itself.
+
+## How It's Built
+
+This section describes the planned architecture from the design phase — **no implementation exists yet**. Treat everything below as a build plan, not a description of working software.
+
+The system is designed as three layers. A Next.js frontend (Vercel) talks to a FastAPI backend (Render) over a REST API with JWT auth. The backend is split deliberately into two halves that do different jobs: a thin AI layer (Gemini 1.5 Flash, two to three calls per session) that only handles language — extracting concepts from free-text explanations, generating follow-up probes, and validating likely misconceptions — and a pure-Python logic layer that does everything else: gap detection via set operations against a reference concept graph, a weighted scoring formula, and a topological sort over concept prerequisites to produce the recommended study order. PostgreSQL on Supabase holds three things: a hand-curated expert concept graph (roughly 80 nodes across the four MVP topics, each with a definition, prerequisites, canonical keywords, and known misconception trigger phrases), session data, and a persistent per-user learner model that's meant to get more accurate about a given person's specific gaps the more they use it.
+
+## Decisions & Tradeoffs
+
+1. Split the AI and the logic on purpose, rather than asking one model call to "grade" the explanation and return a score. The AI only ever extracts and generates language; every actual scoring and gap-detection computation is deterministic Python running against the expert graph. The tradeoff is more upfront engineering — designing a real concept ontology by hand instead of letting a model improvise one — in exchange for a result that's explainable: a score of 71 should always be traceable to "14 of 22 concepts covered, 3 explained weakly, 1 misconception flagged," not a black-box number a model produced once and can't reproduce.
+2. Chose to hand-curate the 80-node concept graph rather than have an LLM generate it on the fly per session. This is slower to build — it's real, fixed domain knowledge that has to be written and checked once, not generated automatically — but it means the diagnostic is consistent across users and sessions instead of silently drifting depending on what a model happens to generate that day.
+3. Picked Gemini 1.5 Flash specifically for cost, not capability ceiling: at roughly $0.00046 per session, the AI layer's job (concept extraction and follow-up generation, not reasoning about correctness) doesn't need a larger, more expensive model. If the misconception-validation step turns out to need stronger reasoning once real sessions are tested, that's the one piece I'd expect to revisit first — it's the part most likely to need a stronger model in practice, and I won't know for certain until there's real usage to look at.
+4. In hindsight, the thing I'm least sure about is the four-topic MVP scope. Arrays & Hashing, Linked Lists, Binary Trees, and Graphs cover a reasonable spread of difficulty, but I picked them before testing whether the concept-graph-authoring effort scales linearly per topic or gets harder for topics with messier prerequisite structures (graphs, especially). I'd rather find that out by actually authoring the graph for one harder topic early than assume the four-topic estimate holds.
+
+## What's Next
+
+The design phase is finished — fifteen of sixteen planned architecture steps are done, covering the product analysis, user personas, database schema (eight tables, all queries pre-verified), API design (eighteen endpoints), and a six-week implementation roadmap. The next concrete step is writing the first database migration and starting Week 1 of that roadmap: standing up the Postgres schema and authoring the first slice of the expert concept graph for Arrays & Hashing, since that's the topic the rest of the build sequence depends on having real data for first.
