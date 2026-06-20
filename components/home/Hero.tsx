@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { motion, useReducedMotion } from "motion/react";
 import { Button } from "@/components/ui/Button";
-import { SITE_TAGLINE } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
 /**
@@ -35,6 +34,11 @@ import { cn } from "@/lib/utils";
  * sub-line → CTAs fade up 16px over motion-base (250ms), staggered 80ms
  * apart, completing in well under 500ms total — fast enough that a
  * returning visitor never feels like they're waiting through a "show."
+ *
+ * headline/subline/currentFocus are supplied entirely by the caller
+ * (app/page.tsx) — this component has no fallback copy of its own and
+ * no dependency on lib/constants.ts, so it never silently diverges from
+ * whatever Home actually passes in.
  */
 
 interface HeroProps {

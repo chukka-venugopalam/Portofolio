@@ -102,28 +102,18 @@ function AvailabilityTags() {
 function IconRow({ className }: { className?: string }) {
   return (
     <div className={cn("flex flex-wrap items-center gap-3", className)}>
-      <IconLink
-        href={`mailto:${SOCIAL_LINKS.email}`}
-        label="Email"
-        children={<EmailIcon />}
-      />
-      <IconLink
-        href={SOCIAL_LINKS.github}
-        label="GitHub"
-        external
-        children={<GitHubIcon />}
-      />
-      <IconLink
-        href={SOCIAL_LINKS.linkedin}
-        label="LinkedIn"
-        external
-        children={<LinkedInIcon />}
-      />
-      <IconLink
-        href="/resume"
-        label="Resume PDF"
-        children={<DocIcon />}
-      />
+      <IconLink href={`mailto:${SOCIAL_LINKS.email}`} label="Email">
+        <EmailIcon />
+      </IconLink>
+      <IconLink href={SOCIAL_LINKS.github} label="GitHub" external>
+        <GitHubIcon />
+      </IconLink>
+      <IconLink href={SOCIAL_LINKS.linkedin} label="LinkedIn" external>
+        <LinkedInIcon />
+      </IconLink>
+      <IconLink href="/resume" label="Resume PDF">
+        <DocIcon />
+      </IconLink>
     </div>
   );
 }

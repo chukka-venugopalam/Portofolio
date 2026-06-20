@@ -54,7 +54,6 @@ export function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const hamburgerRef = useRef<HTMLButtonElement>(null);
 
-  const openMenu = useCallback(() => setMenuOpen(true), []);
   const closeMenu = useCallback(() => setMenuOpen(false), []);
   const toggleMenu = useCallback(() => setMenuOpen((prev) => !prev), []);
 
@@ -68,7 +67,7 @@ export function Navbar() {
       {/* ── Skip-navigation link ──
           Visually hidden until focused by a keyboard user, per WCAG 2.4.1.
           Jumps directly to the main content, bypassing the nav on every page. */}
-      <a
+      
         href="#main-content"
         className={cn(
           "sr-only focus:not-sr-only",

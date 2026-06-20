@@ -60,7 +60,7 @@ export function TechTagList({ tags, className }: TechTagListProps) {
     >
       {tags.map((tag) => (
         <li key={tag}>
-          <TechTag children={tag} />
+          <TechTag>{tag}</TechTag>
         </li>
       ))}
     </ul>

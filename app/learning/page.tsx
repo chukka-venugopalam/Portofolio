@@ -1,3 +1,4 @@
+import Link from "next/link";
 import {
   getLearningEntriesByYear,
   getLearningStats,
@@ -196,12 +197,12 @@ function FeedEmptyState() {
   return (
     <p className="text-body-md text-text-secondary">
       Nothing logged yet — check back soon, or see the{" "}
-      <a
+      <Link
         href="/work"
         className="text-accent hover:underline underline-offset-4 focus-visible:outline-none focus-visible:focus-ring rounded-pill"
       >
         Work page
-      </a>{" "}
+      </Link>{" "}
       for what&rsquo;s currently being built.
     </p>
   );
