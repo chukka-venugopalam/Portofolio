@@ -218,4 +218,4 @@ export function Navbar() {
       <div className="h-16 desktop:h-[72px]" aria-hidden="true" />
     </>
   );
-}
+                    }
