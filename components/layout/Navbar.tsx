@@ -64,21 +64,21 @@ export function Navbar() {
 
   return (
     <>
-      {/* ── Skip-navigation link ──
-          Visually hidden until focused by a keyboard user, per WCAG 2.4.1.
-          Jumps directly to the main content, bypassing the nav on every page. */}
-      
-        href="#main-content"
-        className={cn(
-          "sr-only focus:not-sr-only",
-          "fixed left-4 top-4 z-[200]",
-          "rounded-card bg-accent px-4 py-2",
-          "text-body-sm font-medium text-bg-primary",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bg-primary focus-visible:ring-offset-2"
-        )}
-      >
-        Skip to content
-      </a>
+     {/* ── Skip-navigation link ──
+    Visually hidden until focused by a keyboard user, per WCAG 2.4.1.
+    Jumps directly to the main content, bypassing the nav on every page. */}
+<a
+  href="#main-content"
+  className={cn(
+    "sr-only focus:not-sr-only",
+    "fixed left-4 top-4 z-[200]",
+    "rounded-card bg-accent px-4 py-2",
+    "text-body-sm font-medium text-bg-primary",
+    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bg-primary focus-visible:ring-offset-2"
+  )}
+>
+  Skip to content
+</a>
 
       {/* ── Navbar bar ── */}
       <header
