@@ -54,7 +54,7 @@ function splitIntoSections(body: string, slug: string): ProjectSections {
 
   const sections = {} as ProjectSections;
   for (let i = 0; i < positions.length; i++) {
-    const current = positions[i];
+    const current = positions[i]!;
     const next = positions[i + 1];
     const contentStart = current.start + current.headingLength;
     const contentEnd = next ? next.start : body.length;
@@ -152,7 +152,8 @@ export function getAllProjects(): Project[] {
 }
 
 export function getProjectBySlug(slug: string): Project | null {
-  return getAllProjects().find((p) => p.frontmatter.slug === slug) ?? null;
+  const found = getAllProjects().find((p) => p.frontmatter.slug === slug);
+  return found ?? null;
 }
 
 /**
@@ -197,11 +198,15 @@ export function getStrongestInProgressProject(): Project | null {
   const all = getAllProjects();
   if (all.length === 0) return null;
 
-  const nonExploring = all.filter((p) => p.frontmatter.status !== "exploring");
-  const pool = nonExploring.length > 0 ? nonExploring : all;
-
+  // Prefer non-exploring projects; fall back to all projects.
   // getAllProjects() is already sorted by lastUpdated descending.
-  return pool[0];
+  const nonExploring = all.filter((p) => p.frontmatter.status !== "exploring");
+
+  if (nonExploring.length > 0) {
+    return nonExploring[0]!;
+  }
+
+  return all[0]!;
 }
 
 /**
@@ -241,7 +246,7 @@ export function parseTradeoffs(
   for (const line of lines) {
     const match = line.match(listItemPattern);
     if (match) {
-      const text = match[1].trim();
+      const text = match[1]!.trim();
       if (text.length > 0) {
         decisions.push({ id: `${slug}-tradeoff-${decisions.length + 1}`, text });
       }

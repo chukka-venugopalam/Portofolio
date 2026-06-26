@@ -32,11 +32,12 @@ const nextConfig: NextConfig = {
     formats: ["image/avif", "image/webp"],
   },
 
-  // typedRoutes catches a broken internal Link (e.g. a typo'd href to
-  // /workk instead of /work) at build time rather than at runtime —
-  // worth enabling on a small site like this where every route is known
-  // ahead of time and the safety net costs nothing.
-  typedRoutes: true,
+  // typedRoutes was considered here (catches broken internal Links at
+  // build time) but is deliberately left OFF: this project includes
+  // Link instances pointing to static assets (e.g. /resume.pdf from
+  // ConnectStrip.tsx) which are not part of Next.js's Route type,
+  // and the typed-routes constraint would force unnecessary casts or
+  // workarounds for legitimate static-file navigation.
 };
 
 export default nextConfig;

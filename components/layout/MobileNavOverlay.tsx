@@ -160,7 +160,7 @@ export function MobileNavOverlay({
               <ul className="flex flex-col px-5 py-6 gap-1" role="list">
                 {NAV_ITEMS.map((item, index) => {
                   const isActive = pathname === item.href ||
-                    (item.href !== "/" && pathname.startsWith(item.href));
+                    pathname.startsWith(item.href);
                   return (
                     <li key={item.href}>
                       <Link

@@ -111,7 +111,7 @@ export function getLearningStats(): LearningStats {
   ).length;
 
   // entries is sorted newest-first; the earliest is the last element.
-  const loggingSince = entries[entries.length - 1].frontmatter.date;
+  const loggingSince = entries[entries.length - 1]!.frontmatter.date;
 
   return {
     totalEntries: entries.length,

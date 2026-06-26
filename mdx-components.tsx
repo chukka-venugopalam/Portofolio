@@ -4,11 +4,12 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
-    img: (props) => (
+    img: ({ alt = "", ...props }) => (
       <Image
+        alt={alt}
         sizes="100vw"
         style={{ width: "100%", height: "auto" }}
-        {...(props as ImageProps)}
+        {...(props as Omit<ImageProps, "alt">)}
       />
     ),
     h2: ({ children }) => (

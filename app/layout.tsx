@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import Script from "next/script";
+import { SITE_URL } from "@/lib/constants";
 import { getThemeFromCookie } from "@/lib/theme.server";
 import { buildPersonJsonLd } from "@/lib/seo/structured-data";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
@@ -35,6 +36,7 @@ export const metadata: Metadata = {
     template: "%s — Portfolio",
   },
   description: "building systems that turn curiosity into shipped work.",
+  metadataBase: new URL(SITE_URL),
 };
 
 export default async function RootLayout({

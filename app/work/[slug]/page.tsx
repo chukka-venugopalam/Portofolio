@@ -69,8 +69,9 @@ export function generateStaticParams() {
   }));
 }
 
-export function generateMetadata({ params }: { params: { slug: string } }) {
-  const project = getProjectBySlug(params.slug);
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const project = getProjectBySlug(slug);
   if (!project) return {};
 
   return buildMetadata({
@@ -80,12 +81,13 @@ export function generateMetadata({ params }: { params: { slug: string } }) {
   });
 }
 
-export default function ProjectDetailPage({
+export default async function ProjectDetailPage({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
-  const project = getProjectBySlug(params.slug);
+  const { slug } = await params;
+  const project = getProjectBySlug(slug);
 
   // ── Missing project ──
   // notFound() triggers app/work/[slug]/not-found.tsx — the
