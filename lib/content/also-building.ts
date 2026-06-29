@@ -17,7 +17,17 @@ let cache: AlsoBuildingEntry[] | null = null;
 export function getAlsoBuildingEntries(): AlsoBuildingEntry[] {
   if (cache) return cache;
 
-  const raw = readFileSync(ALSO_BUILDING_PATH, "utf-8");
+  let raw: string;
+  try {
+    raw = readFileSync(ALSO_BUILDING_PATH, "utf-8");
+  } catch {
+    // File doesn't exist — e.g. on Vercel's serverless runtime where
+    // content/ is not bundled. Return empty rather than crashing; every
+    // caller already handles the zero-entries case gracefully.
+    cache = [];
+    return cache;
+  }
+
   const parsed = JSON.parse(raw);
 
   cache = alsoBuildingFileSchema.parse(parsed);

@@ -21,9 +21,18 @@ let cache: LearningEntry[] | null = null;
 export function getAllLearningEntries(): LearningEntry[] {
   if (cache) return cache;
 
-  const files = readdirSync(LEARNING_DIR).filter(
-    (file) => file.endsWith(".mdx") && !file.startsWith("_")
-  );
+  let files: string[] = [];
+  try {
+    files = readdirSync(LEARNING_DIR).filter(
+      (file) => file.endsWith(".mdx") && !file.startsWith("_")
+    );
+  } catch {
+    // Directory doesn't exist — e.g. on Vercel's serverless runtime where
+    // content/ is not bundled. Return empty rather than crashing, since
+    // every caller already handles the zero-entries case gracefully.
+    cache = [];
+    return cache;
+  }
 
   const entries = files.map((file) => {
     const raw = readFileSync(path.join(LEARNING_DIR, file), "utf-8");

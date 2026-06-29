@@ -76,9 +76,18 @@ let cache: Project[] | null = null;
 export function getAllProjects(): Project[] {
   if (cache) return cache;
 
-  const files = readdirSync(PROJECTS_DIR).filter(
-    (file) => file.endsWith(".mdx") && !file.startsWith("_")
-  );
+  let files: string[] = [];
+  try {
+    files = readdirSync(PROJECTS_DIR).filter(
+      (file) => file.endsWith(".mdx") && !file.startsWith("_")
+    );
+  } catch {
+    // Directory doesn't exist — e.g. on Vercel's serverless runtime where
+    // content/ is not bundled. Return empty rather than crashing; every
+    // caller already handles the zero-projects case gracefully.
+    cache = [];
+    return cache;
+  }
 
   const seenSlugs = new Set<string>();
 
