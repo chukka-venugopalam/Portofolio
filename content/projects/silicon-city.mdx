@@ -1,0 +1,40 @@
+---
+name: "Silicon City"
+slug: "silicon-city"
+status: "shipped"
+category: "production"
+oneLiner: "A real-time urban data dashboard that visualizes city infrastructure metrics — traffic, air quality, energy usage — across multiple data sources."
+techTags: ["Next.js", "Python", "PostgreSQL", "Chart.js", "Mapbox", "Docker"]
+links:
+  live: "https://silicon-city-demo.vercel.app"
+  code: "https://github.com/your-username/silicon-city"
+startedDate: "2026-02-01"
+lastUpdated: "2026-05-15"
+featured: false
+---
+
+## The Problem
+
+Urban data is abundant but fragmented. Traffic data lives in one API, air quality in another, energy consumption in a third. A city planner, researcher, or engaged citizen who wants a holistic view of how a city is running needs to visit five different dashboards, reconcile different time scales and data formats, and mentally correlate patterns across datasets that were never designed to talk to each other. Most cities have the data to make better decisions; they just can't see it in one place.
+
+## What It Does
+
+Silicon City ingests data from public urban APIs (traffic flow from city sensor networks, air quality from EPA monitors, energy usage from utility providers, public transit from GTFS feeds) and renders them on a single map-based dashboard with synchronized time controls. You can watch how traffic patterns shift after a public transit delay, or how energy consumption correlates with air quality on a hot day, or how pedestrian traffic changes after a new bike lane is installed — all from one interface, with data aligned to the same time axis.
+
+The dashboard is organized into three layers: a map layer (geospatial data), a timeline layer (time-series metrics), and a correlation layer (side-by-side comparisons). Each layer can be toggled independently, and the time controls at the bottom of the screen synchronize all three layers simultaneously — scrub to Tuesday at 3 PM, and the map, metrics, and correlation view all update to show that moment.
+
+## How It's Built
+
+The application follows a straightforward three-tier architecture. A Python data ingestion pipeline runs on a daily cron schedule, fetching data from each API, normalizing it into a unified schema, and storing it in PostgreSQL with PostGIS extensions for geospatial queries. The Next.js frontend serves a server-rendered map page that queries the database through a REST API and renders the results using Mapbox GL for the map layer and Chart.js for time-series visualizations. The correlation view is computed server-side as a simple cross-dataset query — no ML, just SQL JOINs — because the goal is correlation discovery, not causal inference.
+
+The data pipeline is deliberately batch-oriented rather than streaming, because most urban data APIs update on hourly or daily cycles anyway. Streaming architecture would add complexity without corresponding value.
+
+## Decisions & Tradeoffs
+
+1. Chose Mapbox GL over Leaflet despite the licensing consideration because Mapbox's 3D terrain rendering and real-time data visualization capabilities were a better fit for the multi-layer map design. If the project outgrows Mapbox's free tier, the abstraction layer makes it straightforward to swap in an alternative.
+
+2. Kept the data pipeline batch-oriented rather than real-time streaming. Urban data APIs update infrequently — traffic data every 15 minutes, air quality hourly, energy usage daily — so a streaming architecture would add operational complexity without meaningful improvement in data freshness.
+
+## What's Next
+
+Silicon City is feature-complete for its current scope. Future improvements on the roadmap include: additional city data sources (noise pollution, waste management, green space utilization), a historical comparison mode (compare traffic patterns year-over-year), and an API that lets third-party developers build on top of the unified urban dataset.

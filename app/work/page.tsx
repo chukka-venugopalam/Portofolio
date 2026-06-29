@@ -1,8 +1,6 @@
 import { buildMetadata } from "@/lib/seo/metadata";
 import {
-  getFlagshipProject,
-  getNonFlagshipProjects,
-  getStrongestInProgressProject,
+  getProjectsByCategory,
 } from "@/lib/content/projects";
 import { getAlsoBuildingEntries } from "@/lib/content/also-building";
 import { Container } from "@/components/ui/Container";
@@ -14,146 +12,79 @@ import { AlsoBuildingEntry } from "@/components/project/AlsoBuildingEntry";
 
 export const metadata = buildMetadata({
   title: "Work",
-  description: "Everything I'm building, tagged by status.",
+  description: "Flagship products, production projects, and experiments I'm building.",
   pathname: "/work",
 });
 
 /**
- * Work page — Visual Design Spec Section 2, Component Library B3/B4/B8/D8.
- *
- * Five sections, matching this task's requested structure exactly:
- *   1. Work Hero       — SectionHeader in "page" mode (H1 + sub-line)
- *   2. Flagship Project — ProjectCard, flagship variant, full weight
- *   3. Projects Grid    — ProjectCard, grid variant, 2-col desktop
- *   4. Also Building    — AlsoBuildingEntry one-liners
- *   5. Empty States      — handled per-section, not as a separate block
- *
- * Component reuse, per this task's explicit requirement:
- *   Container, Section, SectionHeader, ProjectCard, StatusTag — every
- *   one is an EXISTING component from prior turns. No new card
- *   component is introduced; the flagship/grid distinction is handled
- *   entirely by ProjectCard's existing `variant` prop (Component
- *   Library B3), exactly as it already is on Home.
- *
- * "Work Hero" is deliberately NOT the Home page's <Hero> component.
- * Component Library B1 states this explicitly: Hero is a single
- * variant, Home-only — there is no secondary-page "mini-hero." Every
- * other page uses SectionHeader's "page" mode (H1 + sub-line) instead,
- * which is exactly what's used here. Reusing <Hero> on this page would
- * violate that rule and exists as a clear example of why "reuse
- * existing components" sometimes means picking the RIGHT existing
- * component, not the most superficially similar-sounding one.
- *
- * Filtering (FilterChip) was part of the original Visual Design Spec's
- * Work page wireframe but is deliberately NOT included here: this
- * task's component list and five-section structure don't call for it,
- * and FilterChip doesn't exist yet in the codebase. Building it now
- * would mean inventing a component outside this task's explicit scope.
- * Filtering is a clean, additive change to layer in later once
- * FilterChip exists — see the Implementation Blueprint's component
- * dependency notes for why it's safe to defer.
- *
- * Empty states (Component Library, content-honesty model): with a
- * single flagship and no other real or in-progress projects yet, both
- * the Projects Grid and Also Building sections render an honest empty
- * state rather than being silently omitted or padded with invented
- * content. Each empty state uses StatusTag (status="exploring") as a
- * small, real visual anchor — not decoration, but an accurate signal
- * that more work is in an earlier stage, which is the only state a
- * brand-new portfolio can honestly claim.
+ * Work page — organized into three clear sections:
+ *   1. Flagship Projects — long-term products (larger cards, richer descriptions)
+ *   2. Production Projects — fully working deployed applications (standard cards)
+ *   3. Experiments & Research — small prototypes, explorations, and AI experiments
  */
 export default function WorkPage() {
-  const flagship = getFlagshipProject();
-  const strongestInProgress = flagship ? null : getStrongestInProgressProject();
-  const otherProjects = getNonFlagshipProjects().filter(
-    (p) => p.frontmatter.slug !== strongestInProgress?.frontmatter.slug
-  );
+  const flagshipProjects = getProjectsByCategory("flagship");
+  const productionProjects = getProjectsByCategory("production");
   const alsoBuilding = getAlsoBuildingEntries();
 
   return (
     <>
-      {/* ── 1. Work Hero ──
-          SectionHeader page-header mode: display-lg H1 + body-lg
-          sub-line, max-width 480px — Visual Design Spec 2.1/2.3. */}
+      {/* ── 1. Work Hero ── */}
       <Section spacing="secondary" className="pt-0">
         <Container>
           <SectionHeader
             mode="page"
             level="h1"
-            subline="Everything I'm building, tagged by status."
+            subline="Flagship products, production projects, and experiments — everything I'm building."
           >
             Work
           </SectionHeader>
         </Container>
       </Section>
 
-      {/* ── 2. Flagship Project (or honest no-flagship-yet state) ──
-          Same component, same visual weight as Home's flagship when one
-          exists — Visual Design Spec 2.1: "consistency here is what
-          makes the flagship feel like a genuine anchor rather than a
-          homepage-only marketing moment." When no project has earned
-          featured: true yet, this renders the strongest in-progress
-          project at its real status using the GRID variant, never
-          flagship — see getStrongestInProgressProject()'s doc comment
-          in lib/content/projects.ts. */}
+      {/* ── 2. Flagship Projects ── */}
       <Section spacing="secondary">
         <Container>
-          {flagship ? (
-            <>
-              <SectionHeader mode="label" level="h2" id="flagship">
-                Flagship
-              </SectionHeader>
-              <div className="mt-8">
-                <ProjectCard project={flagship.frontmatter} variant="flagship" />
-              </div>
-            </>
-          ) : strongestInProgress ? (
-            <>
-              <SectionHeader mode="label" level="h2" id="flagship">
-                No Flagship Yet
-              </SectionHeader>
-              <p className="mt-3 max-w-[600px] text-body-sm text-text-secondary">
-                Nothing&rsquo;s shipped enough to call a flagship yet.
-                Here&rsquo;s the project getting the most real attention
-                right now, shown at its actual status — not promoted to
-                a weight it hasn&rsquo;t earned.
-              </p>
-              <div className="mt-8">
+          <SectionHeader mode="label" level="h2" id="flagship">
+            Flagship Projects
+          </SectionHeader>
+          <p className="mt-3 max-w-[600px] text-body-sm text-text-secondary">
+            Long-term products that represent my vision — AI-assisted learning, real-time
+            decision-making, and developer growth.
+          </p>
+
+          {flagshipProjects.length > 0 ? (
+            <div className="mt-8 flex flex-col gap-8">
+              {flagshipProjects.map((project) => (
                 <ProjectCard
-                  project={strongestInProgress.frontmatter}
-                  variant="grid"
+                  key={project.frontmatter.slug}
+                  project={project.frontmatter}
+                  variant="flagship"
                 />
-              </div>
-            </>
+              ))}
+            </div>
           ) : (
-            <>
-              <SectionHeader mode="label" level="h2" id="flagship">
-                Flagship
-              </SectionHeader>
-              <EmptyState
-                status="exploring"
-                message="No projects yet — check back soon."
-              />
-            </>
+            <EmptyState
+              status="exploring"
+              message="No flagship projects yet — the current focus is on getting the first one ready."
+            />
           )}
         </Container>
       </Section>
 
-      {/* ── 3. Projects Grid ──
-          Grid variant per Component Library B3: border-subtle (not
-          border-default — reserved for the flagship only), 2-column on
-          desktop, single column tablet/mobile (Visual Design Spec 2.7:
-          two cards side by side at 768px would be too narrow to read
-          tech tags and link rows comfortably). */}
+      {/* ── 3. Production Projects ── */}
       <Section spacing="secondary">
         <Container>
-          <SectionHeader mode="label" level="h2" id="all-work">
-            All Work
+          <SectionHeader mode="label" level="h2" id="production">
+            Production Projects
           </SectionHeader>
+          <p className="mt-3 max-w-[600px] text-body-sm text-text-secondary">
+            Fully built, deployed applications that are live and running.
+          </p>
 
-          {otherProjects.length > 0 ? (
+          {productionProjects.length > 0 ? (
             <div className="mt-8 grid grid-cols-1 desktop:grid-cols-2 gap-x-6 gap-y-8">
-              {otherProjects.map((project) => (
+              {productionProjects.map((project) => (
                 <ProjectCard
                   key={project.frontmatter.slug}
                   project={project.frontmatter}
@@ -163,23 +94,25 @@ export default function WorkPage() {
             </div>
           ) : (
             <EmptyState
-              status="exploring"
-              message="No additional projects with full writeups yet — the flagship above is the current focus. More are on the way."
+              status="building"
+              message="Production projects will appear here once existing projects reach a shippable state."
             />
           )}
         </Container>
       </Section>
 
-      {/* ── 4. Also Building ──
-          Honest one-liners only, per Component Library D8 — a project
-          without enough substance for a full page stays a single
-          sentence, never a card, regardless of how this section's
-          emptiness might look. */}
+      {/* ── 4. Experiments & Research ──
+          Quick prototypes, AI experiments, hackathon ideas, and research concepts —
+          communicated as rapid iteration rather than polished products. */}
       <Section spacing="secondary" className="pb-0">
         <Container>
-          <SectionHeader mode="label" level="h2" id="also-building">
-            Also Building
+          <SectionHeader mode="label" level="h2" id="experiments">
+            Experiments &amp; Research
           </SectionHeader>
+          <p className="mt-3 max-w-[600px] text-body-sm text-text-secondary">
+            Small prototypes, AI experiments, and research concepts — rapid iteration
+            and curiosity-driven exploration.
+          </p>
 
           {alsoBuilding.length > 0 ? (
             <ul className="mt-6 divide-y divide-border-subtle">
@@ -190,7 +123,7 @@ export default function WorkPage() {
           ) : (
             <EmptyState
               status="exploring"
-              message="Nothing in early exploration to share publicly yet — check back soon, or see the Learning Log for what's currently being worked through."
+              message="Nothing in early exploration to share publicly yet — check back soon."
             />
           )}
         </Container>
@@ -202,14 +135,8 @@ export default function WorkPage() {
 /**
  * EmptyState
  *
- * Local to this page rather than a new shared component — per this
- * task's "do not create duplicate card components" instruction, this is
- * deliberately NOT a card: no border, no background fill, no shadow.
- * It's plain text with a StatusTag anchor, consistent with how thin
- * content is treated everywhere else on the site (AlsoBuildingEntry's
- * own minimalism, Learning Entry's plainness) — an empty state should
- * look like "nothing here yet," not like a styled placeholder card
- * pretending to be content.
+ * Local to this page — plain text with a StatusTag anchor, consistent
+ * with how thin content is treated everywhere else on the site.
  */
 function EmptyState({
   status,

@@ -12,6 +12,8 @@ import { z } from "zod";
  */
 export const projectStatusSchema = z.enum(["shipped", "building", "exploring"]);
 
+export const projectCategorySchema = z.enum(["flagship", "production", "experiment"]);
+
 export const projectFrontmatterSchema = z.object({
   name: z.string().min(1, "name is required"),
 
@@ -24,6 +26,8 @@ export const projectFrontmatterSchema = z.object({
     ),
 
   status: projectStatusSchema,
+
+  category: projectCategorySchema,
 
   // Soft length guideline, not a hard validation failure — see
   // Implementation Blueprint 5.1. A warning is logged at build time in
@@ -48,15 +52,14 @@ export const projectFrontmatterSchema = z.object({
 
   lastUpdated: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "lastUpdated must be ISO format (YYYY-MM-DD)"),
 
-  // Exactly one project across the whole collection should have
-  // featured: true. That cross-file invariant can't be expressed by a
-  // single file's schema — it's checked in lib/content/projects.ts'
-  // getFlagshipProject(), which throws if it finds zero or multiple.
-  featured: z.boolean(),
+  // Flagship projects use the category field now instead of featured.
+  // Kept for backward compatibility — defaults to false.
+  featured: z.boolean().default(false),
 });
 
 export type ProjectFrontmatter = z.infer<typeof projectFrontmatterSchema>;
 export type ProjectStatus = z.infer<typeof projectStatusSchema>;
+export type ProjectCategory = z.infer<typeof projectCategorySchema>;
 
 /**
  * A project's body content, once split by heading per Implementation

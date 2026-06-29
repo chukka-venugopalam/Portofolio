@@ -49,27 +49,27 @@ const NODES: FrameworkNode[] = [
   {
     id: "curiosity",
     label: "Curiosity",
-    example: "Noticed most dashboards explain what happened, never why.",
+    example: "Every flagship project started with one question I couldn't stop thinking about.",
   },
   {
     id: "learning",
     label: "Learning",
-    example: "Spent two weeks deep in time-series anomaly detection papers.",
+    example: "Learning isn't collecting tutorials—it's turning ideas into working systems.",
   },
   {
     id: "understanding",
     label: "Understanding",
-    example: "Realized the real bottleneck was data freshness, not the model.",
+    example: "I optimize for deep understanding because durable knowledge compounds faster than memorized solutions.",
   },
   {
     id: "building",
     label: "Building",
-    example: "Shipped a pipeline observatory that flags drift in real time.",
+    example: "Every concept becomes a prototype. Every prototype becomes a product.",
   },
   {
     id: "impact",
     label: "Impact",
-    example: "Three people on the team now catch issues before users do.",
+    example: "Building AI systems that help people learn, think, and make better decisions.",
   },
 ];
 

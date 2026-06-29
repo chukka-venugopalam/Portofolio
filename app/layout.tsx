@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import Script from "next/script";
-import { SITE_URL } from "@/lib/constants";
+import { SITE_URL, SITE_NAME } from "@/lib/constants";
 import { getThemeFromCookie } from "@/lib/theme.server";
 import { buildPersonJsonLd } from "@/lib/seo/structured-data";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
@@ -32,8 +32,8 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Portfolio",
-    template: "%s — Portfolio",
+    default: SITE_NAME,
+    template: `%s — ${SITE_NAME}`,
   },
   description: "building systems that turn curiosity into shipped work.",
   metadataBase: new URL(SITE_URL),

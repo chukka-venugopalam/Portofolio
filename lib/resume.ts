@@ -33,16 +33,16 @@ export interface ResumeContent {
 // "content lives in one obvious place" pattern (lib/constants.ts,
 // content/*.json) rather than buried inside JSX.
 export const RESUME_CONTENT: ResumeContent = {
-  name: "[Your Name]",
+  name: "Venugopalam Chukka",
   statusLine: "Student & builder — Computer Science",
   currentFocus:
-    "Currently designing Concept Intelligence Platform, a diagnostic tool that surfaces gaps in DSA understanding rather than just checking whether a solution passes. The architecture and data model are fully designed; implementation starts next. Comfortable across the stack, from backend logic and data modeling through to the interface someone actually reads.",
+    "Currently designing Concept Intelligence Platform, a diagnostic tool that surfaces gaps in DSA understanding. Also building Silicon Valley Learning OS and PulseVote — three long-term products that represent my vision for AI-assisted learning, real-time decision-making, and developer growth.",
   highlights: [
-    "Designed a full diagnostic system end-to-end — Concept Intelligence Platform — before writing a line of code: 15 architecture steps including a hand-curated 80-node concept graph, an 18-endpoint API, and a 6-week build plan. See the Work page for the full writeup, including the tradeoffs.",
+    "Designed and building three flagship products: Concept Intelligence Platform (AI diagnostic for DSA understanding), Silicon Valley Learning OS (AI-powered learning operating system), and PulseVote (real-time collective decision-making platform).",
     "Comfortable with Next.js, FastAPI/Python, and PostgreSQL across full-stack and applied-AI contexts.",
     "Learns in public — the Learning Log is a dated, falsifiable record of what's actually been picked up recently, not a static skills list.",
   ],
-  lastUpdated: "2026-06-01",
+  lastUpdated: "2026-06-28",
 };
 
 const RESUME_PDF_RELATIVE_PATH = "/resume.pdf";

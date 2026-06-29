@@ -4,6 +4,7 @@ import matter from "gray-matter";
 import {
   projectFrontmatterSchema,
   type Project,
+  type ProjectCategory,
   type ProjectSections,
 } from "@/content/projects/_schema";
 
@@ -132,25 +133,6 @@ export function getAllProjects(): Project[] {
     return { frontmatter, sections };
   });
 
-  // Multiple simultaneous flagships is still a genuine content error —
-  // the system can only honestly present one "strongest proof point" at
-  // a time, and two competing for the slot is an authoring mistake, not
-  // a valid state. Zero flagships, by contrast, is a legitimate state:
-  // a portfolio with no project substantial enough to earn the
-  // flagship's visual weight yet should say so honestly rather than be
-  // forced to crown one prematurely. See getFlagshipProject() below for
-  // how callers are expected to handle the zero case.
-  const featuredCount = projects.filter((p) => p.frontmatter.featured).length;
-  if (featuredCount > 1) {
-    throw new Error(
-      `${featuredCount} projects have featured: true — at most one ` +
-        `flagship is allowed at a time. Check: ${projects
-          .filter((p) => p.frontmatter.featured)
-          .map((p) => p.frontmatter.slug)
-          .join(", ")}`
-    );
-  }
-
   cache = projects.sort(
     (a, b) =>
       new Date(b.frontmatter.lastUpdated).getTime() -
@@ -180,11 +162,15 @@ export function getProjectBySlug(slug: string): Project | null {
  * entire point of the status system.
  */
 export function getFlagshipProject(): Project | null {
-  return getAllProjects().find((p) => p.frontmatter.featured) ?? null;
+  return getAllProjects().find((p) => p.frontmatter.category === "flagship") ?? null;
 }
 
 export function getNonFlagshipProjects(): Project[] {
-  return getAllProjects().filter((p) => !p.frontmatter.featured);
+  return getAllProjects().filter((p) => p.frontmatter.category !== "flagship");
+}
+
+export function getProjectsByCategory(category: ProjectCategory): Project[] {
+  return getAllProjects().filter((p) => p.frontmatter.category === category);
 }
 
 /**

@@ -1,1 +1,17 @@
-[]
+[
+  {
+    "name": "LLM Prompt Playground",
+    "status": "exploring",
+    "description": "An interactive sandbox for comparing LLM prompt strategies side by side — temperature, system prompts, few-shot examples, and structured outputs."
+  },
+  {
+    "name": "Code Review Bot",
+    "status": "exploring",
+    "description": "A GitHub Action that analyzes PR descriptions and code changes to suggest additional test cases, edge cases, and documentation improvements."
+  },
+  {
+    "name": "Viz Explorer",
+    "status": "exploring",
+    "description": "Visual experiments with D3.js and Canvas — animated sorting algorithms, pathfinding visualization, and graph traversal demos."
+  }
+]

@@ -10,7 +10,7 @@
 export const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
-export const SITE_NAME = "[Your Name]"; // replace before launch
+export const SITE_NAME = "Venugopalam Chukka";
 
 export const SITE_TAGLINE =
   "building systems that turn curiosity into shipped work.";

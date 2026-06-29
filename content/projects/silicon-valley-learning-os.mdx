@@ -1,0 +1,59 @@
+---
+name: "Silicon Valley Learning OS"
+slug: "silicon-valley-learning-os"
+status: "building"
+category: "flagship"
+oneLiner: "An AI-powered learning operating system that adapts your curriculum, schedule, and study strategy in real time — built for the pace of Silicon Valley engineering."
+techTags: ["Next.js", "FastAPI", "PostgreSQL", "Redis", "Gemini 2.0 Pro", "Docker", "Kubernetes", "Python"]
+links:
+  code: "https://github.com/your-username/sv-learning-os"
+startedDate: "2026-04-15"
+lastUpdated: "2026-06-28"
+featured: false
+---
+
+## The Problem
+
+The way engineers learn on the job is broken in three specific ways that compound into a much bigger problem. First, learning resources are decoupled from engineering context — you read a blog post about system design patterns in the morning, but by the time you actually encounter a problem that calls for that pattern in your codebase, the context window has closed and the knowledge doesn't transfer. Second, every engineer's learning curve is different — one person needs depth in distributed systems but can pick up a new framework in a day, another is the exact opposite — yet every learning platform serves the same curriculum to everyone, at the same pace, in the same order. Third, and most insidious, there's no feedback loop between what you're learning and what you're building: you study something, you build something, and nobody connects those two events to tell you whether the learning actually made you more effective.
+
+I spent six months as a teaching assistant for a full-stack engineering program, watching this pattern repeat across hundreds of students. The ones who learned fastest weren't the ones who studied the most hours — they were the ones whose learning was triggered by an actual problem they needed to solve, right when they needed to solve it. The gap isn't a content gap. It's a timing and context gap. Silicon Valley Learning OS is designed to close that gap.
+
+## What It Does
+
+SV Learning OS ingests your engineering context — the repositories you work on, the PRs you review, the docs you reference, the Stack Overflow searches you make — and builds a dynamic Learning Graph: a map of what you know, what you're actively learning, and what's just outside your current context window. It doesn't replace your existing tools; it sits alongside them, watching for learning opportunities that are immediately applicable to whatever you're building right now.
+
+When a relevant concept surfaces (say, you're debugging a Redis connection pool exhaustion issue), the system surfaces a 15-minute learning module targeted at exactly that concept, with an explanation grounded in the code you're actually looking at. It then tracks whether you applied that knowledge — did the fix work? did you explain it in a PR comment? — and updates your Learning Graph accordingly. Over time, it learns your pace, your preferred learning depth (breadth-first vs. depth-first), and the contexts where you learn best, and adjusts both the curriculum and the schedule to match.
+
+For teams, it adds an organizational layer: tech leads can see aggregate learning patterns across the team — not to micromanage, but to identify systemic knowledge gaps before they become production incidents. If three engineers independently searched for "Kubernetes pod eviction" in the same week, that's a signal worth surfacing, not a coincidence.
+
+## How It's Built
+
+The system is architected as five microservices connected through Redis streams and a shared PostgreSQL event store, deployed on Kubernetes.
+
+The **Context Ingestion Service** (Python, Celery) watches Git activity through webhooks and periodic repository scans. It processes diff outputs, PR descriptions, code review comments, and documentation commits to extract learning signals — new patterns being used, unfamiliar APIs being imported, debugging sessions visible through commit messages. Each signal is enriched with the relevant code context and published to a Redis stream.
+
+The **Learning Graph Service** (Python, FastAPI, Neo4j) maintains a persistent graph of concepts, prerequisites, and the user's current mastery level for each node. When a new signal arrives, it identifies which concepts are implicated, checks the user's current graph state, and determines whether this is a reinforcement opportunity (you already know this, here's a concrete example), a learning opportunity (you're using something you haven't formally learned yet), or a gap signal (you're struggling with something whose prerequisites aren't in your graph). This is the core intelligence of the system — all the logic is deterministic, graph-based reasoning, not an LLM black box making fuzzy judgments.
+
+The **Curriculum Engine** (Go, for performance in real-time scheduling) receives learning opportunities from the graph service and schedules them into the user's calendar. It respects configurable constraints: max learning time per day, preferred times (some people learn best in the morning, others late at night), depth preferences, and project deadlines. The schedule is recalculated whenever new signals arrive or the user marks time as unavailable — it's a real-time scheduling problem, not a daily batch job.
+
+The **Delivery Service** (Next.js, Tailwind) presents learning modules as browser-based micro-courses that load in under 200ms. Each module is assembled dynamically from a content library of concept explanations, code examples drawn from public repositories, and (where available) the user's own past code. The rendering is standard MDX, same as this project's own content pipeline, because the pattern works well — write once, render anywhere.
+
+The **Analytics Service** (Python, TimescaleDB) tracks engagement and knowledge application signals. This is the only service that touches PII — it stores only session metadata (module started, module completed, knowledge applied, outcome observed), never the content of what was learned. Aggregated team views are computed from deterministic rollups of individual signals, not from reading individual learning graphs.
+
+## Decisions & Tradeoffs
+
+1. Chose a microservice architecture over a monolith despite the operational complexity because each of the five services has fundamentally different scaling profiles and latency requirements. The Context Ingestion Service can lag by minutes; the Curriculum Engine needs to respond to a new signal in under a second to feel real-time; the Delivery Service needs to render modules in under 200ms. Running them as separate services with independent scaling policies is the honest engineering choice, even though it adds deployment complexity.
+
+2. Chose Redis Streams over Kafka for the event backbone because the throughput requirements (a few hundred events per second per organization, not millions) don't justify Kafka's operational overhead. Redis Streams with consumer groups provide exactly the exactly-once delivery semantics the Learning Graph Service needs without requiring a dedicated Kafka cluster.
+
+3. Picked Neo4j (a graph database) over a relational store for the Learning Graph because prerequisite chains and mastery propagation are fundamentally graph operations — transitive closure on a DAG of concepts is a single Cypher query in Neo4j and a recursive CTE in PostgreSQL that becomes unreadable past depth 3. The tradeoff is operational: now we run two databases instead of one. But the Learning Graph is the system's core intelligence, and forcing it into a relational mold would produce worse recommendations, not simpler ops.
+
+4. Designed the Curriculum Engine in Go specifically because scheduling algorithms benefit from Go's goroutine-per-request model and its predictable pause-free GC. A Java or Python service would spend enough time in GC pauses at the scheduling frequency we need (sub-second recalculations) that the user would feel the latency. Go isn't normally my first choice, but for this specific subproblem it's the right tool.
+
+5. The hardest decision was what NOT to track. We deliberately don't track what code users write inside their editor, what websites they visit, or what Slack messages they send. That data would improve the Learning Graph's accuracy — probably significantly — but it would also make the system feel like surveillance, not a learning tool. I'd rather ship a system that's 80% as effective and feels like a collaborator than one that's 95% effective and feels like your manager installed spyware on your machine.
+
+## What's Next
+
+The architecture and data model are fully designed. The current build phase is focused on the Context Ingestion Service and Learning Graph Service — those two form the core loop that everything else depends on. The MVP will ship with GitHub integration only (the most universal engineering context), supporting a single team of up to 10 developers.
+
+After MVP, the next priorities are: (1) GitLab and Bitbucket support, (2) the Analytics Service so teams can see aggregate patterns, and (3) an API that lets other tools (project management platforms, documentation hosts, CI/CD systems) push learning signals into the graph. The Curriculum Engine and Delivery Service come last, because they're useless without a functioning Learning Graph to drive them.
