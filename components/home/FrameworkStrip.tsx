@@ -12,8 +12,12 @@ import { cn } from "@/lib/utils";
  * Library B2. The component doing the most work to make the site's core
  * positioning legible at a glance.
  *
- * States: only one node expanded at a time; expanding a new node
- * collapses whichever was previously open (Component Library B2).
+ * Interaction model:
+ *   Desktop: hover/focus on a stage smoothly highlights it and reveals
+ *   its corresponding quote with a fade/slide transition. Clicking/tapping
+ *   toggles the quote panel to remain pinned.
+ *
+ *   Mobile: tap to toggle (hover is not meaningful on touch devices).
  *
  * Accessibility (Component Library B2):
  * - Each node is a real <button>, aria-expanded reflects panel state,
@@ -76,11 +80,24 @@ const NODES: FrameworkNode[] = [
 export function FrameworkStrip() {
   const shouldReduce = useReducedMotion();
   const idPrefix = useId();
-  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [activeId, setActiveId] = useState<string | null>(null);
   const nodeRefs = useRef<Array<HTMLButtonElement | null>>([]);
+  const stripRef = useRef<HTMLDivElement | null>(null);
 
-  const toggleNode = (id: string) => {
-    setExpandedId((current) => (current === id ? null : id));
+  const handleMouseEnter = (id: string) => {
+    setActiveId(id);
+  };
+
+  const handleMouseLeave = () => {
+    setActiveId(null);
+  };
+
+  const handleFocus = (id: string) => {
+    setActiveId(id);
+  };
+
+  const handleClick = (id: string) => {
+    setActiveId((current) => (current === id ? null : id));
   };
 
   const handleKeyDown = (e: React.KeyboardEvent, index: number) => {
@@ -96,7 +113,10 @@ export function FrameworkStrip() {
   };
 
   return (
-    <div>
+    <div
+      ref={stripRef}
+      onMouseLeave={handleMouseLeave}
+    >
       {/* ── Scrollable row container ──
           Desktop: static (no overflow needed, but scroll classes are
           harmless no-ops when content fits). Tablet/mobile: horizontally
@@ -106,14 +126,15 @@ export function FrameworkStrip() {
           className={cn(
             "flex items-start gap-0",
             "overflow-x-auto desktop:overflow-visible",
-            "scrollbar-none", // relies on global scrollbar-hiding utility if added; harmless if not
-            "-mx-5 px-5 tablet:mx-0 tablet:px-0" // bleed to viewport edge on mobile for natural swipe feel
+            "scrollbar-none",
+            "-mx-5 px-5 tablet:mx-0 tablet:px-0"
           )}
         >
           {NODES.map((node, index) => {
-            const isExpanded = expandedId === node.id;
+            const isActive = activeId === node.id;
             const isLast = index === NODES.length - 1;
             const panelId = `${idPrefix}-panel-${node.id}`;
+            const prevActive = index > 0 && activeId === NODES[index - 1]?.id;
 
             return (
               <div
@@ -126,33 +147,51 @@ export function FrameworkStrip() {
                       nodeRefs.current[index] = el;
                     }}
                     type="button"
-                    aria-expanded={isExpanded}
+                    aria-expanded={isActive}
                     aria-controls={panelId}
-                    onClick={() => toggleNode(node.id)}
+                    aria-label={`${node.label}${isActive ? " — currently selected" : ""}`}
+                    onClick={() => handleClick(node.id)}
+                    onMouseEnter={() => handleMouseEnter(node.id)}
+                    onFocus={() => handleFocus(node.id)}
                     onKeyDown={(e) => handleKeyDown(e, index)}
                     className={cn(
                       "group flex w-24 tablet:w-auto shrink-0 flex-col items-start gap-2 rounded-card",
-                      "px-3 py-2.5 -mx-3 -my-2.5", // expand hit area without affecting layout spacing
+                      "px-3 py-3 -mx-3 -my-3",
                       "text-left",
-                      "transition-colors duration-fast ease-standard",
+                      "transition-all duration-fast ease-standard",
                       "hover:bg-accent/8",
-                      isExpanded && "bg-accent/8",
+                      isActive && "bg-accent/8",
                       "focus-visible:outline-none focus-visible:focus-ring"
                     )}
                   >
-                    <span
+                    <motion.span
                       aria-hidden="true"
+                      animate={
+                        shouldReduce
+                          ? {}
+                          : {
+                              scale: isActive ? 1.35 : 1,
+                            }
+                      }
+                      transition={{
+                        type: "spring",
+                        stiffness: 400,
+                        damping: 20,
+                        duration: 0.2,
+                      }}
                       className={cn(
-                        "h-2 w-2 rounded-full border-2",
-                        isExpanded
-                          ? "border-accent bg-accent"
-                          : "border-border-default bg-bg-tertiary group-hover:border-accent"
+                        "h-2.5 w-2.5 rounded-full border-2",
+                        "transition-colors duration-fast ease-standard",
+                        isActive
+                          ? "border-accent bg-accent shadow-[0_0_8px_rgba(94,234,212,0.35)]"
+                          : "border-border-default bg-bg-tertiary group-hover:border-accent group-hover:bg-accent/20"
                       )}
                     />
                     <span
                       className={cn(
                         "text-body-md font-medium",
-                        isExpanded ? "text-accent" : "text-text-primary"
+                        "transition-colors duration-fast ease-standard",
+                        isActive ? "text-accent" : "text-text-primary"
                       )}
                     >
                       {node.label}
@@ -164,7 +203,13 @@ export function FrameworkStrip() {
                 {!isLast && (
                   <span
                     aria-hidden="true"
-                    className="hidden desktop:block h-px flex-1 self-center bg-border-subtle mx-2"
+                    className={cn(
+                      "hidden desktop:block h-[2px] flex-1 self-center mx-2 rounded-full",
+                      "transition-all duration-fast ease-standard",
+                      isActive || prevActive
+                        ? "bg-accent opacity-50"
+                        : "bg-border-default dark:opacity-60 opacity-40"
+                    )}
                   />
                 )}
               </div>
@@ -183,13 +228,14 @@ export function FrameworkStrip() {
         />
       </div>
 
-      {/* ── Expansion panels ──
-          Rendered once per node, height-animated open/closed. Capped at
-          80px per spec. AnimatePresence handles the collapse-then-expand
-          sequence when switching between nodes. */}
-      <AnimatePresence initial={false}>
+      {/* ── Quote panel ──
+          Shows the corresponding quote for the active/hovered stage.
+          Animated with a fade + vertical slide.
+          AnimatePresence with mode="wait" ensures exit of the current
+          panel completes before the next one enters. */}
+      <AnimatePresence mode="wait">
         {NODES.map((node) => {
-          if (expandedId !== node.id) return null;
+          if (activeId !== node.id) return null;
           const panelId = `${idPrefix}-panel-${node.id}`;
 
           return (
@@ -197,15 +243,30 @@ export function FrameworkStrip() {
               key={node.id}
               id={panelId}
               role="region"
-              aria-label={`${node.label} example`}
-              initial={shouldReduce ? false : { height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={shouldReduce ? undefined : { height: 0, opacity: 0 }}
-              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+              aria-label={`${node.label}: ${node.example}`}
+              initial={shouldReduce ? false : { opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={shouldReduce ? undefined : { opacity: 0, y: -10 }}
+              transition={{
+                duration: shouldReduce ? 0 : 0.3,
+                ease: [0.16, 1, 0.3, 1],
+              }}
               className="overflow-hidden"
             >
-              <div className="mt-4 max-h-20 rounded-card border border-border-subtle bg-bg-secondary px-4 py-3">
-                <p className="text-body-sm text-text-secondary">
+              <div
+                className={cn(
+                  "mt-4 rounded-card",
+                  "border border-border-subtle",
+                  "bg-bg-secondary",
+                  "px-5 py-4",
+                  "transition-shadow duration-fast ease-standard",
+                  "shadow-[0_1px_3px_rgba(0,0,0,0.12),0_1px_2px_rgba(0,0,0,0.08)]"
+                )}
+              >
+                <span className="text-mono-sm tracking-[0.08em] text-text-tertiary uppercase">
+                  {node.label}
+                </span>
+                <p className="mt-1.5 text-body-md text-text-secondary leading-relaxed">
                   {node.example}
                 </p>
               </div>

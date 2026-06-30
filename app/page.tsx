@@ -53,10 +53,18 @@ export default function HomePage() {
         </Container>
       </Section>
 
-      {/* ── Builder Snapshot (Framework Strip) ── */}
+      {/* ── Engineering Philosophy (Framework Strip) ── */}
       <Section spacing="secondary">
         <Container>
-          <FrameworkStrip />
+          <SectionHeader mode="label" level="h2" id="engineering-philosophy">
+            Engineering Philosophy
+          </SectionHeader>
+          <p className="mt-3 max-w-[480px] text-body-sm text-text-secondary">
+            The mindset that guides how I learn, think, build, and create impact.
+          </p>
+          <div className="mt-8">
+            <FrameworkStrip />
+          </div>
         </Container>
       </Section>
 
