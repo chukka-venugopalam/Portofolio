@@ -1,17 +1,12 @@
 import { buildHomeMetadata } from "@/lib/seo/metadata";
-import {
-  getProjectsByCategory,
-} from "@/lib/content/projects";
+import { getProjectsByCategory } from "@/lib/content/projects";
 import { getRecentLearningEntries } from "@/lib/content/learning";
-import { getAlsoBuildingEntries } from "@/lib/content/also-building";
 import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
 import { SectionHeader } from "@/components/ui/SectionHeader";
-import { Button } from "@/components/ui/Button";
 import { Hero } from "@/components/home/Hero";
 import { FrameworkStrip } from "@/components/home/FrameworkStrip";
 import { ProjectCard } from "@/components/project/ProjectCard";
-import { AlsoBuildingEntry } from "@/components/project/AlsoBuildingEntry";
 import { LearningEntry } from "@/components/learning/LearningEntry";
 import { ConnectStrip } from "@/components/connect/ConnectStrip";
 import { SITE_TAGLINE } from "@/lib/constants";
@@ -24,16 +19,13 @@ export const metadata = buildHomeMetadata();
  *
  * Sections:
  *   1. Hero — the 5-20s make-or-break positioning
- *   2. Builder Snapshot — FrameworkStrip narrative spine
+ *   2. Engineering Philosophy — FrameworkStrip narrative spine
  *   3. Flagship Projects — all three long-term products, flagship card variant
- *   4. Production Projects & Experiments — standard cards + one-liners
- *   5. Learning Pulse — compact preview
- *   6. Connect Strip — closing conversion surface
+ *   4. Learning Pulse — compact preview
+ *   5. Connect Strip — closing conversion surface
  */
 export default function HomePage() {
   const flagshipProjects = getProjectsByCategory("flagship");
-  const productionProjects = getProjectsByCategory("production");
-  const alsoBuilding = getAlsoBuildingEntries();
   const recentLearning = getRecentLearningEntries(4);
 
   return (
@@ -88,49 +80,6 @@ export default function HomePage() {
                   variant="flagship"
                 />
               ))}
-            </div>
-          </Container>
-        </Section>
-      )}
-
-      {/* ── Production Projects & Experiments ── */}
-      {(productionProjects.length > 0 || alsoBuilding.length > 0) && (
-        <Section spacing="secondary">
-          <Container>
-            {productionProjects.length > 0 && (
-              <>
-                <SectionHeader mode="label" level="h2" id="production-work">
-                  Production Projects
-                </SectionHeader>
-                <div className="mt-8 grid grid-cols-1 desktop:grid-cols-2 gap-6">
-                  {productionProjects.map((project) => (
-                    <ProjectCard
-                      key={project.frontmatter.slug}
-                      project={project.frontmatter}
-                      variant="grid"
-                    />
-                  ))}
-                </div>
-              </>
-            )}
-
-            {alsoBuilding.length > 0 && (
-              <div className={productionProjects.length > 0 ? "mt-12" : ""}>
-                <span className="text-mono-sm uppercase tracking-[0.08em] text-text-tertiary">
-                  Experiments &amp; Research
-                </span>
-                <ul className="mt-3 divide-y divide-border-subtle">
-                  {alsoBuilding.map((entry) => (
-                    <AlsoBuildingEntry key={entry.name} entry={entry} />
-                  ))}
-                </ul>
-              </div>
-            )}
-
-            <div className="mt-10">
-              <Button variant="secondary" href="/work">
-                See all work
-              </Button>
             </div>
           </Container>
         </Section>

@@ -10,7 +10,16 @@ import { z } from "zod";
  * for exactly this reason — a malformed project file should never
  * silently produce a broken or missing page in production).
  */
-export const projectStatusSchema = z.enum(["shipped", "building", "exploring"]);
+export const projectStatusSchema = z.enum([
+  "designing",
+  "architecture-complete",
+  "mvp-development",
+  "in-progress",
+  "production-ready",
+  "shipped",
+  "building",
+  "exploring",
+]);
 
 export const projectCategorySchema = z.enum(["flagship", "production", "experiment"]);
 

@@ -29,18 +29,33 @@ const STATUS_LABEL: Record<ProjectStatus, string> = {
   shipped: "Shipped",
   building: "Building",
   exploring: "Exploring",
+  designing: "Designing",
+  "architecture-complete": "Architecture Complete",
+  "mvp-development": "MVP Development",
+  "in-progress": "In Progress",
+  "production-ready": "Production Ready",
 };
 
 const STATUS_COLOR_CLASSES: Record<ProjectStatus, string> = {
   shipped: "text-status-shipped",
   building: "text-status-building",
   exploring: "text-status-exploring",
+  designing: "text-status-exploring",
+  "architecture-complete": "text-status-building",
+  "mvp-development": "text-status-building",
+  "in-progress": "text-status-building",
+  "production-ready": "text-status-shipped",
 };
 
 const STATUS_DOT_CLASSES: Record<ProjectStatus, string> = {
   shipped: "bg-status-shipped",
   building: "bg-status-building",
   exploring: "bg-status-exploring",
+  designing: "bg-status-exploring",
+  "architecture-complete": "bg-status-building",
+  "mvp-development": "bg-status-building",
+  "in-progress": "bg-status-building",
+  "production-ready": "bg-status-shipped",
 };
 
 interface StatusTagProps {
