@@ -1,209 +1,213 @@
-import Link from "next/link";
-import {
-  getLearningEntriesByYear,
-  getLearningStats,
-} from "@/lib/content/learning";
 import { buildMetadata } from "@/lib/seo/metadata";
-import { formatFullDate } from "@/lib/utils";
 import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
 import { SectionHeader } from "@/components/ui/SectionHeader";
-import { LearningEntry } from "@/components/learning/LearningEntry";
-import { YearDivider } from "@/components/learning/YearDivider";
 
 export const metadata = buildMetadata({
-  title: "Learning Log",
-  description: "A dated, honest record of what I'm learning and when.",
+  title: "Learning",
+  description:
+    "How I learn: fundamentals, prototypes, gaps, deeper study, better systems.",
   pathname: "/learning",
 });
 
 /**
- * Learning Log page — PRD Part 7, Visual Design Spec Section 4,
- * Component Library B6/B7.
+ * Learning page
  *
- * Five sections, matching this task's requested structure:
- *   1. Learning Hero                       — SectionHeader page mode
- *   2. Reverse Chronological Learning Feed  — LearningEntry (full
- *      variant) grouped under YearDivider, sorted newest-first
- *   3. Optional Topic Filters                — deliberately NOT built;
- *      see the note below
- *   4. Learning Stats                          — derived, real numbers
- *      only (lib/content/learning.ts's getLearningStats())
- *   5. Empty State Handling                     — handled at both the
- *      feed and stats level, not bolted on separately, since the
- *      current real state of this codebase IS empty (zero entries
- *      exist in content/learning/ as of this page being built)
- *
- * Sort order (this task's explicit requirement): newest-first sorting
- * was ALREADY implemented in getAllLearningEntries() — see that
- * function's final sort() call — so this page doesn't re-sort
- * anything; it relies on the content layer's existing guarantee, which
- * is the correct place for that guarantee to live (any future
- * consumer of learning entries inherits correct ordering for free).
- *
- * On "Optional Topic Filters": this task explicitly marks this item
- * optional, and content/learning/_schema.ts's frontmatter has no
- * topic/tag field to filter by. Both the Component Library (B6) and
- * Visual Design Spec (4.x) repeatedly emphasize that Learning Entry
- * should stay "plain and dated rather than acquiring card-like
- * structure over time" — adding a topic-tagging schema field and
- * filter UI would directly work against that documented design intent
- * for a feature this task itself flags as optional. Deliberately
- * skipped, not silently omitted: if topic filtering becomes a real
- * requirement later, it needs a schema change (an optional `topic`
- * field on learningEntryFrontmatterSchema) before a filter UI has
- * anything to filter on — that's a content-model decision, not a page-
- * level one, and shouldn't be made implicitly inside this file.
- *
- * Layout (Visual Design Spec 4.1): content max-width 760px, matching
- * Project Detail's reading width — this is a sustained-reading page,
- * not a card-grid page.
- *
- * MDX: each LearningEntry's optional 1-3 sentence expansion is the
- * entry's `body` field — already-parsed markdown text from
- * lib/content/learning.ts (gray-matter strips frontmatter; the
- * remaining content is rendered as plain text here since learning
- * entries are intentionally too short to warrant full MDX compilation
- * with custom components, unlike Project Detail's longer prose
- * sections — Visual Design Spec 4.8 calls this content "1-2 sentences,"
- * which doesn't need headings, code blocks, or embedded images).
+ * My learning philosophy is not about collecting certificates or completing
+ * tutorials. It is about understanding systems deeply enough to build them
+ * myself. The cycle is always:
+ *   Learn fundamentals -> Build prototypes -> Find gaps -> Study deeper -> Build better systems
  */
-export default function LearningLogPage() {
-  const entriesByYear = getLearningEntriesByYear();
-  const stats = getLearningStats();
-  const hasEntries = stats.totalEntries > 0;
-
+export default function LearningPage() {
   return (
     <>
-      {/* ── 1. Learning Hero ── */}
+      {/* Hero */}
       <Section spacing="secondary" className="pt-0">
         <Container className="max-w-[760px]" wide={false}>
           <SectionHeader
             mode="page"
             level="h1"
-            subline="A dated, honest record of what I'm learning and when."
+            subline="I don't optimize for completing tutorials. I optimize for understanding systems deeply enough to build them myself."
           >
-            Learning Log
+            How I Learn
           </SectionHeader>
         </Container>
       </Section>
 
-      {/* ── 2. Reverse Chronological Learning Feed ── */}
+      {/* Philosophy */}
       <Section spacing="tight">
         <Container className="max-w-[760px]" wide={false}>
-          {hasEntries ? (
-            <div className="flex flex-col gap-8">
-              {Array.from(entriesByYear.entries()).map(([year, entries]) => (
-                <div key={year}>
-                  <YearDivider year={year} />
-                  <ul className="mt-5 divide-y divide-border-subtle">
-                    {entries.map((entry) => (
-                      <li key={entry.slug}>
-                        <LearningEntry
-                          date={entry.frontmatter.date}
-                          headline={entry.frontmatter.headline}
-                          body={entry.body || undefined}
-                          link={entry.frontmatter.link}
-                          variant="full"
-                        />
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+          <div className="rounded-card bg-bg-secondary border border-border-default p-6 desktop:p-8">
+            <span className="text-mono-sm uppercase tracking-[0.08em] text-text-tertiary">
+              My Learning Cycle
+            </span>
+            <ol className="mt-5 flex flex-col gap-4">
+              {[
+                {
+                  step: "Learn fundamentals",
+                  detail: "Build a solid mental model of how the system works at its core, not just how to use it.",
+                },
+                {
+                  step: "Build prototypes",
+                  detail: "Implement something real with what I have learned. The gap between theory and practice always reveals itself here.",
+                },
+                {
+                  step: "Find gaps",
+                  detail: "The prototype exposes what I don't actually understand. A bug, a performance issue, a design choice I could not justify.",
+                },
+                {
+                  step: "Study deeper",
+                  detail: "Go back to the fundamentals with a specific question in mind. The second pass is always faster and more focused.",
+                },
+                {
+                  step: "Build better systems",
+                  detail: "Rebuild or extend the prototype with the deeper understanding. This is where the learning solidifies into something durable.",
+                },
+              ].map((item, index) => (
+                <li key={item.step} className="flex gap-3">
+                  <span
+                    aria-hidden="true"
+                    className="shrink-0 text-mono-md font-medium text-accent"
+                  >
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <div>
+                    <span className="text-body-md font-medium text-text-primary">
+                      {item.step}
+                    </span>
+                    <p className="mt-0.5 text-body-sm text-text-secondary">
+                      {item.detail}
+                    </p>
+                  </div>
+                </li>
               ))}
-            </div>
-          ) : (
-            <FeedEmptyState />
-          )}
+            </ol>
+          </div>
         </Container>
       </Section>
 
-      {/* ── 4. Learning Stats ──
-          (Numbered to match this task's requested order; rendered after
-          the feed, which is also where it reads best — supporting
-          evidence below the thing it's summarizing, not above it.)
-          Every number here is derived directly from real entry data —
-          no invented or aspirational metrics, consistent with the
-          PRD's content-honesty model. */}
-      <Section spacing="tight" className="pb-0">
+      {/* Current Learning Areas */}
+      <Section spacing="tight">
         <Container className="max-w-[760px]" wide={false}>
           <SectionHeader mode="label" level="h2">
-            Learning Stats
+            Currently Studying
           </SectionHeader>
 
-          {hasEntries ? (
-            <dl className="mt-5 grid grid-cols-1 tablet:grid-cols-3 gap-6">
-              <StatItem
-                label="Total entries"
-                value={stats.totalEntries.toString()}
-              />
-              <StatItem
-                label="Last 30 days"
-                value={stats.entriesLast30Days.toString()}
-              />
-              <StatItem
-                label="Logging since"
-                value={
-                  stats.loggingSince
-                    ? formatFullDate(stats.loggingSince)
-                    : "—"
-                }
-              />
-            </dl>
-          ) : (
-            <p className="mt-5 text-body-md text-text-secondary">
-              Stats will appear here once the first entry is logged.
-            </p>
-          )}
+          <div className="mt-6 flex flex-col gap-6">
+            <LearningArea
+              title="Data Structures and Algorithms"
+              status="completed"
+              description="I have built a solid foundation in the core data structures: arrays, stacks, queues, trees, and graphs. I can implement each one from memory and reason about their tradeoffs."
+              details={[
+                "Arrays, Stacks, Queues",
+                "Trees: binary trees, BSTs, tree traversals",
+                "Graphs: representations, BFS, DFS",
+              ]}
+            />
+
+            <LearningArea
+              title="Algorithms"
+              status="studying"
+              description="I am moving from knowing data structures to understanding algorithmic thinking and optimization. This is not about memorizing solutions. It is about building intuition for why certain approaches work and others do not."
+              details={[
+                "Sorting and searching algorithms",
+                "Dynamic programming patterns",
+                "Graph algorithms: shortest paths, topological sort",
+                "Complexity analysis and optimization",
+              ]}
+            />
+
+            <LearningArea
+              title="AI and Machine Learning"
+              status="studying"
+              description="I am studying beyond using APIs. I want to understand the models themselves: how they work, why they fail, and how to build systems around them that are reliable and predictable."
+              details={[
+                "Large Language Models: architecture, training, inference",
+                "AI Engineering: building production systems around LLMs",
+                "Agent Systems: tool use, reasoning, multi-step planning",
+                "Machine Learning Fundamentals: beyond using APIs",
+                "Evaluation: measuring quality beyond accuracy",
+                "Retrieval Augmented Generation: grounding models in real data",
+                "Prompt Engineering: systematic, not guesswork",
+              ]}
+            />
+
+            <LearningArea
+              title="Cloud and Full Stack"
+              status="studying"
+              description="Full-stack is where my learning becomes immediately testable. Every concept goes through the cycle: learn the theory, build a prototype, find the gaps, study deeper, ship something real."
+              details={[
+                "Backend Architecture: APIs, services, state management",
+                "Databases: relational, NoSQL, query optimization",
+                "Authentication: sessions, tokens, OAuth patterns",
+                "APIs: REST design, WebSockets, real-time communication",
+                "Deployment: CI/CD, containerization, orchestration",
+                "Cloud Infrastructure: compute, storage, networking",
+              ]}
+            />
+          </div>
+        </Container>
+      </Section>
+
+      {/* Learning Belief */}
+      <Section spacing="tight" className="pb-0">
+        <Container className="max-w-[760px]" wide={false}>
+          <div className="border border-border-subtle rounded-card p-6 desktop:p-8">
+            <span className="text-mono-sm uppercase tracking-[0.08em] text-text-tertiary">
+              My Belief
+            </span>
+            <blockquote className="mt-3 text-body-lg leading-relaxed text-text-primary">
+              I don't collect certificates. I collect understanding. Every project I build is an answer to a question I was genuinely curious about. Every learning area I study is motivated by a system I want to build but cannot yet.
+            </blockquote>
+          </div>
         </Container>
       </Section>
     </>
   );
 }
 
-/**
- * StatItem
- *
- * Page-local to Learning Stats — a single dt/dd pair. Deliberately not
- * a card (no border, no background fill), consistent with Learning
- * Entry's own lowest-ornamentation treatment (Visual Design Spec 4.8):
- * a log's supporting stats shouldn't look more decorated than the log
- * itself.
- */
-function StatItem({ label, value }: { label: string; value: string }) {
-  return (
-    <div>
-      <dt className="text-mono-sm uppercase tracking-[0.04em] text-text-tertiary">
-        {label}
-      </dt>
-      <dd className="mt-1.5 text-heading-md text-text-primary">{value}</dd>
-    </div>
-  );
-}
+function LearningArea({
+  title,
+  status,
+  description,
+  details,
+}: {
+  title: string;
+  status: "completed" | "studying";
+  description: string;
+  details: string[];
+}) {
+  const statusLabel = status === "completed" ? "Foundation built" : "Studying";
+  const statusColor = status === "completed" ? "text-status-shipped" : "text-status-building";
+  const dotColor = status === "completed" ? "bg-status-shipped" : "bg-status-building";
 
-/**
- * FeedEmptyState
- *
- * 5. Empty State Handling — the feed-level empty state. Plain text, no
- * card chrome, consistent with how this codebase has handled every
- * other genuinely-empty content section (the Work page's empty Projects
- * Grid / Also Building sections use the same restrained, no-card
- * approach). This is also the actual current state of this codebase —
- * content/learning/ has zero .mdx files as of this page being built —
- * so this isn't a defensive edge case, it's what a fresh visitor sees
- * today.
- */
-function FeedEmptyState() {
   return (
-    <p className="text-body-md text-text-secondary">
-      Nothing logged yet — check back soon, or see the{" "}
-      <Link
-        href="/work"
-        className="text-accent hover:underline underline-offset-4 focus-visible:outline-none focus-visible:focus-ring rounded-pill"
-      >
-        Work page
-      </Link>{" "}
-      for what&rsquo;s currently being built.
-    </p>
+    <div className="rounded-card border border-border-subtle p-5 desktop:p-6">
+      <div className="flex items-start justify-between gap-3">
+        <h3 className="text-heading-sm text-text-primary">{title}</h3>
+        <span
+          className={"inline-flex items-center gap-1.5 rounded-pill bg-bg-tertiary px-2.5 py-1 text-mono-md shrink-0 " + statusColor}
+        >
+          <span
+            aria-hidden="true"
+            className={"h-1.5 w-1.5 rounded-full " + dotColor}
+          />
+          {statusLabel}
+        </span>
+      </div>
+      <p className="mt-2 text-body-md text-text-secondary leading-relaxed">
+        {description}
+      </p>
+      <ul className="mt-3 flex flex-col gap-1">
+        {details.map((detail) => (
+          <li key={detail} className="flex gap-2 text-body-sm text-text-primary">
+            <span aria-hidden="true" className="text-accent shrink-0">
+              →
+            </span>
+            {detail}
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }

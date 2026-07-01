@@ -1,0 +1,68 @@
+[
+  {
+    "name": "Operating System Scheduling Simulator",
+    "status": "shipped",
+    "motivation": "I wanted to understand why different CPU scheduling algorithms produce radically different performance profiles under the same workload. Textbooks explain FCFS, SJF, Round Robin, and Priority Scheduling with throughput tables and turnaround-time averages, but those numbers never made me feel the scheduling decisions the way watching a Gantt chart animate did.",
+    "whatIUnderstood": "I realized that scheduling isnt just about picking an algorithm, its about understanding the assumptions embedded in each one. FCFS works well for long, predictable jobs but punishes short interactive ones. SJF minimizes average wait time but needs perfect future knowledge. Round Robin feels fair but wastes time on context switches. Each choice encodes a tradeoff, and no single answer is right for every workload.",
+    "coreFeatures": [
+      "Four CPU scheduling algorithms: FCFS, SJF (preemptive and non-preemptive), Round Robin, and Priority Scheduling",
+      "Real-time Gantt chart visualization showing process execution timelines",
+      "Side-by-side comparison metrics: turnaround time, waiting time, response time",
+      "Custom workload configuration with arrival times, burst durations, and priority levels"
+    ],
+    "engineeringConcepts": [
+      "Context switching overhead and its impact on throughput",
+      "Starvation and aging in priority-based schedulers",
+      "The tradeoff between response time and throughput",
+      "Preemptive vs non-preemptive scheduling dynamics"
+    ],
+    "technologies": ["HTML", "CSS", "JavaScript"],
+    "github": "https://github.com/chukka-venugopalam/os-scheduling-simulator",
+    "liveDemo": "https://chukka-venugopalam.github.io/os-scheduling-simulator/",
+    "whatILearned": "Building this taught me that visualization is a thinking tool, not just a presentation tool. Watching a Gantt chart stretch and compress under different algorithms made the textbook formulas click in a way they hadnt before. I learned that the real challenge in scheduling isnt algorithmic, its that real systems have unpredictable workloads, and every scheduler is guessing about the future."
+  },
+  {
+    "name": "Interactive Graph Algorithm Visualizer",
+    "status": "shipped",
+    "motivation": "Graph algorithms are taught as abstract procedures. You trace through BFS, DFS, and Dijkstras on paper and memorize the steps. But I kept wondering what the algorithm was actually seeing at each step. What does the frontier look like to BFS as it expands? How does Dijkstras perception of the graph change as it discovers shorter paths? I wanted to see the algorithms state, not just its output.",
+    "whatIUnderstood": "Graph traversal is a fundamentally different kind of thinking than most algorithms. Youre not processing a sequence of elements, youre navigating a structure where the same node can be reached from multiple paths, and the order you explore determines everything about the efficiency and correctness of the result. Visualizing that exploration step by step made me understand why DFS uses a stack and BFS uses a queue, not as a memorized rule, but as a natural consequence of how each strategy explores.",
+    "coreFeatures": [
+      "BFS, DFS, and Dijkstras algorithm visualizations with adjustable speed control",
+      "Interactive graph builder that lets you add, remove, and connect nodes by clicking and dragging",
+      "Real-time step tracking showing which node is being processed and why",
+      "Visual distinction between explored, frontier, and unexplored nodes"
+    ],
+    "engineeringConcepts": [
+      "Graph representations: adjacency lists vs adjacency matrices",
+      "Queue vs stack behavior in traversal order",
+      "Shortest path discovery in weighted vs unweighted graphs",
+      "Time and space complexity visible through animation steps"
+    ],
+    "technologies": ["HTML", "CSS", "JavaScript", "Canvas API"],
+    "github": "https://github.com/chukka-venugopalam/Interactive-Graph-Algorithm-Visualizer",
+    "liveDemo": "https://chukka-venugopalam.github.io/Interactive-Graph-Algorithm-Visualizer/",
+    "whatILearned": "I learned that the gap between understanding an algorithm and implementing it is wider than I expected. Writing a correct BFS is easy. Writing a visualization that faithfully shows what BFS is doing at each step, that forced me to reason about the algorithm at a deeper level. I also learned that Canvas API performance matters: redrawing the entire graph on every animation frame works for small graphs, but the approach would need to change for larger ones."
+  },
+  {
+    "name": "Page Replacement Algorithm Simulator",
+    "status": "shipped",
+    "motivation": "Page replacement feels abstract in an OS textbook. You read about FIFO, LRU, and Optimal algorithms, and the differences seem obvious on paper. But I wanted to understand why LRU is so hard to implement efficiently in practice, and why the theoretically optimal algorithm cant actually be built. Theres a gap between knowing the definition of an algorithm and understanding why real systems make the tradeoffs they do.",
+    "whatIUnderstood": "The key insight wasnt about the algorithms themselves, it was about the cost of knowledge. Optimal replacement assumes you know the future. LRU approximates it by tracking recency, but tracking recency is expensive because every memory access needs a timestamp update. FIFO is cheap but throws out pages that might be actively used. Every real system makes a conscious tradeoff between prediction accuracy and implementation cost, and the textbook rankings hide that complexity.",
+    "coreFeatures": [
+      "FIFO, LRU, and Optimal page replacement algorithm simulations",
+      "Configurable page reference strings and frame counts",
+      "Real-time page fault tracking with visual indicators",
+      "Side-by-side comparison of page fault counts across algorithms"
+    ],
+    "engineeringConcepts": [
+      "The cost of knowledge in algorithm design",
+      "Beladys anomaly: why more frames can mean more page faults in FIFO",
+      "Locality of reference and why LRU works well in practice",
+      "The gap between theoretical optimality and practical implementability"
+    ],
+    "technologies": ["HTML", "CSS", "JavaScript"],
+    "github": "https://github.com/chukka-venugopalam/Page_replacement-simulator-",
+    "liveDemo": "https://chukka-venugopalam.github.io/Page_replacement-simulator-/",
+    "whatILearned": "This project taught me that the most interesting engineering insights come from implementing things you think you already understand. I knew the definitions of FIFO, LRU, and Optimal before I started. But I didnt understand why LRU was a genuine engineering achievement until I tried to make it work efficiently. The textbook makes it sound simple. Real systems make it a carefully chosen approximation."
+  }
+]

@@ -1,68 +1,32 @@
 import { existsSync, statSync } from "fs";
 import path from "path";
 
-/**
- * Resume content + PDF-availability check.
- *
- * Per the PRD's Part 10 Resume Hub Strategy: name, current status (year/
- * program), a 3-4 line "currently focused on" statement, and a short
- * list of the strongest proof points. This task's six-section structure
- * splits that single PRD "Summary block" into two visually distinct
- * page sections — Quick Snapshot (identity + focus) and Key Highlights
- * (proof points) — which is a finer-grained breakdown of the same
- * content model, not a different one. Both read from this one source.
- */
-
 export interface ResumeContent {
   name: string;
-  /** e.g. "3rd-year student, Computer Science" */
   statusLine: string;
-  /** 3-4 sentences, per PRD Part 10. */
   currentFocus: string;
-  /** Short list of specific, real proof points — never a generic skills list. */
   highlights: string[];
-  /** ISO date string — drives both the page's Last Updated stamp and a
-   *  build-time staleness warning, operationalizing the PRD's "dated
-   *  resume signals active maintenance" trust signal. */
   lastUpdated: string;
 }
 
-// TODO before launch: replace with real content. Kept here, not
-// hardcoded inline in the page component, so updating the resume's
-// on-page summary is a one-file edit — consistent with this codebase's
-// "content lives in one obvious place" pattern (lib/constants.ts,
-// content/*.json) rather than buried inside JSX.
 export const RESUME_CONTENT: ResumeContent = {
   name: "Venugopalam Chukka",
-  statusLine: "Student & builder — Computer Science",
+  statusLine: "Student and builder, Computer Science",
   currentFocus:
-    "Currently designing Concept Intelligence Platform, a diagnostic tool that surfaces gaps in DSA understanding. Also building Silicon Valley Learning OS and PulseVote — three long-term products that represent my vision for AI-assisted learning, real-time decision-making, and developer growth.",
+    "Designing Concept Intelligence Platform, a diagnostic tool that surfaces gaps in DSA understanding by analyzing how you explain concepts, not just whether you can solve problems. Also building Silicon Valley Learning OS and PulseVote, three long-term projects exploring AI-assisted learning, real-time decision-making, and developer growth.",
   highlights: [
-    "Designed and building three flagship products: Concept Intelligence Platform (AI diagnostic for DSA understanding), Silicon Valley Learning OS (AI-powered learning operating system), and PulseVote (real-time collective decision-making platform).",
-    "Comfortable with Next.js, FastAPI/Python, and PostgreSQL across full-stack and applied-AI contexts.",
-    "Learns in public — the Learning Log is a dated, falsifiable record of what's actually been picked up recently, not a static skills list.",
+    "Designed and building three systems: Concept Intelligence Platform (diagnosing DSA understanding gaps), Silicon Valley Learning OS (context-aware learning), and PulseVote (anonymous real-time decision-making).",
+    "Comfortable across the stack: Next.js and FastAPI for applications, PostgreSQL and Redis for data, Python for AI integration.",
+    "Learning philosophy: build prototypes to find gaps in understanding, then study deeper. Every project on this site is an answer to a question I was curious about.",
   ],
   lastUpdated: "2026-06-28",
 };
 
 const RESUME_PDF_RELATIVE_PATH = "/resume.pdf";
 
-/**
- * Build-time check for whether the resume PDF actually exists in
- * /public. This runs during static generation (this function is only
- * ever called from a page component, which executes at build time for
- * a fully statically-generated route — Implementation Blueprint 6.1),
- * not at request time, since there is no request time for a static
- * site. A missing PDF should never crash the build (the rest of the
- * site is real and shippable even if the resume file hasn't been added
- * yet) — instead the Resume page renders an honest fallback in its
- * place. See PDFViewerContainer for the rendered fallback state.
- */
 export function getResumePdfStatus(): {
   exists: boolean;
   path: string;
-  /** Sanity check: catches an accidentally-committed empty/corrupt file,
-   *  not just a missing one. */
   sizeBytes: number | null;
 } {
   const absolutePath = path.join(process.cwd(), "public", "resume.pdf");
@@ -73,22 +37,15 @@ export function getResumePdfStatus(): {
     try {
       sizeBytes = statSync(absolutePath).size;
     } catch {
-      // Extremely unlikely race (file removed between existsSync and
-      // statSync) — treat as if it doesn't exist rather than throwing,
-      // since this is a presentational fallback decision, not a
-      // build-correctness one.
       return { exists: false, path: RESUME_PDF_RELATIVE_PATH, sizeBytes: null };
     }
   }
 
-  // A 0-byte file is functionally "missing" from a visitor's
-  // perspective — treat it the same as not existing rather than
-  // rendering a broken embed pointed at an empty file.
   const effectivelyExists = exists && (sizeBytes ?? 0) > 0;
 
   if (!effectivelyExists && exists) {
     console.warn(
-      `[content warning] public/resume.pdf exists but is 0 bytes — ` +
+      `[content warning] public/resume.pdf exists but is 0 bytes, ` +
         `treating as missing. Replace with a real PDF before launch.`
     );
   }

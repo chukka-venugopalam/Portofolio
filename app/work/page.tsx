@@ -1,27 +1,31 @@
 import { buildMetadata } from "@/lib/seo/metadata";
 import { getProjectsByCategory } from "@/lib/content/projects";
+import { getEngineeringProjects } from "@/lib/content/engineering-projects";
 import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { ProjectCard } from "@/components/project/ProjectCard";
+import { EngineeringProjectsSection } from "@/components/project/EngineeringProjectsSection";
 
 export const metadata = buildMetadata({
   title: "Work",
   description:
-    "Flagship products I'm building — AI-assisted learning, real-time decision-making, and civic technology.",
+    "Flagship products and engineering explorations I'm building.",
   pathname: "/work",
 });
 
 /**
- * Work page — focused exclusively on flagship products that represent
- * the portfolio's long-term engineering vision.
+ * Work page
  *
  * Sections:
- *   1. Hero — page title and positioning
- *   2. Flagship Projects — long-term products, startup case study style
+ *   1. Hero, page title and positioning
+ *   2. Flagship Projects, long-term products, startup case study style
+ *   3. Engineering Projects, explorations built to understand systems
  */
 export default function WorkPage() {
   const flagshipProjects = getProjectsByCategory("flagship");
+  const engineeringProjects = getEngineeringProjects();
+  const hasEngineeringProjects = engineeringProjects.length > 0;
 
   return (
     <>
@@ -31,7 +35,7 @@ export default function WorkPage() {
           <SectionHeader
             mode="page"
             level="h1"
-            subline="These are the long-term products I&rsquo;m building to solve meaningful problems in learning, decision-making, and civic technology. Rather than building many disconnected projects, I focus on a small number of ambitious systems and iterate on them over time."
+            subline="These are the systems I have built and am building. Some are long-term products I design from the ground up. Others are focused engineering explorations built to answer a specific question I was curious about."
           >
             Work
           </SectionHeader>
@@ -45,9 +49,7 @@ export default function WorkPage() {
             Flagship Projects
           </SectionHeader>
           <p className="mt-3 max-w-[600px] text-body-sm text-text-secondary">
-            Ambitious systems I&rsquo;m building from the ground up — each one a
-            startup case study in engineering vision, product thinking, and
-            long-term execution.
+            Long-term products I am building from the ground up, each one an engineering case study in systems thinking and product design.
           </p>
 
           {flagshipProjects.length > 0 ? (
@@ -62,11 +64,20 @@ export default function WorkPage() {
             </div>
           ) : (
             <p className="mt-8 text-body-md text-text-secondary">
-              No flagship projects to showcase yet — check back soon.
+              No flagship projects to showcase yet, check back soon.
             </p>
           )}
         </Container>
       </Section>
+
+      {/* ── 3. Engineering Projects ── */}
+      {hasEngineeringProjects && (
+        <Section spacing="secondary">
+          <Container>
+            <EngineeringProjectsSection />
+          </Container>
+        </Section>
+      )}
     </>
   );
 }

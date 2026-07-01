@@ -1,8 +1,5 @@
 import { buildMetadata } from "@/lib/seo/metadata";
-import {
-  getFlagshipProject,
-  getStrongestInProgressProject,
-} from "@/lib/content/projects";
+import { getFlagshipProject, getStrongestInProgressProject } from "@/lib/content/projects";
 import { getResumePdfStatus } from "@/lib/resume";
 import { SOCIAL_LINKS } from "@/lib/constants";
 import { Container } from "@/components/ui/Container";
@@ -18,58 +15,14 @@ export const metadata = buildMetadata({
 });
 
 /**
- * Connect page — PRD Part 6/Opportunity Hub framing, Visual Design Spec
- * Section 6, Component Library D1.
+ * Connect page
  *
- * Five sections, matching this task's requested structure:
- *   1. Connect Hero          — SectionHeader page mode, "Let's talk."
- *                              per Visual Design Spec 6.2's framing
- *   2. Opportunity Areas       — ConnectStrip's availability tags
- *                                (Internships / Hackathons /
- *                                Collaboration) — REUSED, not rebuilt
- *   3. Contact Methods           — ConnectStrip's page-variant contact
- *                                  rows (Email/GitHub/LinkedIn/Resume)
- *                                  — REUSED, not rebuilt
- *   4. Current Focus               — new content, sourced from the same
- *                                     flagship project Home's Hero
- *                                     already uses, so there's one
- *                                     source of truth for "what's
- *                                     currently being worked on" across
- *                                     the whole site, not two
- *                                     independently-maintained copies
- *   5. Collaboration CTA              — closing section distinguishing
- *                                        recruiter-style outreach
- *                                        (resume/email) from founder/
- *                                        collaborator-style outreach
- *                                        (a more direct "let's build
- *                                        something" prompt), since this
- *                                        task explicitly asks for both
- *                                        recruiter-friendly AND
- *                                        collaboration-friendly framing
- *
- * Sections 2 and 3 — per this task's explicit "Reuse: ConnectStrip"
- * requirement — are a SINGLE <ConnectStrip variant="page"> call. That
- * component already renders availability tags (Opportunity Areas)
- * immediately followed by contact rows (Contact Methods) as one
- * connected unit, per Component Library D1 and Visual Design Spec
- * 6.1's stated order ("availability tags, then a vertical stack of
- * contact-method rows"). Splitting these into two separately-rendered
- * components here would duplicate ConnectStrip's existing internal
- * layout/motion-stagger logic for no benefit — exactly what "do not
- * create duplicate components" exists to prevent.
- *
- * Bug fix while building this page: ConnectStrip's resume contact row
- * previously hardcoded a link straight to /resume.pdf, which would
- * silently 404 if the file doesn't exist — it currently doesn't exist
- * in this codebase. ConnectStrip now accepts a resumePdfExists prop
- * (passed below from the same getResumePdfStatus() check the Resume
- * page already uses) so this page's Download button degrades exactly
- * the same honest way the Resume page's already does. See
- * components/connect/ConnectStrip.tsx's updated doc comment.
- *
- * Layout (Visual Design Spec 6.1): 600px max-width — the narrowest
- * reading column on the site, intentional for this page's content
- * volume even with the two added sections.
+ * Sections:
+ *   1. Connect Hero
+ *   2. Opportunity Areas + Contact Methods (ConnectStrip)
+ *   3. Direct Contact Links (Email, GitHub, LeetCode)
+ *   4. Current Focus
+ *   5. Collaboration CTA
  */
 export default function ConnectPage() {
   const flagship = getFlagshipProject();
@@ -78,11 +31,7 @@ export default function ConnectPage() {
 
   return (
     <>
-      {/* ── 1. Connect Hero ──
-          "Let's talk." framing per Visual Design Spec 6.2 — a friendly,
-          direct hook doing double duty as the page's only large display
-          type. Recruiter- and collaboration-friendly by design: the
-          sub-line names both audiences without picking one. */}
+      {/* ── 1. Connect Hero ── */}
       <Section spacing="secondary" className="pt-0">
         <Container className="max-w-[600px]" wide={false}>
           <SectionHeader
@@ -90,28 +39,53 @@ export default function ConnectPage() {
             level="h1"
             subline="Open to internship and full-time conversations, hackathon teams, and collaborations on something real."
           >
-            Let&rsquo;s talk.
+            Lets talk.
           </SectionHeader>
         </Container>
       </Section>
 
-      {/* ── 2. Opportunity Areas + 3. Contact Methods ──
-          One ConnectStrip call, page variant — see the doc comment
-          above for why these two requested sections map to a single
-          reused component rather than two separately-built ones. */}
+      {/* ── 2. Opportunity Areas + 3. Contact Methods ── */}
       <Section spacing="tight">
         <Container className="max-w-[600px]" wide={false}>
           <ConnectStrip variant="page" resumePdfExists={pdfStatus.exists} />
         </Container>
       </Section>
 
-      {/* ── 4. Current Focus ──
-          Same source of truth as Home's Hero "Currently:" line —
-          getFlagshipProject() if one exists, otherwise the same
-          getStrongestInProgressProject() fallback Home and Work use —
-          so a collaborator reading Connect sees the same honest,
-          current answer a recruiter sees elsewhere on the site, not a
-          second, independently-maintained version of the same claim. */}
+      {/* ── Direct Contact Links ── */}
+      <Section spacing="tight">
+        <Container className="max-w-[600px]" wide={false}>
+          <SectionHeader mode="label" level="h2">
+            Direct Links
+          </SectionHeader>
+          <div className="mt-5 flex flex-col gap-3">
+            <ContactLinkRow
+              label="Email"
+              value={SOCIAL_LINKS.email}
+              href={`mailto:${SOCIAL_LINKS.email}`}
+            />
+            <ContactLinkRow
+              label="GitHub"
+              value="github.com/chukka-venugopalam"
+              href={SOCIAL_LINKS.github}
+              external
+            />
+            <ContactLinkRow
+              label="LinkedIn"
+              value="linkedin.com/in/chukka-venugopalam"
+              href={SOCIAL_LINKS.linkedin}
+              external
+            />
+            <ContactLinkRow
+              label="LeetCode"
+              value="leetcode.com/u/xifpLOmHqY"
+              href={SOCIAL_LINKS.leetcode}
+              external
+            />
+          </div>
+        </Container>
+      </Section>
+
+      {/* ── 4. Current Focus ── */}
       <Section spacing="tight">
         <Container className="max-w-[600px]" wide={false}>
           <SectionHeader mode="label" level="h2">
@@ -120,14 +94,14 @@ export default function ConnectPage() {
           {currentFocusProject ? (
             <>
               <p className="mt-4 text-body-md leading-[1.7] text-text-primary">
-                Right now I&rsquo;m{" "}
+                Right now I am{" "}
                 {currentFocusProject.frontmatter.status === "exploring"
                   ? "designing"
                   : "building"}{" "}
                 <span className="text-text-primary font-medium">
                   {currentFocusProject.frontmatter.name}
                 </span>
-                {" — "}
+                {" "}—{" "}
                 {currentFocusProject.frontmatter.oneLiner}
               </p>
               <Button
@@ -140,40 +114,21 @@ export default function ConnectPage() {
             </>
           ) : (
             <p className="mt-4 text-body-md text-text-secondary">
-              Between projects right now — see the Learning Log for
-              what&rsquo;s actively being worked through.
+              Between projects right now, see the Learning page for what is actively being worked through.
             </p>
           )}
         </Container>
       </Section>
 
-      {/* ── 5. Collaboration CTA ──
-          Closing section distinguishing the two audiences this task
-          asks for explicitly: recruiter-style outreach (resume, formal
-          email) and founder/collaborator-style outreach (a more direct
-          prompt to reach out about building something together). Two
-          buttons, neither more visually dominant than the other —
-          consistent with Button's two-variant system and this page's
-          stated "no single channel should be implied as more
-          important" principle (Visual Design Spec 6.2), applied here
-          to audiences rather than contact channels. */}
+      {/* ── 5. Collaboration CTA ── */}
       <Section spacing="tight" className="pb-0">
         <Container className="max-w-[600px]" wide={false}>
           <div className="rounded-card border border-border-subtle p-6 desktop:p-8">
-            {/* Raw heading, not SectionHeader — this is a card-internal
-                headline (the CTA card's own title), the same pattern
-                ResumeSummaryBlock uses for "Quick Snapshot"'s h2, not a
-                page-level section label. SectionHeader's "label" mode
-                is reserved for top-level section openers like "Current
-                Focus" above; using it here for a conversational,
-                larger statement would force a mismatched typographic
-                treatment onto content that isn't a section label. */}
             <h2 className="text-heading-md text-text-primary">
               Building something? Hiring for something?
             </h2>
             <p className="mt-3 text-body-md text-text-secondary">
-              Either way, the fastest path is a direct message — I read
-              everything that comes in through email.
+              Either way, the fastest path is a direct message. I read everything that comes through email.
             </p>
             <div className="mt-6 flex flex-col tablet:flex-row gap-3">
               <Button href={`mailto:${SOCIAL_LINKS.email}`}>
@@ -187,5 +142,48 @@ export default function ConnectPage() {
         </Container>
       </Section>
     </>
+  );
+}
+
+function ContactLinkRow({
+  label,
+  value,
+  href,
+  external = false,
+}: {
+  label: string;
+  value: string;
+  href: string;
+  external?: boolean;
+}) {
+  return (
+    <a
+      href={href}
+      {...(external
+        ? { target: "_blank", rel: "noopener noreferrer" }
+        : {})}
+      className="flex items-center justify-between rounded-card border border-border-subtle p-4 transition-colors duration-fast ease-standard hover:border-border-default hover:bg-bg-secondary focus-visible:outline-none focus-visible:focus-ring"
+    >
+      <div>
+        <span className="block text-mono-sm uppercase tracking-[0.08em] text-text-tertiary">
+          {label}
+        </span>
+        <span className="mt-0.5 block text-body-md text-text-primary">{value}</span>
+      </div>
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden="true"
+        className="text-text-tertiary shrink-0"
+      >
+        <path d="M7 17L17 7M7 7h10v10" />
+      </svg>
+    </a>
   );
 }

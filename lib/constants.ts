@@ -29,7 +29,8 @@ export const NAV_ITEMS = [
 ] as const;
 
 export const SOCIAL_LINKS = {
-  github: "https://github.com/your-username",
-  linkedin: "https://linkedin.com/in/your-username",
-  email: "you@example.com",
+  github: "https://github.com/chukka-venugopalam",
+  linkedin: "https://linkedin.com/in/chukka-venugopalam",
+  email: "chukkavenugopalam@gmail.com",
+  leetcode: "https://leetcode.com/u/xifpLOmHqY/",
 } as const;

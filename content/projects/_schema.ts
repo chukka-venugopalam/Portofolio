@@ -21,7 +21,7 @@ export const projectStatusSchema = z.enum([
   "exploring",
 ]);
 
-export const projectCategorySchema = z.enum(["flagship", "production", "experiment"]);
+export const projectCategorySchema = z.enum(["flagship", "production", "experiment", "engineering"]);
 
 export const projectFrontmatterSchema = z.object({
   name: z.string().min(1, "name is required"),
