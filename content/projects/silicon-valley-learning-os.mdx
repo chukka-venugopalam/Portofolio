@@ -24,19 +24,17 @@ Third, and most insidious, there is no feedback loop between what you are learni
 
 The question that started this: what if your learning environment had the same situational awareness as your development environment?
 
-## What Curiosity Drove Me Here
+## What It Does
 
 I spent six months as a teaching assistant for a full-stack engineering program, watching this pattern repeat across hundreds of students. The ones who learned fastest were not the ones who studied the most hours. They were the ones whose learning was triggered by an actual problem they needed to solve, right when they needed to solve it.
 
 I wanted to understand why that moment of just-in-time learning is so effective and so rare. The answer, I think, is that it is structurally hard to produce. It requires connecting two systems, what you are building and what you are learning, that currently have no reason to know about each other.
 
-## What Existing Solutions Were Missing
-
 Existing learning platforms optimize for content delivery and completion tracking. They know how many videos you watched and how many quizzes you passed. They dont know what you are building at work, what problems you are debugging, or what concepts you just needed to look up for the third time this week.
 
 The gap isnt a content gap. It is a context gap. The knowledge exists. The timing is wrong.
 
-## Engineering Decisions
+## How It's Built
 
 I chose a microservice architecture over a monolith despite the operational complexity because each of the five services has fundamentally different scaling profiles and latency requirements. The Context Ingestion Service can lag by minutes. The Curriculum Engine needs to respond to a new signal in under a second to feel real-time. Running them as separate services with independent scaling policies is the honest engineering choice, even though it adds deployment complexity.
 
@@ -44,21 +42,19 @@ I chose Redis Streams over Kafka for the event backbone because the throughput r
 
 I picked Neo4j for the Learning Graph because prerequisite chains and mastery propagation are fundamentally graph operations. Transitive closure on a DAG of concepts is a single Cypher query in Neo4j and a recursive CTE in PostgreSQL that becomes unreadable past depth 3. The tradeoff is operational, now we run two databases instead of one. But the Learning Graph is the systems core intelligence, and forcing it into a relational mold would produce worse recommendations.
 
-## Challenges
+## Decisions & Tradeoffs
 
-The hardest decision was what not to track. We deliberately dont track what code users write inside their editor, what websites they visit, or what Slack messages they send. That data would improve the Learning Graphs accuracy, probably significantly. But it would also make the system feel like surveillance, not a learning tool.
+1. The hardest decision was what not to track. We deliberately dont track what code users write inside their editor, what websites they visit, or what Slack messages they send. That data would improve the Learning Graphs accuracy, probably significantly. But it would also make the system feel like surveillance, not a learning tool.
 
-I would rather ship a system that is 80 percent as effective and feels like a collaborator than one that is 95 percent effective and feels like spyware.
+2. I would rather ship a system that is 80 percent as effective and feels like a collaborator than one that is 95 percent effective and feels like spyware.
 
-The Curriculum Engine being written in Go is another choice I keep revisiting. Go isnt normally my first choice, but for this specific subproblem, sub-second scheduling recalculations, its the right tool because of its predictable pause-free GC. A Python service would spend enough time in GC pauses at the scheduling frequency we need that the user would feel the latency.
+3. The Curriculum Engine being written in Go is another choice I keep revisiting. Go isnt normally my first choice, but for this specific subproblem, sub-second scheduling recalculations, its the right tool because of its predictable pause-free GC. A Python service would spend enough time in GC pauses at the scheduling frequency we need that the user would feel the latency.
 
-## What I Learned Designing It
+4. I learned that designing a system that adapts to a person means accepting that you will never have complete information. Every model of what someone knows is an approximation. The temptation is to collect more data to make the approximation better, but at some point the cost of collecting that data exceeds the value of the improved approximation.
 
-I learned that designing a system that adapts to a person means accepting that you will never have complete information. Every model of what someone knows is an approximation. The temptation is to collect more data to make the approximation better, but at some point the cost of collecting that data exceeds the value of the improved approximation.
+5. I also learned that just-in-time learning is hard to engineer not because the technology is complex, it is actually straightforward, but because it requires trust. The system needs to know enough about what you are doing to be useful, but not so much that it feels invasive. Finding that line is the actual engineering challenge.
 
-I also learned that just-in-time learning is hard to engineer not because the technology is complex, it is actually straightforward, but because it requires trust. The system needs to know enough about what you are doing to be useful, but not so much that it feels invasive. Finding that line is the actual engineering challenge.
-
-## Future Vision
+## What's Next
 
 The architecture and data model are fully designed. The current build phase is focused on the Context Ingestion Service and Learning Graph Service, the two services that form the core loop everything else depends on. The MVP will ship with GitHub integration only, supporting a single team of up to 10 developers.
 

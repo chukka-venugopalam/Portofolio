@@ -19,19 +19,17 @@ I noticed this in my own prep. I could pass LeetCode's test cases on a binary se
 
 The question that started this: how do you measure understanding when the answer isnt right or wrong?
 
-## What Curiosity Drove Me Here
+## What It Does
 
 I spent a month trying different approaches before I found one that felt honest. The first idea was to build yet another coding platform with harder problems. The second was to use an LLM to grade free-text explanations and return a score. Both felt wrong, because neither solved the real problem: the tools werent measuring understanding at all, they were measuring output quality and calling it understanding.
 
 I wanted to build something that could tell me, specifically, what I thought I understood but actually didnt. Not a score. Not a rank. A concrete list: here is what you know, here is what you think you know but dont, and here is where your reasoning has invisible gaps.
 
-## What Existing Solutions Were Missing
-
 Existing platforms like LeetCode and NeetCode are excellent at what they do, but what they do is test recall of patterns and speed of implementation. They dont test whether you could explain the concept to someone who hasnt seen it before. They dont test whether you could defend your design choices. They dont test whether you could predict how the data structure behaves when you change the input conditions.
 
 I realized the missing piece wasnt better content. It was a diagnostic layer that sits between learning and practicing, confirming that understanding exists before the learner moves to the next topic.
 
-## Engineering Decisions
+## How It's Built
 
 I made a deliberate choice to split the AI and the logic into two separate layers rather than asking one model call to grade the explanation and return a score. The AI only ever extracts and generates language. Every actual scoring and gap-detection computation is deterministic Python running against a hand-curated expert concept graph.
 
@@ -39,21 +37,17 @@ The tradeoff is more upfront engineering. Designing a real concept ontology by h
 
 I chose Gemini 1.5 Flash specifically for cost, not capability ceiling. At roughly $0.00046 per session, the AI layers job, concept extraction and follow-up generation, doesnt need a larger, more expensive model. But I also know this is the part most likely to need revisiting once real sessions are tested.
 
-## Challenges
+## Decisions & Tradeoffs
 
-The hardest challenge hasnt been technical. Its been defining what understanding actually means in a way thats both rigorous enough to be useful and flexible enough to handle the way people actually learn.
+1. The hardest challenge hasnt been technical. Its been defining what understanding actually means in a way thats both rigorous enough to be useful and flexible enough to handle the way people actually learn. Should understanding a binary tree mean being able to implement insertion from memory? Or should it mean being able to explain why the recursive traversal uses O(h) space without being prompted? Or both? The answer depends on the context, and building a system that adapts its standards to the learners goals without becoming inconsistent is the design problem I keep coming back to.
 
-Should understanding a binary tree mean being able to implement insertion from memory? Or should it mean being able to explain why the recursive traversal uses O(h) space without being prompted? Or both? The answer depends on the context, and building a system that adapts its standards to the learners goals without becoming inconsistent is the design problem I keep coming back to.
+2. The four-topic MVP scope is another uncertainty. Arrays and Hashing, Linked Lists, Binary Trees, and Graphs cover a reasonable spread of difficulty, but I picked them before testing whether the concept-graph-authoring effort scales linearly per topic or gets harder for messier prerequisite structures.
 
-The four-topic MVP scope is another uncertainty. Arrays and Hashing, Linked Lists, Binary Trees, and Graphs cover a reasonable spread of difficulty, but I picked them before testing whether the concept-graph-authoring effort scales linearly per topic or gets harder for messier prerequisite structures.
+3. I learned that most educational tools optimize for engagement metrics because those are easy to measure. Time spent, problems solved, streaks maintained. Understanding is hard to measure, so it gets proxied by completion. Building a tool that directly measures understanding means accepting that your metrics wont look as impressive as a gamified platforms, but they will be honest.
 
-## What I Learned Designing It
+4. I also learned that when you design for explainability first, every decision becomes harder but the result is more durable. Every time I was tempted to let an LLM do more work and call it a day, I had to stop and ask: can I trace why this system produced this output for this specific user? If the answer was no, I had to redesign.
 
-I learned that most educational tools optimize for engagement metrics because those are easy to measure. Time spent, problems solved, streaks maintained. Understanding is hard to measure, so it gets proxied by completion. Building a tool that directly measures understanding means accepting that your metrics wont look as impressive as a gamified platforms, but they will be honest.
-
-I also learned that when you design for explainability first, every decision becomes harder but the result is more durable. Every time I was tempted to let an LLM do more work and call it a day, I had to stop and ask: can I trace why this system produced this output for this specific user? If the answer was no, I had to redesign.
-
-## Future Vision
+## What's Next
 
 The next step is writing the first database migration and starting implementation of the Postgres schema and the expert concept graph for Arrays and Hashing. After that, the goal is to have a working prototype that I can test on actual learners, not synthetic cases.
 

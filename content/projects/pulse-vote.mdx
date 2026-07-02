@@ -19,19 +19,17 @@ I experienced this firsthand running a university hackathon with over 200 partic
 
 The question that started this: how do you make the quietest person in the room as influential as the loudest?
 
-## What Curiosity Drove Me Here
+## What It Does
 
 I kept coming back to the hackathon experience because it felt like a systems design problem disguised as a communication problem. The technology existed to let everyone participate. The issue was that the participation structure, going around the room, asking for opinions in a shared document, inherently filtered out certain voices.
 
 I started exploring what a decision-making tool would look like if anonymity was the default, not an opt-in. What if the system assumed that the most useful signal was the one people wouldnt say out loud? What if the interface was designed not for speed of expression, but for honesty of expression?
 
-## What Existing Solutions Were Missing
-
 Existing polling tools like Mentimeter and Slido solve the logistics of gathering responses but not the psychology of surfacing honest dissent. They show bar charts of majority opinion, which reinforces the same social pressure they claim to remove. If you see that 80% of people agree, you are less likely to express disagreement even if you are one of the 20%.
 
 The tools also miss the confidence signal. Knowing that someone disagrees is useful. Knowing that they are confident in that disagreement is transformative. A polarized result where both sides are confident is a very different signal from a result where the majority is ambivalent and a confident minority disagrees.
 
-## Engineering Decisions
+## How It's Built
 
 I made anonymity the default rather than optional, because optional anonymity is effectively no anonymity. In practice, the people who opt in are the same people who would have spoken up anyway, and the silent majority stays silent. Making anonymity the default shifts the entire participation dynamic.
 
@@ -39,19 +37,17 @@ I also decided not to build an AI summary feature. Every design document and pro
 
 I chose CSS-only result visualization over a chart library despite the implementation cost. Chart libraries like Chart.js, D3, and Vega produce prettier visualizations, but they also introduce accessibility barriers and an implicit editorial layer. Every chart type encodes assumptions about what is important. CSS horizontal bars with text labels are less visually impressive but more honest, more accessible, and faster to render.
 
-## Challenges
+## Decisions & Tradeoffs
 
-The hardest challenge has been designing the confidence slider. The instinct is to make it granular, a scale of 1 to 10, but that introduces noise. People interpret scales differently. I settled on a three-point confidence scale: unsure, fairly sure, very sure. It limits expressiveness but improves consistency across users.
+1. The hardest challenge has been designing the confidence slider. The instinct is to make it granular, a scale of 1 to 10, but that introduces noise. People interpret scales differently. I settled on a three-point confidence scale: unsure, fairly sure, very sure. It limits expressiveness but improves consistency across users.
 
-The trend-over-time feature is the one I am least confident about, not because the implementation is hard, its a straightforward time-series query, but because I am not sure how teams will actually use it. The risk is that trend visualization becomes a toxic metric, our confidence score dropped this week, someone must be failing, rather than a diagnostic signal.
+2. The trend-over-time feature is the one I am least confident about, not because the implementation is hard, its a straightforward time-series query, but because I am not sure how teams will actually use it. The risk is that trend visualization becomes a toxic metric, our confidence score dropped this week, someone must be failing, rather than a diagnostic signal.
 
-## What I Learned Designing It
+3. I learned that building for honesty often means building less. Every feature I added had to pass the question: does this make it easier or harder for someone to express an unpopular opinion? If the answer was anything but easier, the feature had to be rethought or removed.
 
-I learned that building for honesty often means building less. Every feature I added had to pass the question: does this make it easier or harder for someone to express an unpopular opinion? If the answer was anything but easier, the feature had to be rethought or removed.
+4. I also learned that transparency in design is a constraint that forces better decisions. Knowing that every participant can verify the vote count by hand meant I could not add any weighting, smoothing, or interpretation layer without explicitly documenting it. That constraint made the system simpler and more trustworthy.
 
-I also learned that transparency in design is a constraint that forces better decisions. Knowing that every participant can verify the vote count by hand meant I could not add any weighting, smoothing, or interpretation layer without explicitly documenting it. That constraint made the system simpler and more trustworthy.
-
-## Future Vision
+## What's Next
 
 The core voting flow is implemented and working. The immediate next step is end-to-end testing with a real group, starting with the hackathon organizing team that inspired the project, to validate that the anonymity model and result visualization actually surface different signals than a normal discussion would.
 

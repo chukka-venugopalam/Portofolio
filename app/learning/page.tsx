@@ -157,7 +157,7 @@ export default function LearningPage() {
               My Belief
             </span>
             <blockquote className="mt-3 text-body-lg leading-relaxed text-text-primary">
-              I don't collect certificates. I collect understanding. Every project I build is an answer to a question I was genuinely curious about. Every learning area I study is motivated by a system I want to build but cannot yet.
+              I don&rsquo;t collect certificates. I collect understanding. Every project I build is an answer to a question I was genuinely curious about. Every learning area I study is motivated by a system I want to build but cannot yet.
             </blockquote>
           </div>
         </Container>
