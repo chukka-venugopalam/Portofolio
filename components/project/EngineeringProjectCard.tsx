@@ -20,8 +20,9 @@ export function EngineeringProjectCard({
     <article
       className={cn(
         "rounded-card bg-bg-secondary border border-border-subtle p-6",
-        "transition-colors duration-fast ease-standard",
-        "hover:border-border-default",
+        "transition-all duration-base ease-standard",
+        "hover:-translate-y-0.5 hover:border-border-default",
+        "hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)]",
         className
       )}
     >

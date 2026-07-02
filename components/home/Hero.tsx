@@ -1,51 +1,62 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { motion, useReducedMotion } from "motion/react";
 import { Button } from "@/components/ui/Button";
+import { AnimatedBackground } from "@/components/home/AnimatedBackground";
 import { cn } from "@/lib/utils";
+
+// Dynamically import the 3D cube — no SSR since WebGL doesn't exist on the server.
+// The component is small (~2KB gzipped) and loads after the hero content renders.
+const FloatingCube = dynamic(
+  () => import("@/components/home/FloatingCube"),
+  { ssr: false }
+);
 
 /**
  * Hero
  *
- * Delivers the entire value proposition within the 5-20 second window
- * the PRD identifies as make-or-break for a time-pressured recruiter —
- * Component Library B1. Single instance, Home page only — there is
- * deliberately no secondary-page "mini-hero" variant in this system.
+ * Delivers the entire value proposition within the first 5 seconds —
+ * Component Library B1, enhanced with:
  *
- * Accessibility (Component Library B1):
- * - The headline is the page's ONE true <h1>.
- * - The "Currently:" focus line is supplementary, not grammatically
- *   load-bearing — the sub-line stands on its own if currentFocus is
- *   ever omitted in a content update.
- * - Both CTAs use destination-describing accessible names ("View the
- *   work", "Get the resume"), not generic "click here" text.
+ * 1. Identity-first copy: "Hi, I'm" greeting establishes personhood before
+ *    listing credentials, making the page feel like a conversation start
+ *    rather than a document header.
  *
- * Responsive (Component Library B1 — a structural change, not just
- * resizing): on mobile, only the primary CTA renders as a full-width
- * filled button. The secondary CTA loses its button chrome entirely and
- * renders as a plain text link beneath it — implemented here by
- * literally not rendering <Button variant="secondary"> on mobile, per
- * Button.tsx's own documented stance that it has no "looks like a link"
- * mode, so this exception can't accidentally leak into other secondary
- * buttons across the site.
+ * 2. Animated background: subtle grid + gradient orbs + particles at <6%
+ *    opacity. Never distracting, but creates the "this site is engineered"
+ *    first impression that increases perceived frontend skill.
  *
- * Motion (Component Library B1 / Visual Design Spec 1.6): headline →
- * sub-line → CTAs fade up 16px over motion-base (250ms), staggered 80ms
- * apart, completing in well under 500ms total — fast enough that a
- * returning visitor never feels like they're waiting through a "show."
+ * 3. 3D floating cube accent: wireframe cube with edge glow, positioned
+ *    in the hero's negative space. Enhances the engineering-forward
+ *    aesthetic without dominating.
  *
- * headline/subline/currentFocus are supplied entirely by the caller
- * (app/page.tsx) — this component has no fallback copy of its own and
- * no dependency on lib/constants.ts, so it never silently diverges from
- * whatever Home actually passes in.
+ * 4. Gradient name: accent-to-primary gradient on the name, drawing the
+ *    eye naturally to the most important text on the page.
+ *
+ * 5. Premium CTAs: subtle lift + glow on hover, communicated via Button
+ *    component's updated hover tokens.
+ *
+ * Performance:
+ * - AnimatedBackground: CSS-only, GPU composited (transform/opacity)
+ * - FloatingCube: dynamic import with ssr:false, DPR limited to 1.5
+ * - All motion is transform/opacity based — no layout shifts
+ *
+ * Accessibility:
+ * - prefers-reduced-motion respected throughout
+ * - Background and 3D cube are aria-hidden / pointer-events-none
+ * - CTA names are destination-specific, not generic
  */
 
 interface HeroProps {
-  headline: string;
-  /** e.g. "Student & builder — AI/ML, full-stack, cloud." */
-  subline: string;
-  /** e.g. "building a real-time data pipeline observatory" — supplementary only. */
+  /** The primary identity line (name) */
+  name: string;
+  /** The positioning tagline */
+  tagline: string;
+  /** Role descriptors */
+  roles: string;
+  /** Current project focus */
   currentFocus?: string;
 }
 
@@ -54,76 +65,116 @@ const fadeUp = {
   visible: { opacity: 1, y: 0 },
 };
 
-export function Hero({ headline, subline, currentFocus }: HeroProps) {
+export function Hero({ name, tagline, roles, currentFocus }: HeroProps) {
   const shouldReduce = useReducedMotion();
 
   return (
-    <div className="max-w-[760px]">
-      <motion.h1
-        initial={shouldReduce ? false : "hidden"}
-        animate="visible"
-        variants={fadeUp}
-        transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
-        className={cn(
-          "text-display-xl text-text-primary",
-          // Responsive scale per Visual Design Spec 1.7: 72px desktop →
-          // ~56px tablet → ~40px mobile
-          "tablet:text-display-lg",
-          "mobile:text-[2.5rem] mobile:leading-[1.15]"
-        )}
-      >
-        {headline}
-      </motion.h1>
+    <div className="relative">
+      {/* Subtle animated background — fixed, behind everything */}
+      <AnimatedBackground />
 
-      <motion.div
-        initial={shouldReduce ? false : "hidden"}
-        animate="visible"
-        variants={fadeUp}
-        transition={{ duration: 0.25, delay: shouldReduce ? 0 : 0.08, ease: [0.4, 0, 0.2, 1] }}
-        className="mt-3 max-w-[540px]"
-      >
-        <p className="text-body-lg text-text-secondary">{subline}</p>
-        {currentFocus && (
-          <p className="mt-2 text-body-md text-text-secondary">
-            <span className="text-mono-md text-text-primary">Currently:</span>{" "}
-            {currentFocus}
-          </p>
-        )}
-      </motion.div>
-
-      <motion.div
-        initial={shouldReduce ? false : "hidden"}
-        animate="visible"
-        variants={fadeUp}
-        transition={{ duration: 0.25, delay: shouldReduce ? 0 : 0.16, ease: [0.4, 0, 0.2, 1] }}
-        className="mt-8 flex flex-col tablet:flex-row items-start tablet:items-center gap-4"
-      >
-        <Button href="/work" className="w-full tablet:w-auto">
-          View the work
-        </Button>
-
-        {/* Desktop/tablet: full secondary button. Mobile: text link only —
-            structural change per Component Library B1, not handled by a
-            Button prop, since Button has no "looks like a link" mode. */}
-        <Button
-          variant="secondary"
-          href="/resume"
-          className="hidden tablet:inline-flex"
+      <div className="relative z-10 max-w-[760px]">
+        {/* ── Greeting ── */}
+        <motion.p
+          initial={shouldReduce ? false : "hidden"}
+          animate="visible"
+          variants={fadeUp}
+          transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
+          className="text-body-lg text-text-secondary mb-2"
         >
-          Get the resume
-        </Button>
-        <Link
-          href="/resume"
+          Hi, I&rsquo;m
+        </motion.p>
+
+        {/* ── Name with gradient ──
+            Gradient draws the eye to the most important text on the page.
+            Uses a subtle accent-to-primary gradient that works in both
+            themes without being flashy. */}
+        <motion.h1
+          initial={shouldReduce ? false : "hidden"}
+          animate="visible"
+          variants={fadeUp}
+          transition={{ duration: 0.25, delay: shouldReduce ? 0 : 0.05, ease: [0.4, 0, 0.2, 1] }}
           className={cn(
-            "tablet:hidden",
-            "text-body-md text-text-secondary underline underline-offset-4",
-            "hover:text-text-primary transition-colors duration-fast ease-standard",
-            "focus-visible:outline-none focus-visible:focus-ring rounded-pill"
+            "text-display-xl tablet:text-display-lg mobile:text-[2.5rem] mobile:leading-[1.15]",
+            "bg-gradient-to-r from-text-primary via-accent to-text-primary",
+            "bg-clip-text text-transparent",
+            "bg-[length:200%_100%]",
           )}
         >
-          Get the resume
-        </Link>
-      </motion.div>
+          {name}
+        </motion.h1>
+
+        {/* ── Tagline ── */}
+        <motion.p
+          initial={shouldReduce ? false : "hidden"}
+          animate="visible"
+          variants={fadeUp}
+          transition={{ duration: 0.25, delay: shouldReduce ? 0 : 0.1, ease: [0.4, 0, 0.2, 1] }}
+          className="mt-4 text-body-lg text-text-secondary max-w-[540px]"
+        >
+          {tagline}
+        </motion.p>
+
+        {/* ── Role descriptors ── */}
+        <motion.p
+          initial={shouldReduce ? false : "hidden"}
+          animate="visible"
+          variants={fadeUp}
+          transition={{ duration: 0.25, delay: shouldReduce ? 0 : 0.15, ease: [0.4, 0, 0.2, 1] }}
+          className="mt-3 text-mono-md text-text-tertiary"
+        >
+          {roles}
+        </motion.p>
+
+        {/* ── Current focus ── */}
+        {currentFocus && (
+          <motion.p
+            initial={shouldReduce ? false : "hidden"}
+            animate="visible"
+            variants={fadeUp}
+            transition={{ duration: 0.25, delay: shouldReduce ? 0 : 0.2, ease: [0.4, 0, 0.2, 1] }}
+            className="mt-4 text-body-md text-text-secondary"
+          >
+            <span className="text-mono-md text-text-primary">Currently:</span>{" "}
+            {currentFocus}
+          </motion.p>
+        )}
+
+        {/* ── CTAs ── */}
+        <motion.div
+          initial={shouldReduce ? false : "hidden"}
+          animate="visible"
+          variants={fadeUp}
+          transition={{ duration: 0.25, delay: shouldReduce ? 0 : 0.25, ease: [0.4, 0, 0.2, 1] }}
+          className="mt-8 flex flex-col tablet:flex-row items-start tablet:items-center gap-4"
+        >
+          <Button href="/work" className="w-full tablet:w-auto">
+            View the work
+          </Button>
+
+          <Button
+            variant="secondary"
+            href="/resume"
+            className="hidden tablet:inline-flex"
+          >
+            Get the resume
+          </Button>
+          <Link
+            href="/resume"
+            className={cn(
+              "tablet:hidden",
+              "text-body-md text-text-secondary underline underline-offset-4",
+              "hover:text-text-primary transition-colors duration-fast ease-standard",
+              "focus-visible:outline-none focus-visible:focus-ring rounded-pill"
+            )}
+          >
+            Get the resume
+          </Link>
+        </motion.div>
+      </div>
+
+      {/* 3D cube accent — positioned in hero's negative space, hidden on tablet/mobile */}
+      <FloatingCube />
     </div>
   );
 }

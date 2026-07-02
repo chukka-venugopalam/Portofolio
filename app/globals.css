@@ -211,6 +211,10 @@
   --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
   --ease-expand:   cubic-bezier(0.16, 1, 0.3, 1); /* framework strip + tradeoffs only */
 
+  /* ── Custom animations ── */
+  --animate-grid-rotate: grid-rotate 60s linear infinite;
+  --animate-gradient-drift: gradient-drift 30s ease-in-out infinite;
+
   /* ── Breakpoints (Implementation Blueprint 2.4) ──
      Named to match the Visual Design Spec's own breakpoint names, not
      Tailwind's generic sm/md/lg. Enables `tablet:` and `desktop:` prefixes
@@ -284,5 +288,31 @@
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
     }
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   5. ANIMATIONS — @keyframes
+   ───────────────────────────────────────────────────────────────────── */
+
+@keyframes grid-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes gradient-drift {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  33% {
+    transform: translate(2%, -1%);
+  }
+  66% {
+    transform: translate(-1%, 2%);
   }
 }

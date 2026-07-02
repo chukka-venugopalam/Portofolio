@@ -26,7 +26,7 @@ interface ContainerProps {
   className?: string;
   /** Removes the max-width cap for full-bleed sections. */
   wide?: boolean;
-  as?: React.ElementType;
+  as?: React.ElementType<{ children?: React.ReactNode; className?: string }>;
 }
 
 export function Container({

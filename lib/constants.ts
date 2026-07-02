@@ -13,7 +13,7 @@ export const SITE_URL =
 export const SITE_NAME = "Venugopalam Chukka";
 
 export const SITE_TAGLINE =
-  "building systems that turn curiosity into shipped work.";
+  "Building AI systems that transform curiosity into understanding.";
 
 /**
  * Navigation source of truth — per Implementation Blueprint Section

@@ -103,9 +103,12 @@ export function Navbar() {
             href="/"
             aria-label={`${SITE_NAME} — home`}
             className={cn(
-              "text-heading-sm font-semibold text-text-primary",
-              "transition-colors duration-fast ease-standard",
-              "hover:text-accent",
+              "text-heading-sm font-semibold",
+              // Gradient text that shifts on hover
+              "bg-gradient-to-r from-text-primary to-text-primary bg-[length:100%_100%] bg-clip-text",
+              "hover:bg-gradient-to-r hover:from-accent hover:to-accent-dim hover:text-transparent hover:text-transparent",
+              "transition-all duration-fast ease-standard",
+              "hover:scale-[1.02]",
               "focus-visible:outline-none focus-visible:focus-ring rounded-pill"
             )}
           >

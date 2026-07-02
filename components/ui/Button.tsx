@@ -81,21 +81,28 @@ const baseClasses = cn(
   "h-11 desktop:h-12", // 44px mobile, 48px desktop
   "rounded-card px-space-5",
   "text-body-md font-medium",
-  "transition-[background-color,border-color,transform] duration-fast ease-standard",
+  // Enhanced transition: includes box-shadow for glow effect
+  "transition-all duration-fast ease-standard",
   "focus-visible:outline-none focus-visible:focus-ring",
-  "disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:translate-y-0"
+  "disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:translate-y-0 disabled:shadow-none"
 );
 
 const variantClasses: Record<ButtonVariant, string> = {
   primary: cn(
     "bg-accent text-bg-primary",
-    "hover:bg-accent-dim hover:-translate-y-px",
-    "active:translate-y-0"
+    "shadow-[0_0_0px_rgba(94,234,212,0)]",
+    "hover:bg-accent-dim hover:-translate-y-0.5",
+    // Subtle glow on hover — using accent color with low opacity
+    "hover:shadow-[0_4px_14px_rgba(94,234,212,0.25)]",
+    "active:translate-y-0 active:shadow-[0_0_0px_rgba(94,234,212,0)]"
   ),
   secondary: cn(
     "bg-transparent text-text-primary border border-border-default",
-    "hover:bg-bg-tertiary hover:-translate-y-px",
-    "active:translate-y-0"
+    "shadow-[0_0_0px_rgba(162,162,170,0)]",
+    "hover:bg-bg-tertiary hover:-translate-y-0.5",
+    "hover:shadow-[0_4px_12px_rgba(162,162,170,0.12)]",
+    "hover:border-border-default",
+    "active:translate-y-0 active:shadow-[0_0_0px_rgba(162,162,170,0)]"
   ),
 };
 

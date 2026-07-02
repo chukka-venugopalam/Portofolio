@@ -54,17 +54,20 @@ export function ProjectCard({
     <article
       className={cn(
         "rounded-card bg-bg-secondary",
-        "transition-colors duration-fast ease-standard",
+        "transition-all duration-base ease-standard",
+        "hover:-translate-y-0.5",
         isFlagship
           ? cn(
               "border border-border-default",
-              "p-6 tablet:p-4 mobile:p-6", // 48px desktop / 16px tablet / 24px mobile
-              "hover:border-accent"
+              "p-6 tablet:p-4 mobile:p-6",
+              "hover:border-accent",
+              "hover:shadow-[0_8px_24px_rgba(94,234,212,0.08)]"
             )
           : cn(
               "border border-border-subtle",
-              "p-6", // 24px at every breakpoint
-              "hover:border-border-default"
+              "p-6",
+              "hover:border-border-default",
+              "hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)]"
             ),
         className
       )}

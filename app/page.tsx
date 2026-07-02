@@ -34,8 +34,9 @@ export default function HomePage() {
       <Section spacing="home" className="pt-0">
         <Container>
           <Hero
-            headline={SITE_TAGLINE}
-            subline="Student & builder — AI/ML, full-stack, cloud."
+            name="Venugopalam Chukka"
+            tagline={SITE_TAGLINE}
+            roles="Student &amp; Builder &bull; AI/ML &bull; Full Stack &bull; Cloud"
             currentFocus={
               flagshipProjects.length > 0
                 ? `building ${flagshipProjects[0]!.frontmatter.name}`
