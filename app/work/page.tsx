@@ -6,6 +6,7 @@ import { Section } from "@/components/ui/Section";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { ProjectCard } from "@/components/project/ProjectCard";
 import { EngineeringProjectsSection } from "@/components/project/EngineeringProjectsSection";
+import { SceneAccents } from "@/components/home/SceneAccents";
 
 export const metadata = buildMetadata({
   title: "Work",
@@ -14,14 +15,6 @@ export const metadata = buildMetadata({
   pathname: "/work",
 });
 
-/**
- * Work page
- *
- * Sections:
- *   1. Hero, page title and positioning
- *   2. Flagship Projects, long-term products, startup case study style
- *   3. Engineering Projects, explorations built to understand systems
- */
 export default function WorkPage() {
   const flagshipProjects = getProjectsByCategory("flagship");
   const engineeringProjects = getEngineeringProjects();
@@ -29,7 +22,10 @@ export default function WorkPage() {
 
   return (
     <>
-      {/* ── 1. Work Hero ── */}
+      {/* 3D accents */}
+      <SceneAccents />
+
+      {/* Work Hero */}
       <Section spacing="secondary" className="pt-0">
         <Container>
           <SectionHeader
@@ -42,7 +38,7 @@ export default function WorkPage() {
         </Container>
       </Section>
 
-      {/* ── 2. Flagship Projects ── */}
+      {/* Flagship Projects */}
       <Section spacing="secondary">
         <Container>
           <SectionHeader mode="label" level="h2" id="flagship">
@@ -70,7 +66,7 @@ export default function WorkPage() {
         </Container>
       </Section>
 
-      {/* ── 3. Engineering Projects ── */}
+      {/* Engineering Projects */}
       {hasEngineeringProjects && (
         <Section spacing="secondary">
           <Container>

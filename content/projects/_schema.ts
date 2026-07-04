@@ -1,5 +1,17 @@
 import { z } from "zod";
 
+/** Cover art variant identifiers used across the site. */
+export const coverArtSchema = z.enum([
+  "concept-intelligence",
+  "silicon-valley",
+  "pulse-vote",
+  "graph-visualizer",
+  "os-scheduling",
+  "page-replacement",
+]);
+
+export type CoverArtVariant = z.infer<typeof coverArtSchema>;
+
 /**
  * Validates a single project's MDX frontmatter.
  *
@@ -60,6 +72,19 @@ export const projectFrontmatterSchema = z.object({
   startedDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "startedDate must be ISO format (YYYY-MM-DD)"),
 
   lastUpdated: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "lastUpdated must be ISO format (YYYY-MM-DD)"),
+
+  // Cover art variant — determines which SVG illustration to show
+  // on the project card. If omitted, no cover art is shown.
+  coverArt: z
+    .enum([
+      "concept-intelligence",
+      "silicon-valley",
+      "pulse-vote",
+      "graph-visualizer",
+      "os-scheduling",
+      "page-replacement",
+    ])
+    .optional(),
 
   // Flagship projects use the category field now instead of featured.
   // Kept for backward compatibility — defaults to false.

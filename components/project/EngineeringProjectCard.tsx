@@ -1,6 +1,8 @@
 import { projectStatusSchema, type ProjectStatus } from "@/content/projects/_schema";
+import { type CoverArtVariant } from "@/content/projects/_schema";
 import { StatusTag } from "@/components/ui/StatusTag";
 import { Button } from "@/components/ui/Button";
+import { ProjectCover } from "@/components/project/ProjectCover";
 import { cn } from "@/lib/utils";
 import type { EngineeringProject } from "@/lib/content/engineering-projects";
 
@@ -9,111 +11,141 @@ interface EngineeringProjectCardProps {
   className?: string;
 }
 
+/** Map engineering project names to cover art variants */
+function getCoverForProject(name: string): CoverArtVariant | null {
+  if (name.toLowerCase().includes("scheduling")) return "os-scheduling";
+  if (name.toLowerCase().includes("graph")) return "graph-visualizer";
+  if (name.toLowerCase().includes("page replacement")) return "page-replacement";
+  return null;
+}
+
 export function EngineeringProjectCard({
   project,
   className,
 }: EngineeringProjectCardProps) {
   const parsed = projectStatusSchema.safeParse(project.status);
   const status: ProjectStatus = parsed.success ? parsed.data : "building";
+  const coverArt = getCoverForProject(project.name);
 
   return (
     <article
       className={cn(
-        "rounded-card bg-bg-secondary border border-border-subtle p-6",
+        "group relative rounded-card bg-bg-secondary overflow-hidden",
+        "border border-border-subtle",
         "transition-all duration-base ease-standard",
-        "hover:-translate-y-0.5 hover:border-border-default",
-        "hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)]",
+        "hover:-translate-y-1 hover:border-border-default",
+        "hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)]",
         className
       )}
     >
-      <div className="flex items-start justify-between gap-4">
-        <h3 className="text-heading-md text-text-primary">
-          {project.name}
-        </h3>
-        <StatusTag status={status} className="shrink-0" />
-      </div>
-
-      <p className="mt-3 text-body-md text-text-secondary leading-relaxed">
-        {project.motivation}
-      </p>
-
-      <div className="mt-4">
-        <span className="text-mono-sm uppercase tracking-[0.08em] text-text-tertiary">
-          What I wanted to understand
-        </span>
-        <p className="mt-1.5 text-body-sm text-text-primary leading-relaxed">
-          {project.whatIUnderstood}
-        </p>
-      </div>
-
-      <div className="mt-5 grid grid-cols-1 tablet:grid-cols-2 gap-4">
-        <div>
-          <span className="text-mono-sm uppercase tracking-[0.08em] text-text-tertiary">
-            Core Features
-          </span>
-          <ul className="mt-1.5 flex flex-col gap-1.5">
-            {project.coreFeatures.map((feature) => (
-              <li key={feature} className="flex gap-2 text-body-sm text-text-primary">
-                <span aria-hidden="true" className="text-accent shrink-0 mt-0.5">→</span>
-                {feature}
-              </li>
-            ))}
-          </ul>
+      {/* Cover Art */}
+      {coverArt && (
+        <div className="relative overflow-hidden aspect-[16/8]">
+          <div className="absolute inset-0 transition-transform duration-700 ease-standard group-hover:scale-105">
+            <ProjectCover variant={coverArt} className="w-full h-full" />
+          </div>
+          <div className={cn(
+            "absolute inset-0 opacity-0 transition-opacity duration-base ease-standard",
+            "group-hover:opacity-100",
+            "bg-gradient-to-t from-accent/5 to-transparent"
+          )} />
         </div>
-        <div>
-          <span className="text-mono-sm uppercase tracking-[0.08em] text-text-tertiary">
-            Engineering Concepts
-          </span>
-          <ul className="mt-1.5 flex flex-col gap-1.5">
-            {project.engineeringConcepts.map((concept) => (
-              <li key={concept} className="flex gap-2 text-body-sm text-text-primary">
-                <span aria-hidden="true" className="text-accent shrink-0 mt-0.5">→</span>
-                {concept}
-              </li>
-            ))}
-          </ul>
+      )}
+
+      <div className="p-6">
+        <div className="flex items-start justify-between gap-4">
+          <h3 className={cn(
+            "text-heading-md text-text-primary",
+            "transition-colors duration-fast ease-standard",
+            "group-hover:text-accent"
+          )}>
+            {project.name}
+          </h3>
+          <StatusTag status={status} className="shrink-0" />
         </div>
-      </div>
 
-      <div className="mt-4">
-        <span className="text-mono-sm uppercase tracking-[0.08em] text-text-tertiary">
-          What I Learned
-        </span>
-        <p className="mt-1.5 text-body-sm text-text-secondary leading-relaxed">
-          {project.whatILearned}
+        <p className="mt-3 text-body-md text-text-secondary leading-relaxed">
+          {project.motivation}
         </p>
-      </div>
 
-      <div className="mt-5 flex flex-wrap items-center gap-2">
-        {project.technologies.map((tech) => (
-          <span
-            key={tech}
-            className="inline-flex items-center rounded-pill bg-bg-tertiary px-2 py-0.75 text-mono-sm text-text-tertiary"
+        <div className="mt-4">
+          <span className="text-mono-sm uppercase tracking-[0.08em] text-text-tertiary">
+            What I wanted to understand
+          </span>
+          <p className="mt-1.5 text-body-sm text-text-primary leading-relaxed">
+            {project.whatIUnderstood}
+          </p>
+        </div>
+
+        <div className="mt-5 grid grid-cols-1 tablet:grid-cols-2 gap-4">
+          <div>
+            <span className="text-mono-sm uppercase tracking-[0.08em] text-text-tertiary">
+              Core Features
+            </span>
+            <ul className="mt-1.5 flex flex-col gap-1.5">
+              {project.coreFeatures.map((feature) => (
+                <li key={feature} className="flex gap-2 text-body-sm text-text-primary">
+                  <span aria-hidden="true" className="text-accent shrink-0 mt-0.5">→</span>
+                  {feature}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <span className="text-mono-sm uppercase tracking-[0.08em] text-text-tertiary">
+              Engineering Concepts
+            </span>
+            <ul className="mt-1.5 flex flex-col gap-1.5">
+              {project.engineeringConcepts.map((concept) => (
+                <li key={concept} className="flex gap-2 text-body-sm text-text-primary">
+                  <span aria-hidden="true" className="text-accent shrink-0 mt-0.5">→</span>
+                  {concept}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        <div className="mt-4">
+          <span className="text-mono-sm uppercase tracking-[0.08em] text-text-tertiary">
+            What I Learned
+          </span>
+          <p className="mt-1.5 text-body-sm text-text-secondary leading-relaxed">
+            {project.whatILearned}
+          </p>
+        </div>
+
+        <div className="mt-5 flex flex-wrap items-center gap-2">
+          {project.technologies.map((tech) => (
+            <span
+              key={tech}
+              className="inline-flex items-center rounded-pill bg-bg-tertiary px-2 py-0.75 text-mono-sm text-text-tertiary"
+            >
+              {tech}
+            </span>
+          ))}
+        </div>
+
+        <div className="mt-5 flex flex-wrap items-center gap-3">
+          <Button
+            variant="secondary"
+            href={project.github}
+            external
+            className="h-9 desktop:h-9 px-4 text-body-sm"
           >
-            {tech}
-          </span>
-        ))}
-      </div>
-
-      <div className="mt-5 flex flex-wrap items-center gap-3">
-        <Button
-          variant="secondary"
-          href={project.github}
-          external
-          className="h-9 desktop:h-9 px-4 text-body-sm"
-        >
-          Code
-          <ArrowIcon />
-        </Button>
-        <Button
-          variant="primary"
-          href={project.liveDemo}
-          external
-          className="h-9 desktop:h-9 px-4 text-body-sm"
-        >
-          Live Demo
-          <ArrowIcon />
-        </Button>
+            Code
+            <ArrowIcon />
+          </Button>
+          <Button
+            variant="primary"
+            href={project.liveDemo}
+            external
+            className="h-9 desktop:h-9 px-4 text-body-sm"
+          >
+            Live Demo
+            <ArrowIcon />
+          </Button>
+        </div>
       </div>
     </article>
   );

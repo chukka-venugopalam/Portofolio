@@ -9,28 +9,21 @@ import { FrameworkStrip } from "@/components/home/FrameworkStrip";
 import { ProjectCard } from "@/components/project/ProjectCard";
 import { LearningEntry } from "@/components/learning/LearningEntry";
 import { ConnectStrip } from "@/components/connect/ConnectStrip";
+import { SceneAccents } from "@/components/home/SceneAccents";
 import { SITE_TAGLINE } from "@/lib/constants";
 
 export const metadata = buildHomeMetadata();
 
-/**
- * Home page — showcases the flagship projects prominently, then surfaces
- * learning pulse and connect strip.
- *
- * Sections:
- *   1. Hero — the 5-20s make-or-break positioning
- *   2. Engineering Philosophy — FrameworkStrip narrative spine
- *   3. Flagship Projects — all three long-term products, flagship card variant
- *   4. Learning Pulse — compact preview
- *   5. Connect Strip — closing conversion surface
- */
 export default function HomePage() {
   const flagshipProjects = getProjectsByCategory("flagship");
   const recentLearning = getRecentLearningEntries(4);
 
   return (
     <>
-      {/* ── Hero ── */}
+      {/* 3D accents placed across the page */}
+      <SceneAccents />
+
+      {/* Hero */}
       <Section spacing="home" className="pt-0">
         <Container>
           <Hero
@@ -46,7 +39,7 @@ export default function HomePage() {
         </Container>
       </Section>
 
-      {/* ── Engineering Philosophy (Framework Strip) ── */}
+      {/* Engineering Philosophy */}
       <Section spacing="secondary">
         <Container>
           <SectionHeader mode="label" level="h2" id="engineering-philosophy">
@@ -61,9 +54,7 @@ export default function HomePage() {
         </Container>
       </Section>
 
-      {/* ── Flagship Projects ──
-          All three long-term products displayed with the flagship card variant.
-          This is the heaviest section on the page after the hero. */}
+      {/* Flagship Projects */}
       {flagshipProjects.length > 0 && (
         <Section spacing="secondary">
           <Container>
@@ -86,7 +77,7 @@ export default function HomePage() {
         </Section>
       )}
 
-      {/* ── Learning Pulse ── */}
+      {/* Learning Pulse */}
       {recentLearning.length > 0 && (
         <Section spacing="secondary">
           <Container>
@@ -117,7 +108,7 @@ export default function HomePage() {
         </Section>
       )}
 
-      {/* ── Connect Strip ── */}
+      {/* Connect Strip */}
       <Section spacing="secondary" className="pb-0">
         <Container>
           <ConnectStrip variant="home" />
