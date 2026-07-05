@@ -6,7 +6,6 @@ import { Section } from "@/components/ui/Section";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { ProjectCard } from "@/components/project/ProjectCard";
 import { EngineeringProjectsSection } from "@/components/project/EngineeringProjectsSection";
-import { SceneAccents } from "@/components/home/SceneAccents";
 
 export const metadata = buildMetadata({
   title: "Work",
@@ -22,9 +21,6 @@ export default function WorkPage() {
 
   return (
     <>
-      {/* 3D accents */}
-      <SceneAccents />
-
       {/* Work Hero */}
       <Section spacing="secondary" className="pt-0">
         <Container>

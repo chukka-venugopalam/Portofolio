@@ -9,7 +9,6 @@ import { FrameworkStrip } from "@/components/home/FrameworkStrip";
 import { ProjectCard } from "@/components/project/ProjectCard";
 import { LearningEntry } from "@/components/learning/LearningEntry";
 import { ConnectStrip } from "@/components/connect/ConnectStrip";
-import { SceneAccents } from "@/components/home/SceneAccents";
 import { SITE_TAGLINE } from "@/lib/constants";
 
 export const metadata = buildHomeMetadata();
@@ -20,9 +19,6 @@ export default function HomePage() {
 
   return (
     <>
-      {/* 3D accents placed across the page */}
-      <SceneAccents />
-
       {/* Hero */}
       <Section spacing="home" className="pt-0">
         <Container>

@@ -7,10 +7,9 @@ import { Button } from "@/components/ui/Button";
 import { AnimatedBackground } from "@/components/home/AnimatedBackground";
 import { cn } from "@/lib/utils";
 
-// Dynamically import the 3D cube — no SSR since WebGL doesn't exist on the server.
-// The component is small (~2KB gzipped) and loads after the hero content renders.
-const FloatingCube = dynamic(
-  () => import("@/components/home/FloatingCube"),
+// Dynamically import the morphing geometry — no SSR since WebGL doesn't exist on the server.
+const MorphingGeometry = dynamic(
+  () => import("@/components/home/MorphingGeometry"),
   { ssr: false }
 );
 
@@ -28,9 +27,10 @@ const FloatingCube = dynamic(
  *    opacity. Never distracting, but creates the "this site is engineered"
  *    first impression that increases perceived frontend skill.
  *
- * 3. 3D floating cube accent: wireframe cube with edge glow, positioned
- *    in the hero's negative space. Enhances the engineering-forward
- *    aesthetic without dominating.
+ * 3. Morphing geometry: single premium 3D object that smoothly
+ *    transitions between mathematical shapes. Frosted glass material
+ *    with subtle wireframe edges. Reinforces the engineering brand
+ *    without dominating.
  *
  * 4. Gradient name: accent-to-primary gradient on the name, drawing the
  *    eye naturally to the most important text on the page.
@@ -40,7 +40,7 @@ const FloatingCube = dynamic(
  *
  * Performance:
  * - AnimatedBackground: CSS-only, GPU composited (transform/opacity)
- * - FloatingCube: dynamic import with ssr:false, DPR limited to 1.5
+ * - MorphingGeometry: dynamic import with ssr:false, DPR limited to 1.5
  * - All motion is transform/opacity based — no layout shifts
  *
  * Accessibility:
@@ -173,8 +173,8 @@ export function Hero({ name, tagline, roles, currentFocus }: HeroProps) {
         </motion.div>
       </div>
 
-      {/* 3D cube accent — positioned in hero's negative space, hidden on tablet/mobile */}
-      <FloatingCube />
+      {/* Morphing geometry accent — positioned in hero's negative space, hidden on tablet/mobile */}
+      <MorphingGeometry />
     </div>
   );
 }
