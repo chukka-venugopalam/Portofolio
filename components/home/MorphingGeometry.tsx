@@ -8,8 +8,6 @@ import * as THREE from "three";
 
 // ──────────────────────────────────────────────
 // Shape vertex generators
-// Each function projects the base icosahedron
-// vertices onto a different mathematical surface.
 // ──────────────────────────────────────────────
 
 function computeCubePositions(src: Float32Array): Float32Array {
@@ -85,10 +83,8 @@ function computeTorusPositions(src: Float32Array, R = 1.0, r = 0.35): Float32Arr
     const nx = x / len;
     const ny = y / len;
     const nz = z / len;
-
     const theta = Math.acos(Math.max(-1, Math.min(1, nz)));
     const phi = Math.atan2(ny, nx);
-
     dst[i] = (R + r * Math.cos(theta)) * Math.cos(phi);
     dst[i + 1] = (R + r * Math.cos(theta)) * Math.sin(phi);
     dst[i + 2] = r * Math.sin(theta);
@@ -134,7 +130,7 @@ function useMousePosition() {
   return mouseRef;
 }
 
-// ─── Visibility hook (IntersectionObserver) ───
+// ─── Visibility hook ───
 
 function useIsVisible() {
   const ref = useRef<HTMLDivElement>(null);
@@ -158,6 +154,103 @@ function easeInOutCubic(t: number): number {
   return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 }
 
+// ─── Particles ───
+
+function Particles({ count = 60 }) {
+  const meshRef = useRef<THREE.Points>(null);
+  const positions = useMemo(() => {
+    const pos = new Float32Array(count * 3);
+    for (let i = 0; i < count * 3; i++) {
+      pos[i] = (Math.random() - 0.5) * 12;
+    }
+    return pos;
+  }, [count]);
+
+  useFrame((state) => {
+    if (!meshRef.current) return;
+    meshRef.current.rotation.y = state.clock.elapsedTime * 0.015;
+    meshRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.01) * 0.05;
+  });
+
+  return (
+    <points ref={meshRef}>
+      <bufferGeometry>          <bufferAttribute
+            attach="attributes-position"
+            args={[positions, 3]}
+          />
+      </bufferGeometry>
+      <pointsMaterial
+        size={0.04}
+        color="#5eead4"
+        transparent
+        opacity={0.4}
+        sizeAttenuation
+        depthWrite={false}
+      />
+    </points>
+  );
+}
+
+// ─── Orbiting Ring ───
+
+function OrbitingRing({ radius = 2.2, color = "#5eead4", speed = 0.3, tilt = 0 }) {
+  const ref = useRef<THREE.Mesh>(null);
+
+  useFrame((state) => {
+    if (!ref.current) return;
+    ref.current.rotation.x = tilt;
+    ref.current.rotation.z = state.clock.elapsedTime * speed;
+  });
+
+  return (
+    <mesh ref={ref}>
+      <ringGeometry args={[radius - 0.015, radius + 0.015, 64]} />
+      <meshBasicMaterial
+        color={color}
+        transparent
+        opacity={0.12}
+        side={THREE.DoubleSide}
+        depthWrite={false}
+      />
+    </mesh>
+  );
+}
+
+// ─── Floating Plane ───
+
+function FloatingPlane({ position, rotation, color = "#5eead4", opacity = 0.04 }: {
+  position: [number, number, number];
+  rotation: [number, number, number];
+  color?: string;
+  opacity?: number;
+}) {
+  const ref = useRef<THREE.Mesh>(null);
+  const startY = useRef(Math.random() * 10);
+
+  useFrame((state) => {
+    if (!ref.current) return;
+    ref.current.position.y = position[1] + Math.sin(state.clock.elapsedTime * 0.3 + startY.current) * 0.15;
+    ref.current.rotation.z += 0.002;
+  });
+
+  const pos = new THREE.Vector3(position[0], position[1], position[2]);
+  const rot = new THREE.Euler(rotation[0], rotation[1], rotation[2]);
+
+  return (
+    <mesh ref={ref} position={pos} rotation={rot}>
+      <planeGeometry args={[1.2, 0.8]} />
+      <meshBasicMaterial
+        color={color}
+        transparent
+        opacity={opacity}
+        side={THREE.DoubleSide}
+        wireframe
+        depthWrite={false}
+      />
+    </mesh>
+  );
+}
+
 // ─── 3D Scene ───
 
 function MorphingMesh({ isVisible }: { isVisible: boolean }) {
@@ -169,33 +262,26 @@ function MorphingMesh({ isVisible }: { isVisible: boolean }) {
   const mouseRef = useMousePosition();
   const initTime = useRef(Math.random() * 100);
 
-  // Track morph state (persists across renders)
   const stateRef = useRef({
     currentIndex: 0,
     nextIndex: 1,
     elapsed: 0,
   });
 
-  // Build base geometry once (Icosahedron, detail 3 = 642 vertices)
   const baseGeo = useMemo(() => new THREE.IcosahedronGeometry(1, 3), []);
   const basePositions = useMemo(
     () => new Float32Array(baseGeo.attributes.position!.array as Float32Array),
     [baseGeo],
   );
 
-  // Pre-compute target positions for every shape
   const targets = useMemo(
     () => SHAPES.map((s) => s.compute(new Float32Array(basePositions))),
     [basePositions],
   );
 
-  // Working buffer (reused each frame to avoid GC)
   const working = useMemo(() => new Float32Array(basePositions.length), [basePositions]);
-
-  // Compute edges geometry from the base once
   const edgeGeo = useMemo(() => new THREE.EdgesGeometry(baseGeo), [baseGeo]);
 
-  // Edge vertex mapping: for each edge vertex, find the corresponding base vertex index
   const edgeVertexToBase = useMemo(() => {
     const edgePos = edgeGeo.attributes.position!.array as Float32Array;
     const basePos = basePositions;
@@ -229,7 +315,6 @@ function MorphingMesh({ isVisible }: { isVisible: boolean }) {
     const posAttr = (meshRef.current.geometry as THREE.BufferGeometry).attributes.position;
     if (!posAttr) return;
 
-    const t = state.clock.elapsedTime + initTime.current;
     const dt = Math.min(state.clock.getDelta(), 0.05);
 
     if (!isVisible || shouldReduce) {
@@ -248,12 +333,12 @@ function MorphingMesh({ isVisible }: { isVisible: boolean }) {
         linePositions.needsUpdate = true;
       }
 
-      meshRef.current.rotation.x = 0.3;
-      meshRef.current.rotation.y = 0.5;
-      wireRef.current.rotation.x = 0.3;
-      wireRef.current.rotation.y = 0.5;
-      innerRef.current.rotation.x = 0.3;
-      innerRef.current.rotation.y = 0.5;
+      meshRef.current.rotation.x = 0.2;
+      meshRef.current.rotation.y = 0.4;
+      wireRef.current.rotation.x = 0.2;
+      wireRef.current.rotation.y = 0.4;
+      innerRef.current.rotation.x = 0.2;
+      innerRef.current.rotation.y = 0.4;
       return;
     }
 
@@ -277,34 +362,29 @@ function MorphingMesh({ isVisible }: { isVisible: boolean }) {
       progress = easeInOutCubic(st.elapsed / MORPH_DURATION);
     }
 
-    // Interpolate positions
     const src = targets[currentIdx]!;
     const dst = targets[nextIdx]!;
     for (let i = 0; i < working.length; i++) {
       working[i] = src[i]! + (dst[i]! - src[i]!) * progress;
     }
 
-    // Update main mesh
     for (let i = 0; i < working.length; i++) {
       posAttr.array[i] = working[i]!;
     }
     posAttr.needsUpdate = true;
 
-    // Update wireframe mesh
     const wireAttr = (wireRef.current.geometry as THREE.BufferGeometry).attributes.position;
     if (wireAttr) {
       for (let i = 0; i < working.length; i++) wireAttr.array[i] = working[i]!;
       wireAttr.needsUpdate = true;
     }
 
-    // Update inner mesh
     const innerAttr = (innerRef.current.geometry as THREE.BufferGeometry).attributes.position;
     if (innerAttr) {
       for (let i = 0; i < working.length; i++) innerAttr.array[i] = working[i]!;
       innerAttr.needsUpdate = true;
     }
 
-    // Update edge lines
     const linePositions = lineRef.current.geometry.attributes.position;
     if (linePositions) {
       const linePos = linePositions.array as Float32Array;
@@ -314,19 +394,16 @@ function MorphingMesh({ isVisible }: { isVisible: boolean }) {
       linePositions.needsUpdate = true;
     }
 
-    // ── Rotation & motion ──
-    const targetRX = 0.3 + mouseRef.current.y * 0.08;
-    const targetRY = 0.5 + mouseRef.current.x * 0.1;
+    const t = state.clock.elapsedTime + initTime.current;
+    const targetRX = 0.2 + mouseRef.current.y * 0.06;
+    const targetRY = 0.4 + mouseRef.current.x * 0.08;
     meshRef.current.rotation.x += (targetRX - meshRef.current.rotation.x) * 0.03;
     meshRef.current.rotation.y += (targetRY - meshRef.current.rotation.y) * 0.03;
-    meshRef.current.rotation.z = Math.sin(t * 0.12) * 0.04;
-
-    meshRef.current.position.y = Math.sin(t * 0.25) * 0.18;
-
-    const breath = 1 + Math.sin(t * 0.4) * 0.012;
+    meshRef.current.rotation.z = Math.sin(t * 0.1) * 0.03;
+    meshRef.current.position.y = Math.sin(t * 0.2) * 0.15;
+    const breath = 1 + Math.sin(t * 0.35) * 0.01;
     meshRef.current.scale.setScalar(breath);
 
-    // Sync wire, inner, and line elements
     wireRef.current.position.copy(meshRef.current.position);
     wireRef.current.rotation.copy(meshRef.current.rotation);
     wireRef.current.scale.copy(meshRef.current.scale);
@@ -343,11 +420,11 @@ function MorphingMesh({ isVisible }: { isVisible: boolean }) {
   return (
     <group>
       {/* Ambient glow shell */}
-      <mesh ref={wireRef} geometry={baseGeo} scale={1.05}>
+      <mesh ref={wireRef} geometry={baseGeo} scale={1.06}>
         <meshPhysicalMaterial
           color="#5eead4"
           transparent
-          opacity={0.04}
+          opacity={0.03}
           roughness={0.3}
           metalness={0.05}
           depthWrite={false}
@@ -360,11 +437,11 @@ function MorphingMesh({ isVisible }: { isVisible: boolean }) {
         <meshPhysicalMaterial
           color="#5eead4"
           transparent
-          opacity={0.14}
-          roughness={0.06}
-          metalness={0.1}
+          opacity={0.12}
+          roughness={0.04}
+          metalness={0.08}
           clearcoat={1.0}
-          clearcoatRoughness={0.15}
+          clearcoatRoughness={0.12}
           envMapIntensity={1.0}
           depthWrite={false}
           side={THREE.DoubleSide}
@@ -372,11 +449,11 @@ function MorphingMesh({ isVisible }: { isVisible: boolean }) {
       </mesh>
 
       {/* Inner core */}
-      <mesh ref={innerRef} geometry={baseGeo} scale={0.5}>
+      <mesh ref={innerRef} geometry={baseGeo} scale={0.45}>
         <meshPhysicalMaterial
           color="#5eead4"
           transparent
-          opacity={0.06}
+          opacity={0.05}
           roughness={0.5}
           metalness={0.3}
           depthWrite={false}
@@ -385,7 +462,7 @@ function MorphingMesh({ isVisible }: { isVisible: boolean }) {
 
       {/* Edge lines */}
       <lineSegments ref={lineRef} geometry={edgeGeo}>
-        <lineBasicMaterial color="#5eead4" transparent opacity={0.15} />
+        <lineBasicMaterial color="#5eead4" transparent opacity={0.12} />
       </lineSegments>
     </group>
   );
@@ -394,11 +471,26 @@ function MorphingMesh({ isVisible }: { isVisible: boolean }) {
 function Scene({ isVisible }: { isVisible: boolean }) {
   return (
     <>
-      <ambientLight intensity={0.3} />
-      <directionalLight position={[4, 3, 5]} intensity={0.6} />
-      <directionalLight position={[-3, 1, -2]} intensity={0.25} />
-      <pointLight position={[-2, 1, 3]} intensity={0.2} color="#5eead4" />
+      <ambientLight intensity={0.25} />
+      <directionalLight position={[4, 3, 5]} intensity={0.5} />
+      <directionalLight position={[-3, 1, -2]} intensity={0.2} />
+      <pointLight position={[-2, 1, 3]} intensity={0.15} color="#5eead4" />
+
+      {/* Main morphing mesh */}
       <MorphingMesh isVisible={isVisible} />
+
+      {/* Orbiting rings */}
+      <OrbitingRing radius={2.0} speed={0.25} tilt={0.3} />
+      <OrbitingRing radius={2.4} color="#a78bfa" speed={-0.2} tilt={-0.5} />
+      <OrbitingRing radius={1.7} speed={0.35} tilt={1.0} />
+
+      {/* Floating planes */}
+      <FloatingPlane position={[-2.5, 1.5, -1]} rotation={[0.3, 0.5, 0.2]} />
+      <FloatingPlane position={[2.8, -0.5, -1.5]} rotation={[0.8, 0.2, 0.6]} color="#a78bfa" />
+      <FloatingPlane position={[0, -2.0, -1]} rotation={[1.2, 0, 0.4]} opacity={0.025} />
+
+      {/* Subtle particles */}
+      <Particles count={40} />
     </>
   );
 }
@@ -408,14 +500,14 @@ function GeometryLoader() {
   return (
     <div className="w-full h-full flex items-center justify-center">
       <div
-        className="w-32 h-32 rounded-2xl bg-gradient-to-br from-accent/5 to-accent/10"
+        className="w-40 h-40 rounded-3xl bg-gradient-to-br from-accent/5 to-accent/10"
         style={{ opacity: 0.1 + progress / 100 }}
       />
     </div>
   );
 }
 
-/** Premium morphing geometry — the sole 3D anchor in the hero */
+/** Premium morphing geometry scene — multiple shapes, rings, particles, wireframes */
 export default function MorphingGeometry() {
   const { ref, isVisible } = useIsVisible();
   const [mounted, setMounted] = useState(false);
@@ -427,13 +519,13 @@ export default function MorphingGeometry() {
   return (
     <div
       ref={ref}
-      className="pointer-events-none absolute hidden desktop:block right-0 top-1/2 -translate-y-1/2 w-[600px] h-[600px] -mr-8"
+      className="pointer-events-none absolute hidden desktop:block right-0 top-1/2 -translate-y-1/2 w-[700px] h-[700px] -mr-12"
       aria-hidden="true"
     >
       {mounted ? (
         <Suspense fallback={<GeometryLoader />}>
           <Canvas
-            camera={{ position: [0, 0, 3.5], fov: 30 }}
+            camera={{ position: [0, 0, 4.2], fov: 28 }}
             dpr={[1, 1.5]}
             gl={{
               antialias: true,
@@ -449,7 +541,7 @@ export default function MorphingGeometry() {
         </Suspense>
       ) : (
         <div className="w-full h-full flex items-center justify-center">
-          <div className="w-32 h-32 rounded-2xl bg-gradient-to-br from-accent/5 to-accent/10 animate-pulse" />
+          <div className="w-40 h-40 rounded-3xl bg-gradient-to-br from-accent/5 to-accent/10 animate-pulse" />
         </div>
       )}
     </div>

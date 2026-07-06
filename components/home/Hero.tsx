@@ -13,92 +13,63 @@ const MorphingGeometry = dynamic(
   { ssr: false }
 );
 
-/**
- * Hero
- *
- * Delivers the entire value proposition within the first 5 seconds —
- * Component Library B1, enhanced with:
- *
- * 1. Identity-first copy: "Hi, I'm" greeting establishes personhood before
- *    listing credentials, making the page feel like a conversation start
- *    rather than a document header.
- *
- * 2. Animated background: subtle grid + gradient orbs + particles at <6%
- *    opacity. Never distracting, but creates the "this site is engineered"
- *    first impression that increases perceived frontend skill.
- *
- * 3. Morphing geometry: single premium 3D object that smoothly
- *    transitions between mathematical shapes. Frosted glass material
- *    with subtle wireframe edges. Reinforces the engineering brand
- *    without dominating.
- *
- * 4. Gradient name: accent-to-primary gradient on the name, drawing the
- *    eye naturally to the most important text on the page.
- *
- * 5. Premium CTAs: subtle lift + glow on hover, communicated via Button
- *    component's updated hover tokens.
- *
- * Performance:
- * - AnimatedBackground: CSS-only, GPU composited (transform/opacity)
- * - MorphingGeometry: dynamic import with ssr:false, DPR limited to 1.5
- * - All motion is transform/opacity based — no layout shifts
- *
- * Accessibility:
- * - prefers-reduced-motion respected throughout
- * - Background and 3D cube are aria-hidden / pointer-events-none
- * - CTA names are destination-specific, not generic
- */
-
 interface HeroProps {
-  /** The primary identity line (name) */
   name: string;
-  /** The positioning tagline */
   tagline: string;
-  /** Role descriptors */
   roles: string;
-  /** Current project focus */
   currentFocus?: string;
 }
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 16 },
+  hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0 },
+};
+
+const scaleIn = {
+  hidden: { opacity: 0, scale: 0.95 },
+  visible: { opacity: 1, scale: 1 },
 };
 
 export function Hero({ name, tagline, roles, currentFocus }: HeroProps) {
   const shouldReduce = useReducedMotion();
 
   return (
-    <div className="relative">
-      {/* Subtle animated background — fixed, behind everything */}
+    <div className="relative min-h-[80vh] desktop:min-h-[85vh] flex items-center">
+      {/* Subtle animated background */}
       <AnimatedBackground />
 
-      <div className="relative z-10 max-w-[760px]">
+      {/* Floating gradient orbs for depth */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute -top-40 -right-40 h-[600px] w-[600px] opacity-[0.04] dark:opacity-[0.03]">
+          <div className="h-full w-full rounded-full bg-accent blur-[120px] animate-float-slow" />
+        </div>
+        <div className="absolute -bottom-60 -left-40 h-[500px] w-[500px] opacity-[0.03] dark:opacity-[0.02]">
+          <div className="h-full w-full rounded-full bg-status-building blur-[120px] animate-float-slow" style={{ animationDelay: "-4s" }} />
+        </div>
+      </div>
+
+      <div className="relative z-10 max-w-[800px]">
         {/* ── Greeting ── */}
         <motion.p
           initial={shouldReduce ? false : "hidden"}
           animate="visible"
           variants={fadeUp}
-          transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
-          className="text-body-lg text-text-secondary mb-2"
+          transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+          className="text-body-lg text-text-secondary mb-3 tracking-wide"
         >
           Hi, I&rsquo;m
         </motion.p>
 
-        {/* ── Name with gradient ──
-            Gradient draws the eye to the most important text on the page.
-            Uses a subtle accent-to-primary gradient that works in both
-            themes without being flashy. */}
+        {/* ── Name with enhanced gradient ── */}
         <motion.h1
           initial={shouldReduce ? false : "hidden"}
           animate="visible"
-          variants={fadeUp}
-          transition={{ duration: 0.25, delay: shouldReduce ? 0 : 0.05, ease: [0.4, 0, 0.2, 1] }}
+          variants={scaleIn}
+          transition={{ duration: 0.5, delay: shouldReduce ? 0 : 0.08, ease: [0.16, 1, 0.3, 1] }}
           className={cn(
-            "text-display-xl tablet:text-display-lg mobile:text-[2.5rem] mobile:leading-[1.15]",
-            "bg-gradient-to-r from-text-primary via-accent to-text-primary",
-            "bg-clip-text text-transparent",
-            "bg-[length:200%_100%]",
+            "text-display-xl tablet:text-display-lg mobile:text-[2.75rem] mobile:leading-[1.1]",
+            "font-semibold tracking-tight",
+            "gradient-text"
           )}
         >
           {name}
@@ -109,35 +80,53 @@ export function Hero({ name, tagline, roles, currentFocus }: HeroProps) {
           initial={shouldReduce ? false : "hidden"}
           animate="visible"
           variants={fadeUp}
-          transition={{ duration: 0.25, delay: shouldReduce ? 0 : 0.1, ease: [0.4, 0, 0.2, 1] }}
-          className="mt-4 text-body-lg text-text-secondary max-w-[540px]"
+          transition={{ duration: 0.4, delay: shouldReduce ? 0 : 0.15, ease: [0.16, 1, 0.3, 1] }}
+          className="mt-5 text-body-lg text-text-secondary max-w-[600px] leading-relaxed"
         >
           {tagline}
         </motion.p>
 
-        {/* ── Role descriptors ── */}
-        <motion.p
+        {/* ── Role descriptors with premium styling ── */}
+        <motion.div
           initial={shouldReduce ? false : "hidden"}
           animate="visible"
           variants={fadeUp}
-          transition={{ duration: 0.25, delay: shouldReduce ? 0 : 0.15, ease: [0.4, 0, 0.2, 1] }}
-          className="mt-3 text-mono-md text-text-tertiary"
+          transition={{ duration: 0.4, delay: shouldReduce ? 0 : 0.2, ease: [0.16, 1, 0.3, 1] }}
+          className="mt-5 flex flex-wrap items-center gap-2"
         >
-          {roles}
-        </motion.p>
+          {roles.split(" • ").map((role) => (
+            <span
+              key={role}
+              className={cn(
+                "inline-flex items-center rounded-pill",
+                "border border-border-subtle bg-bg-tertiary/50",
+                "px-3 py-1.5",
+                "text-mono-md text-text-tertiary",
+                "transition-colors duration-fast",
+                "hover:border-accent/30 hover:text-accent"
+              )}
+            >
+              {role}
+            </span>
+          ))}
+        </motion.div>
 
         {/* ── Current focus ── */}
         {currentFocus && (
-          <motion.p
+          <motion.div
             initial={shouldReduce ? false : "hidden"}
             animate="visible"
             variants={fadeUp}
-            transition={{ duration: 0.25, delay: shouldReduce ? 0 : 0.2, ease: [0.4, 0, 0.2, 1] }}
-            className="mt-4 text-body-md text-text-secondary"
+            transition={{ duration: 0.4, delay: shouldReduce ? 0 : 0.25, ease: [0.16, 1, 0.3, 1] }}
+            className="mt-6 flex items-center gap-2"
           >
-            <span className="text-mono-md text-text-primary">Currently:</span>{" "}
-            {currentFocus}
-          </motion.p>
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-40" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-accent" />
+            </span>
+            <span className="text-mono-md text-text-primary">Currently:</span>
+            <span className="text-body-md text-text-secondary">{currentFocus}</span>
+          </motion.div>
         )}
 
         {/* ── CTAs ── */}
@@ -145,10 +134,10 @@ export function Hero({ name, tagline, roles, currentFocus }: HeroProps) {
           initial={shouldReduce ? false : "hidden"}
           animate="visible"
           variants={fadeUp}
-          transition={{ duration: 0.25, delay: shouldReduce ? 0 : 0.25, ease: [0.4, 0, 0.2, 1] }}
-          className="mt-8 flex flex-col tablet:flex-row items-start tablet:items-center gap-4"
+          transition={{ duration: 0.4, delay: shouldReduce ? 0 : 0.3, ease: [0.16, 1, 0.3, 1] }}
+          className="mt-10 flex flex-col tablet:flex-row items-start tablet:items-center gap-4"
         >
-          <Button href="/work" className="w-full tablet:w-auto">
+          <Button href="/work" className="w-full tablet:w-auto shadow-[0_0_20px_rgba(94,234,212,0.15)]">
             View the work
           </Button>
 
@@ -173,7 +162,7 @@ export function Hero({ name, tagline, roles, currentFocus }: HeroProps) {
         </motion.div>
       </div>
 
-      {/* Morphing geometry accent — positioned in hero's negative space, hidden on tablet/mobile */}
+      {/* Premium morphing geometry */}
       <MorphingGeometry />
     </div>
   );

@@ -66,10 +66,9 @@ export function TradeoffsBlock({
       viewport={{ once: true, amount: 0.3 }}
       transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
       className={cn(
-        "relative overflow-hidden bg-bg-tertiary",
-        // Rounded only on the two right corners — left edge stays sharp
-        // where the solid accent border meets it.
-        "rounded-r-card",
+        "relative overflow-hidden",
+        "rounded-2xl",
+        "bg-bg-tertiary border border-border-subtle",
         "p-6 desktop:p-8",
         className
       )}

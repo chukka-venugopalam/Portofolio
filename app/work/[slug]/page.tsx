@@ -1,4 +1,4 @@
-import { Suspense } from "react";
+import { Fragment, Suspense } from "react";
 import { notFound } from "next/navigation";
 import Script from "next/script";
 import { MDXRemote } from "next-mdx-remote-client/rsc";
@@ -16,52 +16,10 @@ import { ProjectHeader } from "@/components/project/ProjectHeader";
 import { TradeoffsBlock } from "@/components/project/TradeoffsBlock";
 import { StatusFooter } from "@/components/project/StatusFooter";
 import { BackLink } from "@/components/project/BackLink";
+import { ProjectCover } from "@/components/project/ProjectCover";
+import { Button } from "@/components/ui/Button";
 import { getMDXComponents } from "@/mdx-components";
-
-/**
- * Project Detail page — PRD Part 9 (Project Page Blueprint), Visual
- * Design Spec Section 3, Component Library D2-D5.
- *
- * Seven sections, in this exact requested order:
- *   1. Project Header     — ProjectHeader (name, status, one-liner,
- *                            tech tags, live links — Component Library D2)
- *   2. Problem             — plain MDX prose
- *   3. What It Does         — plain MDX prose
- *   4. Architecture          — "How It's Built" content (PRD Part 9 names
- *                              this section "How It's Built"; "Architecture"
- *                              in this task's structure refers to the same
- *                              section — see the note below)
- *   5. Decisions & Tradeoffs  — TradeoffsBlock, the most differentiated
- *                                section on the page (Component Library D3)
- *   6. What's Next             — plain MDX prose
- *   7. Project Metadata Footer  — StatusFooter (Component Library D4)
- *
- * Naming note: this task's requested structure calls section 4
- * "Architecture." The PRD's Project Page Blueprint and every existing
- * content schema (content/projects/_schema.ts's ProjectSections,
- * lib/content/projects.ts's SECTION_HEADINGS) name this same section
- * "How It's Built" — same content slot, two names for it across
- * documents written at different times. Reusing the EXISTING schema
- * field (howItsBuilt) here rather than introducing a parallel
- * "architecture" field avoids a duplicate, divergent content model for
- * what is unambiguously the same section. The page's visible label
- * below renders as "How It's Built" to stay consistent with every
- * project MDX file's actual required heading — renaming the rendered
- * label without renaming the underlying required MDX heading would
- * silently break content validation for the same reason.
- *
- * Static generation (Implementation Blueprint 6.1/6.2): every project
- * page is pre-rendered at build time via generateStaticParams, which
- * also triggers getAllProjects()'s frontmatter validation — an invalid
- * project file fails the build here, not silently at runtime.
- *
- * MDX rendering: each of the four prose sections (problem, whatItDoes,
- * howItsBuilt, whatsNext) is raw markdown text already split out of the
- * project's MDX body by lib/content/projects.ts's splitIntoSections().
- * Rendered here via next-mdx-remote-client's RSC MDXRemote, which is an
- * async Server Component — wrapped in <Suspense> per the package's
- * documented pattern, since MDX compilation is itself async work.
- */
+import { cn } from "@/lib/utils";
 
 export function generateStaticParams() {
   return getAllProjects().map((project) => ({
@@ -89,37 +47,18 @@ export default async function ProjectDetailPage({
   const { slug } = await params;
   const project = getProjectBySlug(slug);
 
-  // ── Missing project ──
-  // notFound() triggers app/work/[slug]/not-found.tsx — the
-  // project-specific 404, more useful than the site-wide one for a
-  // visitor who followed a shared link to a project that's since been
-  // renamed or removed (Implementation Blueprint 1.4).
   if (!project) {
     notFound();
   }
 
   const { frontmatter, sections } = project;
-
-  // Decisions & Tradeoffs is parsed once here, at the page level, since
-  // parseTradeoffs() throws on malformed/empty content — letting that
-  // throw happen during this page's render (which only happens for
-  // slugs that passed generateStaticParams, i.e. at build time for
-  // static generation) keeps the same fail-loudly-at-build-time
-  // guarantee the rest of the content pipeline already has.
   const decisions = parseTradeoffs(sections.tradeoffs, frontmatter.slug);
-
   const projectJsonLd = buildProjectJsonLd(project);
   const mdxComponents = getMDXComponents({});
+  const isFlagship = frontmatter.category === "flagship";
 
   return (
     <>
-      {/* Per-project structured data (Implementation Blueprint 7.5) —
-          lower priority than the site-wide Person schema already
-          injected in app/layout.tsx, but additive here, not a
-          replacement. Unique id (scoped to this project's slug) avoids
-          any collision with layout.tsx's "person-jsonld" script and
-          with this same script across different project pages, since
-          Next.js dedupes <Script> instances by id within a navigation. */}
       <Script
         id={`project-jsonld-${frontmatter.slug}`}
         type="application/ld+json"
@@ -127,52 +66,145 @@ export default async function ProjectDetailPage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(projectJsonLd) }}
       />
 
-      {/* ── 1. Project Header ── */}
+      {/* ── Back link + Project Header ── */}
       <Section spacing="tight" className="pt-0">
-        <Container className="max-w-[760px]" wide={false}>
+        <Container className="max-w-[800px]" wide={false}>
           <BackLink className="mb-6" />
           <ProjectHeader project={frontmatter} />
         </Container>
       </Section>
 
-      {/* ── 2. Problem ── */}
-      <ProseSection
-        label="The Problem"
-        content={sections.problem}
-        mdxComponents={mdxComponents}
-      />
+      {/* ── Cover Art Banner (flagship only) ── */}
+      {isFlagship && frontmatter.coverArt && (
+        <Section spacing="tight">
+          <Container wide>
+            <div className="relative overflow-hidden rounded-2xl aspect-[21/9] max-h-[420px]">
+              <ProjectCover
+                variant={frontmatter.coverArt}
+                className="w-full h-full"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-bg-primary/60 via-transparent to-transparent" />
+            </div>
+          </Container>
+        </Section>
+      )}
 
-      {/* ── 3. What It Does ── */}
-      <ProseSection
-        label="What It Does"
-        content={sections.whatItDoes}
-        mdxComponents={mdxComponents}
-      />
+      {/* ── Engineering Case Study Content ── */}
+      <div className="relative">
+        {/* Side gradient decoration for reading experience */}
+        <div aria-hidden="true" className="pointer-events-none absolute left-0 top-0 bottom-0 w-[1px] bg-gradient-to-b from-accent/20 via-accent/5 to-transparent hidden desktop:block" style={{ left: "calc(50% - 400px)" }} />
 
-      {/* ── 4. Architecture ("How It's Built") ── */}
-      <ProseSection
-        label="How It's Built"
-        content={sections.howItsBuilt}
-        mdxComponents={mdxComponents}
-      />
+        <div className="space-y-0">
+          {/* ── 2. The Problem ── */}
+          {sections.problem && (
+            <PremiumSection label="The Problem" accent>
+              <div className="prose prose-invert max-w-none text-body-md leading-[1.7] text-text-primary">
+                <Suspense fallback={<ProseFallback />}>
+                  <MDXRemote source={sections.problem} components={mdxComponents} />
+                </Suspense>
+              </div>
+            </PremiumSection>
+          )}
 
-      {/* ── 5. Decisions & Tradeoffs ── */}
+          {/* ── 3. What It Does ── */}
+          {sections.whatItDoes && (
+            <PremiumSection label="What It Does">
+              <div className="prose prose-invert max-w-none text-body-md leading-[1.7] text-text-primary">
+                <Suspense fallback={<ProseFallback />}>
+                  <MDXRemote source={sections.whatItDoes} components={mdxComponents} />
+                </Suspense>
+              </div>
+            </PremiumSection>
+          )}
+
+          {/* ── 4. Architecture / How It's Built ── */}
+          {sections.howItsBuilt && (
+            <PremiumSection label="Architecture &amp; How It's Built">
+              <div className="prose prose-invert max-w-none text-body-md leading-[1.7] text-text-primary">
+                <Suspense fallback={<ProseFallback />}>
+                  <MDXRemote source={sections.howItsBuilt} components={mdxComponents} />
+                </Suspense>
+              </div>
+            </PremiumSection>
+          )}
+
+          {/* ── 5. Decisions & Tradeoffs ── */}
+          <Section spacing="tight">
+            <Container className="max-w-[800px]" wide={false}>
+              <TradeoffsBlock decisions={decisions} headingLevel="h2" />
+            </Container>
+          </Section>
+
+          {/* ── 6. What's Next / Roadmap ── */}
+          {sections.whatsNext && (
+            <PremiumSection label="Roadmap &amp; What's Next">
+              <div className="prose prose-invert max-w-none text-body-md leading-[1.7] text-text-primary">
+                <Suspense fallback={<ProseFallback />}>
+                  <MDXRemote source={sections.whatsNext} components={mdxComponents} />
+                </Suspense>
+              </div>
+            </PremiumSection>
+          )}
+        </div>
+      </div>
+
+      {/* ── Tech Stack Summary ── */}
       <Section spacing="tight">
-        <Container className="max-w-[760px]" wide={false}>
-          <TradeoffsBlock decisions={decisions} headingLevel="h2" />
+        <Container className="max-w-[800px]" wide={false}>
+          <div className="rounded-2xl border border-border-subtle bg-bg-secondary p-6 desktop:p-8">
+            <SectionHeader mode="label" level="h2">Technology Stack</SectionHeader>
+            <div className="mt-5 grid grid-cols-2 tablet:grid-cols-3 desktop:grid-cols-4 gap-3">
+              {frontmatter.techTags.map((tech) => (
+                <div
+                  key={tech}
+                  className="flex items-center gap-2 rounded-lg border border-border-subtle bg-bg-tertiary/50 px-3 py-2"
+                >
+                  <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-accent/60 shrink-0" />
+                  <span className="text-mono-sm text-text-primary">{tech}</span>
+                </div>
+              ))}
+            </div>
+          </div>
         </Container>
       </Section>
 
-      {/* ── 6. What's Next ── */}
-      <ProseSection
-        label="What's Next"
-        content={sections.whatsNext}
-        mdxComponents={mdxComponents}
-      />
+      {/* ── Action Links ── */}
+      <Section spacing="tight">
+        <Container className="max-w-[800px]" wide={false}>
+          <div className="flex flex-wrap items-center gap-4 p-6 rounded-2xl glass">
+            <span className="text-mono-sm uppercase tracking-[0.08em] text-text-tertiary">
+              Quick Links
+            </span>
+            <div className="flex flex-wrap gap-3">
+              {frontmatter.links.live && (
+                <Button href={frontmatter.links.live} external>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <path d="M15 3h6v6" />
+                    <path d="M10 14L21 3" />
+                  </svg>
+                  Live Demo
+                </Button>
+              )}
+              {frontmatter.links.code && (
+                <Button variant="secondary" href={frontmatter.links.code} external>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
+                  </svg>
+                  View Code
+                </Button>
+              )}
+              <Button variant="secondary" href="/work">
+                ← All Projects
+              </Button>
+            </div>
+          </div>
+        </Container>
+      </Section>
 
       {/* ── 7. Project Metadata Footer ── */}
       <Section spacing="tight" className="pb-0">
-        <Container className="max-w-[760px]" wide={false}>
+        <Container className="max-w-[800px]" wide={false}>
           <StatusFooter
             startedDate={frontmatter.startedDate}
             lastUpdated={frontmatter.lastUpdated}
@@ -183,57 +215,35 @@ export default async function ProjectDetailPage({
   );
 }
 
-/**
- * ProseSection
- *
- * Local to this page — renders one of the four plain-prose project
- * sections (Problem, What It Does, How It's Built, What's Next) with a
- * consistent SectionHeader label + MDX body, per Visual Design Spec
- * Section 3's seven-section structure.
- *
- * Missing optional sections: every field in ProjectSections is actually
- * REQUIRED by lib/content/projects.ts's splitIntoSections() (it throws
- * at build time if any of the five headings is absent — see that
- * file's docstring). So by the time this component renders, `content`
- * is guaranteed non-empty for a successfully-built page. The guard
- * below is kept anyway as defense-in-depth: if a future content-model
- * change ever makes a section genuinely optional, this component
- * already degrades gracefully (omits itself) rather than rendering an
- * empty, oddly-spaced section with a label and nothing under it.
- */
-function ProseSection({
+/** Premium section with label and optional accent styling */
+function PremiumSection({
   label,
-  content,
-  mdxComponents,
+  children,
+  accent = false,
 }: {
   label: string;
-  content: string;
-  mdxComponents: ReturnType<typeof getMDXComponents>;
+  children: React.ReactNode;
+  accent?: boolean;
 }) {
-  if (!content || content.trim().length === 0) {
-    return null;
-  }
-
   return (
     <Section spacing="tight">
-      <Container className="max-w-[760px]" wide={false}>
-        <SectionHeader mode="label" level="h2">
-          {label}
-        </SectionHeader>
-        <div className="mt-5 text-body-md leading-[1.7] text-text-primary">
-          <Suspense fallback={<ProseFallback />}>
-            <MDXRemote source={content} components={mdxComponents} />
-          </Suspense>
+      <Container className="max-w-[800px]" wide={false}>
+        <div className={cn(
+          "relative",
+          accent && "pl-5 border-l-2 border-accent/30"
+        )}>
+          <SectionHeader mode="label" level="h2">
+            {label}
+          </SectionHeader>
+          <div className="mt-5">
+            {children}
+          </div>
         </div>
       </Container>
     </Section>
   );
 }
 
-/** Lightweight loading state while MDX compiles — this is async Server
- *  Component work, so Suspense needs a fallback even though, for fully
- *  statically-generated pages, this resolves at build time and is
- *  rarely visibly shown in production. */
 function ProseFallback() {
   return (
     <div className="space-y-2" aria-hidden="true">
