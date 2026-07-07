@@ -7,9 +7,9 @@ import { Button } from "@/components/ui/Button";
 import { AnimatedBackground } from "@/components/home/AnimatedBackground";
 import { cn } from "@/lib/utils";
 
-// Dynamically import the morphing geometry — no SSR since WebGL doesn't exist on the server.
-const MorphingGeometry = dynamic(
-  () => import("@/components/home/MorphingGeometry"),
+// Dynamically import the Knowledge Network — no SSR since WebGL doesn't exist on the server.
+const KnowledgeNetwork = dynamic(
+  () => import("@/components/home/KnowledgeNetwork"),
   { ssr: false }
 );
 
@@ -162,8 +162,8 @@ export function Hero({ name, tagline, roles, currentFocus }: HeroProps) {
         </motion.div>
       </div>
 
-      {/* Premium morphing geometry */}
-      <MorphingGeometry />
+      {/* Premium Knowledge Network visualization */}
+      <KnowledgeNetwork />
     </div>
   );
 }

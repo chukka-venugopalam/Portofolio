@@ -4,3 +4,4 @@
  */
 export { Hero } from "./Hero";
 export { FrameworkStrip } from "./FrameworkStrip";
+export { default as KnowledgeNetwork } from "./KnowledgeNetwork";

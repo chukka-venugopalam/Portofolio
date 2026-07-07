@@ -37,21 +37,21 @@ export function ProjectCard({
       }}
       className={cn(
         "group relative rounded-2xl overflow-hidden",
-        "transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]",
+        "card-premium",
         isFlagship
           ? cn(
               "bg-bg-secondary border border-border-default",
               "hover:border-accent/40",
-              "shadow-[0_1px_3px_rgba(0,0,0,0.2)]",
-              "hover:shadow-[0_8px_30px_rgba(94,234,212,0.08),0_0_0_1px_rgba(94,234,212,0.15)]",
-              "hover:-translate-y-1"
+              "shadow-[0_1px_3px_rgba(0,0,0,0.2),0_0_0_1px_rgba(255,255,255,0.02)]",
+              "hover:shadow-[0_8px_32px_rgba(94,234,212,0.1),0_0_0_1px_rgba(94,234,212,0.15)]",
+              "hover:-translate-y-1.5"
             )
           : cn(
               "bg-bg-secondary border border-border-subtle",
-              "hover:border-border-default",
+              "hover:border-accent/25",
               "shadow-[0_1px_2px_rgba(0,0,0,0.1)]",
-              "hover:shadow-[0_8px_24px_rgba(0,0,0,0.12)]",
-              "hover:-translate-y-0.5"
+              "hover:shadow-[0_12px_32px_rgba(0,0,0,0.15),0_0_0_1px_rgba(94,234,212,0.06)]",
+              "hover:-translate-y-1"
             ),
         className
       )}
@@ -76,7 +76,7 @@ export function ProjectCard({
         </div>
       )}
 
-      {/* Cover Art with premium hover zoom */}
+      {/* Cover Art with premium glass overlay and hover zoom */}
       {project.coverArt && (
         <Link
           href={detailHref}
@@ -90,16 +90,23 @@ export function ProjectCard({
               className="w-full h-full"
             />
           </div>
+          {/* Glass overlay on hover */}
+          <div className={cn(
+            "absolute inset-0 opacity-0 transition-opacity duration-500 ease-standard",
+            "group-hover:opacity-100",
+            "bg-gradient-to-t from-bg-glass/60 via-bg-glass/20 to-transparent",
+            "backdrop-blur-[2px]"
+          )} />
           {/* Gradient overlay */}
           <div className={cn(
             "absolute inset-0",
             "bg-gradient-to-t from-bg-secondary/80 via-transparent to-transparent"
           )} />
-          {/* Hover accent overlay */}
+          {/* Hover accent glow overlay */}
           <div className={cn(
             "absolute inset-0 opacity-0 transition-opacity duration-500 ease-standard",
             "group-hover:opacity-100",
-            "bg-gradient-to-t from-accent/5 to-transparent"
+            "bg-gradient-to-t from-accent/8 to-transparent"
           )} />
         </Link>
       )}
@@ -136,6 +143,9 @@ export function ProjectCard({
           {project.oneLiner}
         </p>
 
+        {/* Subtle separator */}
+        <div className="mt-5 h-px bg-gradient-to-r from-border-subtle via-transparent to-transparent" />
+
         {/* Tech tags */}
         <div className="mt-4">
           <TechTagList tags={project.techTags} />
@@ -143,6 +153,7 @@ export function ProjectCard({
 
         {/* Action buttons */}
         <div className="mt-6 flex flex-wrap items-center gap-3">
+          {/* Improved CTA buttons with subtle entrance */}
           {/* Read Case Study — primary CTA for flagships */}
           {isFlagship && (
             <Button

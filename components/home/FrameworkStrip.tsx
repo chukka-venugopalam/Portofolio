@@ -219,7 +219,7 @@ export function FrameworkStrip() {
         })}
       </div>
 
-      {/* Quote panel with premium reveal */}
+      {/* Quote panel with premium fade-in reveal */}
       <AnimatePresence mode="wait">
         {NODES.map((node) => {
           if (activeId !== node.id) return null;
@@ -231,11 +231,11 @@ export function FrameworkStrip() {
               id={panelId}
               role="region"
               aria-label={`${node.label}: ${node.example}`}
-              initial={shouldReduce ? false : { opacity: 0, y: -6, scale: 0.97 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={shouldReduce ? undefined : { opacity: 0, y: -6, scale: 0.97 }}
+              initial={shouldReduce ? false : { opacity: 0, y: -8, scale: 0.97, filter: "blur(4px)" }}
+              animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
+              exit={shouldReduce ? undefined : { opacity: 0, y: -8, scale: 0.97, filter: "blur(4px)" }}
               transition={{
-                duration: shouldReduce ? 0 : 0.3,
+                duration: shouldReduce ? 0 : 0.4,
                 ease: [0.16, 1, 0.3, 1],
               }}
               className="overflow-hidden"
@@ -245,7 +245,8 @@ export function FrameworkStrip() {
                   "mt-6 rounded-card",
                   "glass",
                   "px-6 py-5 desktop:px-8 desktop:py-6",
-                  "transition-shadow duration-fast ease-standard"
+                  "transition-all duration-fast ease-standard",
+                  "hover:shadow-[0_0_30px_rgba(94,234,212,0.06)]"
                 )}
               >
                 <div className="flex items-center gap-3 mb-2">
@@ -261,21 +262,26 @@ export function FrameworkStrip() {
                     {node.label}
                   </span>
                 </div>
-                <p className="text-body-md text-text-secondary leading-relaxed">
+                <motion.p
+                  initial={shouldReduce ? false : { opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: shouldReduce ? 0 : 0.3, delay: shouldReduce ? 0 : 0.1 }}
+                  className="text-body-md text-text-secondary leading-relaxed"
+                >
                   &ldquo;{node.example}&rdquo;
-                </p>
+                </motion.p>
               </div>
             </motion.div>
           );
         })}
       </AnimatePresence>
 
-      {/* Inactive state — subtle hint */}
+      {/* Inactive state — subtle hint with entrance animation */}
       {activeId === null && (
         <motion.p
-          initial={shouldReduce ? false : { opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5, duration: 0.5 }}
+          initial={shouldReduce ? false : { opacity: 0, y: 4 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1, duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
           className="mt-6 text-body-sm text-text-tertiary text-center desktop:text-left"
         >
           Hover or tap a step to learn more
