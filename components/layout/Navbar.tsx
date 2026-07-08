@@ -10,115 +10,82 @@ import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { MobileNavOverlay } from "@/components/layout/MobileNavOverlay";
 import { cn } from "@/lib/utils";
 
-/**
- * Navbar
- *
- * Persistent, sticky top navigation bar. Appears identically across all
- * six page templates.
- *
- * Design spec (Component Library A1, Visual Design Spec 1.5):
- * - Height: 72px desktop/tablet, 64px mobile
- * - Position: sticky top-0, z-index above page content
- * - Default: bg-bg-primary at full opacity, no border
- * - Scrolled (past 8px): bg-bg-primary at 92% opacity + backdrop-blur(12px)
- *   + 1px border-subtle bottom border — Visual Design Spec 1.5 exact values
- * - Active route: accent color + permanent 2px underline (not hover-only)
- * - Nav link hover: text-secondary → text-primary, 150ms, center-out underline
- * - Desktop/tablet (≥600px): all five links inline + ThemeToggle
- * - Mobile (<600px): hamburger opens MobileNavOverlay, ThemeToggle stays inline
- *
- * Accessibility (Component Library A1):
- * - <nav> landmark with aria-label="Primary"
- * - Active route link: aria-current="page"
- * - Hamburger: aria-expanded, aria-controls pointing to overlay id
- * - ThemeToggle: aria-label per Component Library A2
- * - Skip-nav link at the very top for keyboard users (see below)
- */
-
 export function Navbar() {
   const pathname = usePathname();
   const shouldReduce = useReducedMotion();
 
-  // ── Scroll-blur state ──
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 8);
-    // Set initial state (page may have been loaded mid-scroll)
+    const handleScroll = () => setScrolled(window.scrollY > 20);
     handleScroll();
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // ── Mobile menu state ──
   const [menuOpen, setMenuOpen] = useState(false);
   const hamburgerRef = useRef<HTMLButtonElement>(null);
 
   const closeMenu = useCallback(() => setMenuOpen(false), []);
   const toggleMenu = useCallback(() => setMenuOpen((prev) => !prev), []);
 
-  // Close menu on route change
   useEffect(() => {
     closeMenu();
   }, [pathname, closeMenu]);
 
   return (
     <>
-
-      {/* ── Skip-navigation link ──
-          Visually hidden until focused by a keyboard user, per WCAG 2.4.1.
-          Jumps directly to the main content, bypassing the nav on every page. */}
       <a
         href="#main-content"
         className={cn(
           "sr-only focus:not-sr-only",
           "fixed left-4 top-4 z-[200]",
-          "rounded-card bg-accent px-4 py-2",
-          "text-body-sm font-medium text-bg-primary",
+          "rounded-lg bg-accent px-4 py-2",
+          "text-body-sm font-medium text-white",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bg-primary focus-visible:ring-offset-2"
         )}
       >
         Skip to content
       </a>
 
-      {/* ── Navbar bar ── */}
       <header
         className={cn(
           "fixed left-0 right-0 top-0 z-[100]",
-          // Height
           "h-16 desktop:h-[72px]",
-          // Transition — Visual Design Spec 1.5: continuous property change
-          // on scroll crossing the 8px threshold, not a sudden snap
-          !shouldReduce && "transition-[background-color,border-color,backdrop-filter] duration-base ease-standard",
-          // Scrolled state
+          !shouldReduce && "transition-all duration-base ease-standard",
           scrolled
-            ? "border-b border-border-subtle bg-bg-primary/[0.92] backdrop-blur-[12px]"
-            : "bg-bg-primary"
+            ? "border-b border-border-subtle bg-bg-primary/80 backdrop-blur-[20px]"
+            : "bg-transparent"
         )}
       >
         <Container className="flex h-full items-center justify-between">
-
-          {/* ── Wordmark / Home link ── */}
+          {/* Wordmark */}
           <Link
             href="/"
             aria-label={`${SITE_NAME} — home`}
             className={cn(
-              "text-heading-sm font-semibold",
-              // Gradient text that shifts on hover
-              "bg-gradient-to-r from-text-primary to-text-primary bg-[length:100%_100%] bg-clip-text",
-              "hover:bg-gradient-to-r hover:from-accent hover:to-accent-dim hover:text-transparent hover:text-transparent",
-              "transition-all duration-fast ease-standard",
-              "hover:scale-[1.02]",
-              "focus-visible:outline-none focus-visible:focus-ring rounded-pill"
+              "relative text-heading-sm font-semibold tracking-tight",
+              "text-text-primary",
+              "hover:text-accent",
+              "transition-colors duration-fast ease-standard",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 rounded-md"
             )}
           >
             {SITE_NAME}
+            <span
+              aria-hidden="true"
+              className={cn(
+                "absolute -bottom-1 left-0 h-[2px] w-0 bg-accent rounded-full",
+                "transition-all duration-slow ease-out-expo",
+                "group-hover:w-full"
+              )}
+            />
           </Link>
 
-          {/* ── Desktop + Tablet navigation links ── */}
+          {/* Desktop + Tablet nav */}
           <nav
             aria-label="Primary"
-            className="hidden tablet:flex items-center gap-1"
+            className="hidden tablet:flex items-center gap-2"
           >
             <ul className="flex items-center gap-1" role="list">
               {NAV_ITEMS.map((item) => {
@@ -132,26 +99,24 @@ export function Navbar() {
                       href={item.href}
                       aria-current={isActive ? "page" : undefined}
                       className={cn(
-                        "group relative flex items-center h-9 px-3 rounded-pill",
-                        "text-heading-sm",
-                        "transition-colors duration-fast ease-standard",
-                        "focus-visible:outline-none focus-visible:focus-ring",
+                        "group relative flex items-center h-9 px-3.5 rounded-md",
+                        "text-body-sm",
+                        "transition-all duration-fast ease-standard",
+                        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2",
                         isActive
-                          ? "text-accent"
+                          ? "text-accent font-medium"
                           : "text-text-secondary hover:text-text-primary"
                       )}
                     >
                       {item.label}
-
-                      {/* Underline: permanent on active, grows center-out on hover */}
                       <span
                         aria-hidden="true"
                         className={cn(
-                          "absolute bottom-0 left-1/2 h-[2px] -translate-x-1/2 rounded-full bg-accent",
-                          !shouldReduce && "transition-[width] duration-fast ease-standard",
+                          "absolute bottom-0 left-2 right-2 h-[2px] rounded-full bg-accent",
+                          "transition-all duration-fast ease-standard",
                           isActive
-                            ? "w-4"                                  // permanent active indicator
-                            : "w-0 group-hover:w-4"                  // hover reveal
+                            ? "opacity-100 scale-x-100"
+                            : "opacity-0 scale-x-0 group-hover:opacity-40 group-hover:scale-x-100"
                         )}
                       />
                     </Link>
@@ -160,14 +125,13 @@ export function Navbar() {
               })}
             </ul>
 
-            <div className="ml-2 h-5 w-px bg-border-subtle" aria-hidden="true" />
+            <div className="mx-2 h-5 w-px bg-border-subtle" aria-hidden="true" />
             <ThemeToggle className="ml-1" />
           </nav>
 
-          {/* ── Mobile: ThemeToggle + Hamburger ── */}
+          {/* Mobile */}
           <div className="flex items-center gap-1 tablet:hidden">
             <ThemeToggle />
-
             <button
               ref={hamburgerRef}
               type="button"
@@ -176,50 +140,46 @@ export function Navbar() {
               aria-controls="mobile-nav-overlay"
               aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
               className={cn(
-                "flex h-9 w-9 flex-col items-center justify-center gap-[5px] rounded-pill",
+                "flex h-10 w-10 flex-col items-center justify-center gap-[5px] rounded-lg",
                 "text-text-secondary",
                 "hover:bg-bg-tertiary hover:text-text-primary",
-                !shouldReduce && "transition-colors duration-fast ease-standard",
-                "focus-visible:outline-none focus-visible:focus-ring"
+                "transition-colors duration-fast ease-standard",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
               )}
             >
-              {/* Hamburger / X morphing lines */}
               <span
                 className={cn(
-                  "block h-[1.5px] w-[18px] rounded-full bg-current",
+                  "block h-[1.5px] w-[20px] rounded-full bg-current",
                   !shouldReduce && "transition-transform duration-base ease-standard origin-center",
                   menuOpen && "translate-y-[6.5px] rotate-45"
                 )}
               />
               <span
                 className={cn(
-                  "block h-[1.5px] w-[18px] rounded-full bg-current",
+                  "block h-[1.5px] w-[20px] rounded-full bg-current",
                   !shouldReduce && "transition-opacity duration-fast ease-standard",
                   menuOpen && "opacity-0"
                 )}
               />
               <span
                 className={cn(
-                  "block h-[1.5px] w-[18px] rounded-full bg-current",
+                  "block h-[1.5px] w-[20px] rounded-full bg-current",
                   !shouldReduce && "transition-transform duration-base ease-standard origin-center",
                   menuOpen && "-translate-y-[6.5px] -rotate-45"
                 )}
               />
             </button>
           </div>
-
         </Container>
       </header>
 
-      {/* ── Mobile overlay panel (separate component for focus-trap logic) ── */}
       <MobileNavOverlay
         isOpen={menuOpen}
         onClose={closeMenu}
         triggerRef={hamburgerRef}
       />
 
-      {/* ── Spacer: pushes page content below the fixed navbar ── */}
       <div className="h-16 desktop:h-[72px]" aria-hidden="true" />
     </>
   );
-                    }
+}

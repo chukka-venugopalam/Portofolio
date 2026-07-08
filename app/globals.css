@@ -1,117 +1,139 @@
 /*
- * Portfolio V1 — Design Tokens + Tailwind v4 Configuration
+ * Portfolio — Redesigned
  *
- * This single file is the entire styling foundation. It contains:
- *   1. CSS custom properties (actual hex values, per theme)
- *   2. Tailwind @theme block (exposes them as utility classes)
- *   3. Shared component utilities (@layer components)
- *   4. Global base styles (@layer base)
- *
- * Dark mode strategy: CSS variables are defined on :root (dark, default)
- * and overridden on [data-theme="light"]. Tailwind utility classes
- * (bg-bg-primary, text-accent, etc.) always reference the variable, never
- * a literal hex — so a theme swap is a single attribute change on <html>,
- * handled by ThemeProvider. No class duplication anywhere in components.
- *
- * Spacing scale — resolved against the spec's own inline usage references:
- * the Visual Design Spec's raw list ("4, 8, 12, 16, 24, 32, 48, 64, 96,
- * 128, 160") doesn't divide evenly into exactly ten named tokens, but the
- * spec itself repeatedly states each token's resolved px value inline
- * wherever it's used (e.g. "space-6 (48px)" for the flagship card and
- * footer padding, "space-9 (128px)" for homepage section rhythm). Those
- * inline usage references are treated as authoritative here, since they're
- * the values actually load-bearing throughout the rest of the spec:
- *   space-1=4px   space-2=12px   space-3=16px   space-4=16px (card-padding
- *   context, Visual Design Spec 1.9)   space-5=24px   space-6=48px
- *   space-7=64px   space-8=96px   space-9=128px   space-10=160px.
- * The 8px and 32px steps aren't named tokens — they're covered by
- * Tailwind's own default scale (p-2 = 8px, p-8 = 32px) wherever needed.
- * space-project-gap (80px) remains a one-off, used only on Project Detail.
+ * Design language: premium, minimal, engineering-first, product-focused
+ * Inspired by: Apple, Linear, Stripe, Vercel, OpenAI
  */
 
 @import "tailwindcss";
 
 /* ─────────────────────────────────────────────────────────────────────
    1. THEME TOKENS — CSS custom properties
-   Source: Visual Design Spec, Foundation sections 0.2–0.6
    ───────────────────────────────────────────────────────────────────── */
 
 :root {
-  /* ── Dark theme (default) ── */
+  /* ── Dark theme (default) — premium charcoal ── */
 
-  /* Backgrounds — deeper, richer dark with subtle warmth */
-  --color-bg-primary:   #070708;
-  --color-bg-secondary: #0d0d10;
-  --color-bg-tertiary:  #141418;
-  --color-bg-glass:     rgba(20, 20, 24, 0.72);
-  --color-bg-glass-border: rgba(255, 255, 255, 0.06);
+  /* Backgrounds — deep, rich, layered */
+  --color-bg-primary:       #0a0a0b;
+  --color-bg-secondary:     #111113;
+  --color-bg-tertiary:      #18181b;
+  --color-bg-glass:         rgba(17, 17, 19, 0.78);
+  --color-bg-glass-border:  rgba(255, 255, 255, 0.06);
+  --color-bg-elevated:      #1a1a1d;
+  --color-bg-card:          #121214;
 
-  /* Borders — softer, more refined */
-  --color-border-subtle:  #1e1e24;
-  --color-border-default: #2a2a32;
+  /* Borders — refined, muted */
+  --color-border-subtle:  #1e1e22;
+  --color-border-default: #2a2a30;
+  --color-border-strong:  #3a3a42;
 
-  /* Text — higher contrast, warmer tones */
+  /* Text — high contrast, warm */
   --color-text-primary:   #f5f5f0;
-  --color-text-secondary: #9c9ca3;
-  --color-text-tertiary:  #63636a;
+  --color-text-secondary: #a1a1aa;
+  --color-text-tertiary:  #6b6b76;
+  --color-text-quaternary:#454550;
 
-  /* Accent — refined teal, restrained use only */
-  --color-accent:     #5eead4;
-  --color-accent-dim: #1f5f58;
-  --color-accent-glow: rgba(94, 234, 212, 0.08);
+  /* Accent — refined teal with emerald warmth */
+  --color-accent:       #14b8a6;
+  --color-accent-light: #5eead4;
+  --color-accent-dim:   #0d9488;
+  --color-accent-dark:  #0f766e;
+  --color-accent-glow:  rgba(20, 184, 166, 0.1);
+  --color-accent-glow-strong: rgba(20, 184, 166, 0.2);
+
+  /* Emerald highlight accent */
+  --color-emerald:       #34d399;
+  --color-emerald-dim:   #059669;
 
   /* Status — refined palette */
-  --color-status-shipped:   #5eead4;
+  --color-status-shipped:   #34d399;
   --color-status-building:  #a78bfa;
-  --color-status-exploring: #63636a;
+  --color-status-exploring: #6b6b76;
 
   /* Utility */
-  --color-success: #4ade80;
-  --color-danger:  #f87171;
+  --color-success: #22c55e;
+  --color-danger:  #ef4444;
+  --color-warning: #f59e0b;
 
-  /* Elevation — refined shadows for dark mode */
-  --elevation-card: 0 1px 2px rgba(0, 0, 0, 0.3),
-                    0 4px 12px rgba(0, 0, 0, 0.2);
-  --elevation-card-hover: 0 2px 4px rgba(0, 0, 0, 0.4),
-                          0 8px 24px rgba(0, 0, 0, 0.25),
-                          0 0 0 1px rgba(94, 234, 212, 0.08);
-  --elevation-glow: 0 0 20px rgba(94, 234, 212, 0.06),
-                    0 0 40px rgba(94, 234, 212, 0.04);
+  /* Elevation — premium, layered shadows */
+  --elevation-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --elevation-md: 0 4px 12px rgba(0, 0, 0, 0.25),
+                  0 1px 3px rgba(0, 0, 0, 0.3);
+  --elevation-lg: 0 8px 30px rgba(0, 0, 0, 0.3),
+                  0 2px 8px rgba(0, 0, 0, 0.25);
+  --elevation-xl: 0 20px 60px rgba(0, 0, 0, 0.35),
+                  0 4px 16px rgba(0, 0, 0, 0.25);
+  --elevation-glow: 0 0 20px rgba(20, 184, 166, 0.08),
+                    0 0 40px rgba(20, 184, 166, 0.04);
+  --elevation-glow-strong: 0 0 24px rgba(20, 184, 166, 0.15),
+                           0 0 48px rgba(20, 184, 166, 0.08);
+
+  /* Glass accent for cards */
+  --glass-accent: linear-gradient(
+    135deg,
+    rgba(20, 184, 166, 0.03) 0%,
+    rgba(52, 211, 153, 0.02) 50%,
+    transparent 100%
+  );
 }
 
 [data-theme="light"] {
-  /* ── Light theme ── */
+  /* ── Light theme — warm white ── */
 
-  --color-bg-primary:   #f8f8f6;
-  --color-bg-secondary: #ffffff;
-  --color-bg-tertiary:  #efefed;
-  --color-bg-glass:     rgba(255, 255, 255, 0.72);
-  --color-bg-glass-border: rgba(0, 0, 0, 0.06);
+  --color-bg-primary:       #fafaf9;
+  --color-bg-secondary:     #ffffff;
+  --color-bg-tertiary:      #f3f3f0;
+  --color-bg-glass:         rgba(255, 255, 255, 0.78);
+  --color-bg-glass-border:  rgba(0, 0, 0, 0.06);
+  --color-bg-elevated:      #ffffff;
+  --color-bg-card:          #ffffff;
 
-  --color-border-subtle:  #e3e3e0;
-  --color-border-default: #d1d1cd;
+  --color-border-subtle:  #e4e4e1;
+  --color-border-default: #d4d4d0;
+  --color-border-strong:  #b8b8b2;
 
-  --color-text-primary:   #141418;
-  --color-text-secondary: #54545b;
-  --color-text-tertiary:  #84848b;
+  --color-text-primary:   #18181b;
+  --color-text-secondary: #52525b;
+  --color-text-tertiary:  #8b8b95;
+  --color-text-quaternary:#b8b8c2;
 
-  --color-accent:     #0d9488;
-  --color-accent-dim: #0f766e;
-  --color-accent-glow: rgba(13, 148, 136, 0.06);
+  --color-accent:       #0d9488;
+  --color-accent-light: #14b8a6;
+  --color-accent-dim:   #0f766e;
+  --color-accent-dark:  #115e59;
+  --color-accent-glow:  rgba(13, 148, 136, 0.08);
+  --color-accent-glow-strong: rgba(13, 148, 136, 0.15);
 
-  --color-status-shipped:   #0d9488;
+  --color-emerald:       #059669;
+  --color-emerald-dim:   #047857;
+
+  --color-status-shipped:   #059669;
   --color-status-building:  #7c3aed;
-  --color-status-exploring: #84848b;
+  --color-status-exploring: #8b8b95;
 
   --color-success: #16a34a;
   --color-danger:  #dc2626;
+  --color-warning: #d97706;
 
-  --elevation-card: 0 1px 2px rgba(22, 22, 26, 0.04),
-                    0 4px 12px rgba(22, 22, 26, 0.06);
-  --elevation-card-hover: 0 2px 4px rgba(22, 22, 26, 0.06),
-                          0 8px 24px rgba(22, 22, 26, 0.10),
-                          0 0 0 1px rgba(13, 148, 136, 0.1);
-  --elevation-glow: 0 0 16px rgba(13, 148, 136, 0.05);
+  --elevation-sm: 0 1px 2px rgba(24, 24, 27, 0.04);
+  --elevation-md: 0 4px 12px rgba(24, 24, 27, 0.06),
+                  0 1px 3px rgba(24, 24, 27, 0.04);
+  --elevation-lg: 0 8px 30px rgba(24, 24, 27, 0.08),
+                  0 2px 8px rgba(24, 24, 27, 0.05);
+  --elevation-xl: 0 20px 60px rgba(24, 24, 27, 0.1),
+                  0 4px 16px rgba(24, 24, 27, 0.06);
+  --elevation-glow: 0 0 20px rgba(13, 148, 136, 0.06),
+                    0 0 40px rgba(13, 148, 136, 0.03);
+  --elevation-glow-strong: 0 0 24px rgba(13, 148, 136, 0.12),
+                           0 0 48px rgba(13, 148, 136, 0.06);
+
+  --glass-accent: linear-gradient(
+    135deg,
+    rgba(13, 148, 136, 0.04) 0%,
+    rgba(5, 150, 105, 0.02) 50%,
+    transparent 100%
+  );
 }
 
 /* ─────────────────────────────────────────────────────────────────────
@@ -121,217 +143,276 @@
 @theme {
 
   /* ── Colors ── */
-  --color-bg-primary:       var(--color-bg-primary);
-  --color-bg-secondary:     var(--color-bg-secondary);
-  --color-bg-tertiary:      var(--color-bg-tertiary);
-  --color-bg-glass:         var(--color-bg-glass);
-  --color-bg-glass-border:  var(--color-bg-glass-border);
-  --color-border-subtle:    var(--color-border-subtle);
-  --color-border-default:   var(--color-border-default);
-  --color-text-primary:     var(--color-text-primary);
-  --color-text-secondary:   var(--color-text-secondary);
-  --color-text-tertiary:    var(--color-text-tertiary);
-  --color-accent:           var(--color-accent);
-  --color-accent-dim:       var(--color-accent-dim);
-  --color-accent-glow:      var(--color-accent-glow);
-  --color-status-shipped:   var(--color-status-shipped);
-  --color-status-building:  var(--color-status-building);
-  --color-status-exploring: var(--color-status-exploring);
-  --color-success:          var(--color-success);
-  --color-danger:           var(--color-danger);
+  --color-bg-primary:        var(--color-bg-primary);
+  --color-bg-secondary:      var(--color-bg-secondary);
+  --color-bg-tertiary:       var(--color-bg-tertiary);
+  --color-bg-glass:          var(--color-bg-glass);
+  --color-bg-glass-border:   var(--color-bg-glass-border);
+  --color-bg-elevated:       var(--color-bg-elevated);
+  --color-bg-card:           var(--color-bg-card);
+  --color-border-subtle:     var(--color-border-subtle);
+  --color-border-default:    var(--color-border-default);
+  --color-border-strong:     var(--color-border-strong);
+  --color-text-primary:      var(--color-text-primary);
+  --color-text-secondary:    var(--color-text-secondary);
+  --color-text-tertiary:     var(--color-text-tertiary);
+  --color-text-quaternary:   var(--color-text-quaternary);
+  --color-accent:            var(--color-accent);
+  --color-accent-light:      var(--color-accent-light);
+  --color-accent-dim:        var(--color-accent-dim);
+  --color-accent-dark:       var(--color-accent-dark);
+  --color-accent-glow:       var(--color-accent-glow);
+  --color-accent-glow-strong: var(--color-accent-glow-strong);
+  --color-emerald:           var(--color-emerald);
+  --color-emerald-dim:       var(--color-emerald-dim);
+  --color-status-shipped:    var(--color-status-shipped);
+  --color-status-building:   var(--color-status-building);
+  --color-status-exploring:  var(--color-status-exploring);
+  --color-success:           var(--color-success);
+  --color-danger:            var(--color-danger);
+  --color-warning:           var(--color-warning);
 
-  /* ── Font families (Visual Design Spec 0.3) ──
-     next/font/local in layout.tsx injects the actual @font-face rules
-     and exposes CSS variables with the same names. Defining them here
-     too ensures Tailwind font-* utilities resolve during SSR before
-     the font loader script has run on the client. */
+  /* ── Font families ── */
   --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
   --font-body:    "Inter",         ui-sans-serif, system-ui, sans-serif;
   --font-mono:    "JetBrains Mono", ui-monospace, "SF Mono", monospace;
 
-  /* ── Type scale (Visual Design Spec 0.3) ──
-     Tailwind v4 supports --text-*--line-height and --text-*--font-weight
-     companions that travel with the size token. */
+  /* ── Type scale — larger, more premium ── */
 
-  --text-display-xl: 4.5rem;                  /* 72px */
+  --text-display-2xl: 5.5rem;                  /* 88px */
+  --text-display-2xl--line-height:   1;
+  --text-display-2xl--letter-spacing: -0.03em;
+  --text-display-2xl--font-weight:   600;
+
+  --text-display-xl: 4.5rem;                   /* 72px */
   --text-display-xl--line-height:   1.05;
   --text-display-xl--letter-spacing: -0.02em;
   --text-display-xl--font-weight:   600;
 
-  --text-display-lg: 3.5rem;                  /* 56px */
-  --text-display-lg--line-height:   1.1;
+  --text-display-lg: 3.75rem;                  /* 60px */
+  --text-display-lg--line-height:   1.08;
   --text-display-lg--letter-spacing: -0.02em;
   --text-display-lg--font-weight:   600;
 
-  --text-heading-lg: 2rem;                    /* 32px */
-  --text-heading-lg--line-height:  1.2;
+  --text-display: 3rem;                        /* 48px */
+  --text-display--line-height:   1.1;
+  --text-display--letter-spacing: -0.02em;
+  --text-display--font-weight:   600;
+
+  --text-heading-xl: 2.25rem;                  /* 36px */
+  --text-heading-xl--line-height:  1.2;
+  --text-heading-xl--letter-spacing: -0.015em;
+  --text-heading-xl--font-weight:  600;
+
+  --text-heading-lg: 1.75rem;                  /* 28px */
+  --text-heading-lg--line-height:  1.25;
+  --text-heading-lg--letter-spacing: -0.01em;
   --text-heading-lg--font-weight:  600;
 
-  --text-heading-md: 1.5rem;                  /* 24px */
+  --text-heading-md: 1.375rem;                 /* 22px */
   --text-heading-md--line-height:  1.3;
   --text-heading-md--font-weight:  600;
 
-  --text-heading-sm: 1.125rem;                /* 18px */
+  --text-heading-sm: 1.125rem;                 /* 18px */
   --text-heading-sm--line-height:  1.4;
   --text-heading-sm--font-weight:  600;
 
-  --text-body-lg: 1.125rem;                   /* 18px */
+  --text-body-xl: 1.25rem;                     /* 20px */
+  --text-body-xl--line-height:  1.6;
+  --text-body-xl--font-weight:  400;
+
+  --text-body-lg: 1.125rem;                    /* 18px */
   --text-body-lg--line-height:  1.6;
   --text-body-lg--font-weight:  400;
 
-  --text-body-md: 1rem;                       /* 16px */
+  --text-body-md: 1rem;                        /* 16px */
   --text-body-md--line-height:  1.6;
   --text-body-md--font-weight:  400;
 
-  --text-body-sm: 0.875rem;                   /* 14px */
+  --text-body-sm: 0.875rem;                    /* 14px */
   --text-body-sm--line-height:  1.5;
   --text-body-sm--font-weight:  400;
 
-  --text-mono-md: 0.875rem;                   /* 14px */
+  --text-mono-lg: 1rem;                        /* 16px */
+  --text-mono-lg--line-height:   1.3;
+  --text-mono-lg--font-weight:   500;
+  --text-mono-lg--letter-spacing: 0.02em;
+
+  --text-mono-md: 0.8125rem;                   /* 13px */
   --text-mono-md--line-height:   1.4;
   --text-mono-md--font-weight:   500;
-  --text-mono-md--letter-spacing: 0.02em;
+  --text-mono-md--letter-spacing: 0.03em;
 
-  --text-mono-sm: 0.75rem;                    /* 12px */
+  --text-mono-sm: 0.75rem;                     /* 12px */
   --text-mono-sm--line-height:   1.4;
   --text-mono-sm--font-weight:   500;
-  --text-mono-sm--letter-spacing: 0.02em;
+  --text-mono-sm--letter-spacing: 0.04em;
 
-  /* ── Spacing scale (Visual Design Spec 0.4) ──
-     The spec defines space-1 through space-10 and uses each token with
-     its resolved px value stated inline (e.g. "space-6 (48px)"). Those
-     inline references are the authoritative mapping used here. */
-  --spacing-space-1:           0.25rem;   /*  4px */
-  --spacing-space-2:           0.75rem;   /* 12px */
-  --spacing-space-3:           1rem;      /* 16px */
-  --spacing-space-4:           1rem;      /* 16px — spec uses space-4 at 16px
-                                              in card-padding context (1.8).
-                                              A true 8px step uses Tailwind's
-                                              default p-2 (8px) directly. */
-  --spacing-space-5:           1.5rem;    /* 24px */
-  --spacing-space-6:           3rem;      /* 48px */
-  --spacing-space-7:           4rem;      /* 64px */
-  --spacing-space-8:           6rem;      /* 96px */
-  --spacing-space-9:           8rem;      /* 128px */
-  --spacing-space-10:          10rem;     /* 160px */
-  --spacing-space-project-gap: 5rem;      /* 80px — Project Detail only */
+  /* ── Spacing — generous ── */
+  --spacing-space-1: 0.25rem;     /*  4px */
+  --spacing-space-2: 0.5rem;      /*  8px */
+  --spacing-space-3: 0.75rem;     /* 12px */
+  --spacing-space-4: 1rem;        /* 16px */
+  --spacing-space-5: 1.5rem;      /* 24px */
+  --spacing-space-6: 2rem;        /* 32px */
+  --spacing-space-7: 2.5rem;      /* 40px */
+  --spacing-space-8: 3rem;        /* 48px */
+  --spacing-space-9: 4rem;        /* 64px */
+  --spacing-space-10: 5rem;       /* 80px */
+  --spacing-space-11: 6rem;       /* 96px */
+  --spacing-space-12: 8rem;       /* 128px */
 
-  /* ── Radius (Visual Design Spec 0.5) ── */
-  --radius-card: 0.625rem;   /* 10px — cards, buttons */
+  /* ── Radius — larger, more modern ── */
+  --radius-sm: 0.375rem;     /* 6px  — small tags   */
+  --radius-md: 0.5rem;       /* 8px  — buttons       */
+  --radius-lg: 0.75rem;      /* 12px — cards         */
+  --radius-xl: 1rem;         /* 16px — sections      */
+  --radius-2xl: 1.25rem;     /* 20px — hero          */
   --radius-pill: 0.375rem;   /* 6px  — tags, chips    */
 
-  /* ── Motion (Visual Design Spec 0.6) ── */
-  --duration-fast: 150ms;   /* hover states           */
-  --duration-base: 250ms;   /* scroll reveal, toggle  */
-  --duration-slow: 400ms;   /* strip expand, borders  */
+  /* ── Motion ── */
+  --duration-fast: 150ms;
+  --duration-base: 250ms;
+  --duration-slow: 400ms;
+  --duration-slower: 600ms;
 
   --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
-  --ease-expand:   cubic-bezier(0.16, 1, 0.3, 1); /* framework strip + tradeoffs only */
+  --ease-expand:   cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 
   /* ── Custom animations ── */
-  --animate-grid-rotate: grid-rotate 60s linear infinite;
-  --animate-gradient-drift: gradient-drift 30s ease-in-out infinite;
+  --animate-float: float 6s ease-in-out infinite;
   --animate-float-slow: float-slow 8s ease-in-out infinite;
+  --animate-shimmer: shimmer 6s ease-in-out infinite;
   --animate-pulse-soft: pulse-soft 4s ease-in-out infinite;
-  --animate-shimmer: shimmer 4s ease-in-out infinite;
+  --animate-fade-in: fade-in 0.6s ease-out forwards;
+  --animate-scale-in: scale-in 0.5s ease-out forwards;
 
-  /* ── Breakpoints (Implementation Blueprint 2.4) ──
-     Named to match the Visual Design Spec's own breakpoint names, not
-     Tailwind's generic sm/md/lg. Enables `tablet:` and `desktop:` prefixes
-     in component code that map directly back to spec values. */
+  /* ── Breakpoints ── */
   --breakpoint-tablet:  37.5rem;  /* 600px  */
   --breakpoint-desktop: 64rem;    /* 1024px */
+  --breakpoint-wide:    90rem;    /* 1440px */
 }
 
 /* ─────────────────────────────────────────────────────────────────────
    3. SHARED COMPONENT UTILITIES
-   Implementation Blueprint 2.2: the one deliberate exception to
-   "utilities only, no @layer components" — focus-ring must be
-   byte-for-byte identical across every interactive element, so a
-   single shared definition is safer than repeating the exact same
-   four properties in 19 different component files.
    ───────────────────────────────────────────────────────────────────── */
 
 @layer components {
   .focus-ring {
     outline: 2px solid var(--color-accent);
     outline-offset: 2px;
+    border-radius: var(--radius-pill);
   }
 
-  /* Glassmorphism utility — frosted glass card/panel effect */
+  /* Glassmorphism utility */
   .glass {
     background: var(--color-bg-glass);
-    backdrop-filter: blur(16px) saturate(1.2);
-    -webkit-backdrop-filter: blur(16px) saturate(1.2);
+    backdrop-filter: blur(20px) saturate(1.3);
+    -webkit-backdrop-filter: blur(20px) saturate(1.3);
     border: 1px solid var(--color-bg-glass-border);
   }
 
   .glass-strong {
     background: var(--color-bg-glass);
-    backdrop-filter: blur(24px) saturate(1.4);
-    -webkit-backdrop-filter: blur(24px) saturate(1.4);
+    backdrop-filter: blur(28px) saturate(1.5);
+    -webkit-backdrop-filter: blur(28px) saturate(1.5);
     border: 1px solid var(--color-bg-glass-border);
   }
 
-  /* Gradient text utility for premium headings */
+  /* Gradient text — premium subtle shimmer */
   .gradient-text {
-    background: linear-gradient(135deg, var(--color-text-primary) 0%, var(--color-accent) 50%, var(--color-text-primary) 100%);
-    background-size: 200% 100%;
+    background: linear-gradient(
+      135deg,
+      var(--color-text-primary) 0%,
+      var(--color-accent-light) 40%,
+      var(--color-emerald) 60%,
+      var(--color-text-primary) 100%
+    );
+    background-size: 300% 100%;
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: shimmer 6s ease-in-out infinite;
+    animation: shimmer 8s ease-in-out infinite;
   }
 
-  /* Premium card shadow transition */
+  /* Gradient text — subtle variant */
+  .gradient-text-subtle {
+    background: linear-gradient(
+      135deg,
+      var(--color-text-primary) 0%,
+      var(--color-text-secondary) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Premium card styling */
   .card-premium {
-    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-                box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-xl);
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
                 border-color 0.3s ease;
+    box-shadow: var(--elevation-sm);
   }
 
   .card-premium:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--elevation-card-hover);
+    transform: translateY(-3px);
+    border-color: var(--color-accent-glow-strong);
+    box-shadow: var(--elevation-lg), var(--elevation-glow);
   }
 
-  /* Node pulse animation */
-  .node-pulse {
-    animation: node-pulse 4s ease-in-out infinite;
-  }
-
-  /* Subtle shimmer for glass overlays */
-  .glass-shimmer {
+  /* Interactive glow on hover */
+  .glow-on-hover {
     position: relative;
     overflow: hidden;
   }
 
-  .glass-shimmer::after {
+  .glow-on-hover::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(
-      105deg,
-      transparent 40%,
-      rgba(94, 234, 212, 0.03) 45%,
-      rgba(94, 234, 212, 0.05) 50%,
-      transparent 55%
+    background: radial-gradient(
+      600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+      var(--color-accent-glow) 0%,
+      transparent 60%
     );
-    animation: shimmer 6s ease-in-out infinite;
+    opacity: 0;
+    transition: opacity 0.5s ease;
     pointer-events: none;
+    z-index: 0;
   }
 
-  /* Scroll-reveal: initial hidden state set by JS/framer-motion at
-     component mount. This class exists as a CSS fallback for visitors
-     with JS disabled — they see content immediately rather than a blank
-     page waiting for JS to reveal it. prefers-reduced-motion already
-     handled in ThemeProvider; JS also checks it before applying motion. */
-  .reveal-ready {
+  .glow-on-hover:hover::before {
     opacity: 1;
-    transform: translateY(0);
   }
 
-  /* Scrollbar hide utility */
+  /* Section label styling */
+  .section-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: var(--text-mono-sm);
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-tertiary);
+  }
+
+  .section-label::before {
+    content: '';
+    display: block;
+    width: 1.5rem;
+    height: 1px;
+    background: var(--color-accent);
+    opacity: 0.5;
+  }
+
+  /* Scrollbar hide */
   .scrollbar-none {
     -ms-overflow-style: none;
     scrollbar-width: none;
@@ -340,7 +421,7 @@
     display: none;
   }
 
-  /* Line clamp for cards */
+  /* Line clamp */
   .line-clamp-2 {
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -361,10 +442,9 @@
    ───────────────────────────────────────────────────────────────────── */
 
 @layer base {
-  /* color-scheme tells the browser which native UI chrome to render
-     (scrollbars, form controls, selected text highlight) */
   html {
     color-scheme: dark;
+    scroll-behavior: smooth;
   }
 
   html[data-theme="light"] {
@@ -377,16 +457,44 @@
     font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-
-    /* Component Library A2: themed colors transition together on theme
-       toggle — never instant-snap. Duration matches motion-base token. */
+    line-height: 1.6;
     transition:
       background-color var(--duration-base) var(--ease-standard),
-      color            var(--duration-base) var(--ease-standard);
+      color var(--duration-base) var(--ease-standard);
   }
 
-  /* Respect prefers-reduced-motion at the CSS level as a baseline.
-     Motion components additionally check this via useReducedMotion(). */
+  /* Selection styling */
+  ::selection {
+    background: var(--color-accent);
+    color: var(--color-bg-primary);
+  }
+
+  /* Smooth focus visible for all interactive elements */
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+  }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-border-default);
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-border-strong);
+  }
+
   @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
@@ -394,6 +502,7 @@
       animation-duration: 0.01ms !important;
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
     }
   }
 }
@@ -402,25 +511,12 @@
    5. ANIMATIONS — @keyframes
    ───────────────────────────────────────────────────────────────────── */
 
-@keyframes grid-rotate {
-  from {
-    transform: rotate(0deg);
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
   }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes gradient-drift {
-  0%,
-  100% {
-    transform: translate(0, 0);
-  }
-  33% {
-    transform: translate(2%, -1%);
-  }
-  66% {
-    transform: translate(-1%, 2%);
+  50% {
+    transform: translateY(-10px);
   }
 }
 
@@ -429,7 +525,16 @@
     transform: translateY(0px);
   }
   50% {
-    transform: translateY(-8px);
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 300% 50%;
+  }
+  100% {
+    background-position: -300% 50%;
   }
 }
 
@@ -442,12 +547,25 @@
   }
 }
 
-@keyframes shimmer {
-  0% {
-    background-position: 200% 50%;
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
   }
-  100% {
-    background-position: -200% 50%;
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
 }
 
@@ -457,7 +575,40 @@
     transform: scale(1);
   }
   50% {
-    opacity: 0.8;
-    transform: scale(1.05);
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
+@keyframes edge-pulse {
+  0%, 100% {
+    opacity: 0.15;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+@keyframes orbit {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes drift {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  25% {
+    transform: translate(2%, -1%) scale(1.02);
+  }
+  50% {
+    transform: translate(-1%, 2%) scale(0.98);
+  }
+  75% {
+    transform: translate(-2%, -1%) scale(1.01);
   }
 }

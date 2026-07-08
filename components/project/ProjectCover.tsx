@@ -24,14 +24,14 @@ export function ProjectCover({ variant, className }: ProjectCoverProps) {
       )}
     >
       <svg
-        viewBox="0 0 800 500"
+        viewBox="0 0 800 400"
         preserveAspectRatio="xMidYMid slice"
         className="w-full h-full"
         role="img"
       >
         {cover(id)}
       </svg>
-      <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-bg-secondary/80 to-transparent pointer-events-none" />
+      <div className="absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-bg-card/80 to-transparent pointer-events-none" />
     </div>
   );
 }
@@ -42,296 +42,334 @@ const COVERS: Record<CoverArtVariant, CoverRenderer> = {
   "concept-intelligence": (id) => (
     <g>
       <defs>
-        <linearGradient id={`bg-${id}`} x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#1a0533" />
-          <stop offset="50%" stopColor="#0d1b3e" />
+        <linearGradient id={`cibg-${id}`} x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#0c1929" />
+          <stop offset="50%" stopColor="#0f2a47" />
           <stop offset="100%" stopColor="#0a1628" />
         </linearGradient>
-        <radialGradient id={`glw-${id}`} cx="0.5" cy="0.4" r="0.5">
-          <stop offset="0%" stopColor="#7c3aed" stopOpacity="0.3" />
-          <stop offset="100%" stopColor="#7c3aed" stopOpacity="0" />
+        <radialGradient id={`ciglw-${id}`} cx="0.5" cy="0.4" r="0.6">
+          <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.15" />
+          <stop offset="100%" stopColor="#38bdf8" stopOpacity="0" />
         </radialGradient>
-        <filter id={`gf-${id}`}>
-          <feGaussianBlur stdDeviation="3" result="blur" />
+        <filter id={`cif-${id}`}>
+          <feGaussianBlur stdDeviation="4" result="blur" />
           <feMerge>
             <feMergeNode in="blur" />
             <feMergeNode in="SourceGraphic" />
           </feMerge>
         </filter>
       </defs>
-      <rect width="800" height="500" fill={`url(#bg-${id})`} />
-      <rect width="800" height="500" fill={`url(#glw-${id})`} />
-      <g opacity="0.6" filter={`url(#gf-${id})`}>
-        {[[200,150,350,200],[350,200,500,150],[350,200,300,350],[350,200,450,320],[200,150,250,280],[500,150,550,280],[250,280,300,350],[550,280,450,320],[300,350,450,320],[200,150,100,220],[500,150,600,220]].map(([x1,y1,x2,y2],i)=>(
-          <line key={`c${i}`} x1={x1} y1={y1} x2={x2} y2={y2}
-            stroke={i%2===0?"#a78bfa":"#5eead4"} strokeWidth="1.5"
-            opacity={0.3+(i%3)*0.15} />
-        ))}
-        {[[200,150],[350,200],[500,150],[250,280],[300,350],[450,320],[550,280],[100,220],[600,220]].map(([cx,cy],i)=>(
-          <circle key={`n${i}`} cx={cx} cy={cy} r={i<3?6:4}
-            fill={i%2===0?"#a78bfa":"#5eead4"}
-            opacity={0.6+(i%3)*0.13} />
-        ))}
-      </g>
-      <g transform="translate(400,220)">
-        <circle cx="0" cy="0" r="60" fill="none" stroke="#a78bfa" strokeWidth="1.5" opacity="0.2" />
-        <circle cx="0" cy="0" r="45" fill="none" stroke="#a78bfa" strokeWidth="1" opacity="0.3" />
-        <circle cx="0" cy="0" r="30" fill="none" stroke="#5eead4" strokeWidth="1" opacity="0.4" />
-        <circle cx="0" cy="0" r="15" fill="#a78bfa" opacity="0.3" filter={`url(#gf-${id})`} />
-      </g>
-      {Array.from({length:20},(_,i)=>(
-        <circle key={`p${i}`}
-          cx={100+Math.sin(i*1.7)*300+400}
-          cy={50+Math.cos(i*2.3)*180+150}
-          r={1+(i%3)}
-          fill={i%3===0?"#a78bfa":i%3===1?"#5eead4":"#818cf8"}
-          opacity={0.2+(i%5)*0.08} />
-      ))}
-      <text x="400" y="440" textAnchor="middle" fill="#a78bfa"
-        fontSize="14" fontFamily="ui-monospace,monospace"
-        letterSpacing="3" opacity="0.7">
-        UNDERSTANDING &gt; MEMORIZATION
-      </text>
-    </g>
-  ),
-  "silicon-valley": (id) => (
-    <g>
-      <defs>
-        <linearGradient id={`bg2-${id}`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#0a0e27" /><stop offset="100%" stopColor="#0d1b2a" />
-        </linearGradient>
-        <linearGradient id={`cg-${id}`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#5eead4" stopOpacity="0.15" />
-          <stop offset="100%" stopColor="#5eead4" stopOpacity="0" />
-        </linearGradient>
-      </defs>
-      <rect width="800" height="500" fill={`url(#bg2-${id})`} />
-      <rect width="800" height="320" fill={`url(#cg-${id})`} />
-      <g opacity="0.08">
-        {Array.from({length:16},(_,i)=>(
-          <line key={`vg${i}`} x1={i*50} y1="0" x2={i*50} y2="500" stroke="#5eead4" strokeWidth="0.5" />
-        ))}
-        {Array.from({length:10},(_,i)=>(
-          <line key={`hg${i}`} x1="0" y1={i*50} x2="800" y2={i*50} stroke="#5eead4" strokeWidth="0.5" />
-        ))}
-      </g>
-      <g transform="translate(0,180)">
-        {[{x:50,w:40,h:120},{x:100,w:30,h:180},{x:140,w:50,h:90},{x:200,w:35,h:200},{x:245,w:45,h:140},{x:300,w:25,h:220},{x:335,w:55,h:100},{x:400,w:40,h:200},{x:450,w:30,h:160},{x:490,w:50,h:110},{x:550,w:35,h:190},{x:595,w:45,h:130},{x:650,w:30,h:170},{x:690,w:50,h:100},{x:750,w:40,h:150}].map((b,i)=>(
-          <g key={`b${i}`}>
-            <rect x={b.x} y={320-b.h} width={b.w} height={b.h}
-              fill={`rgba(94,234,212,${0.04+(i%5)*0.02})`}
-              stroke="#5eead4" strokeWidth="0.5" opacity={0.3+(i%4)*0.08} />
-            {Array.from({length:Math.floor(b.h/20)},(_,j)=>(
-              <rect key={`w${i}${j}`} x={b.x+b.w*0.15} y={320-b.h+j*20+5}
-                width={b.w*0.7} height="6" fill="#5eead4"
-                opacity={0.15+Math.sin(i*j)*0.1} />
+      <rect width="800" height="400" fill={`url(#cibg-${id})`} />
+      <rect width="800" height="400" fill={`url(#ciglw-${id})`} />
+
+      {/* Neural network grid */}
+      <g opacity="0.4" filter={`url(#cif-${id})`}>
+        {/* Vertical nodes with connecting lines */}
+        {[100, 250, 400, 550, 700].map((cx, gi) => (
+          <g key={`cg${gi}`}>
+            <line x1={cx} y1="20" x2={cx} y2="380" stroke="#38bdf8" strokeWidth="0.5" opacity="0.08" />
+            {[60, 120, 180, 240, 300, 360].map((cy, ni) => (
+              <g key={`cn${gi}-${ni}`}>
+                <circle cx={cx} cy={cy} r={2 + (ni % 3)} fill="#5eead4" opacity={0.3 + (ni % 4) * 0.1} />
+                {gi < 4 && (
+                  <line x1={cx} y1={cy} x2={cx + 150} y2={cy + (ni % 2 === 0 ? 30 : -30)} stroke="#38bdf8" strokeWidth="0.5" opacity={0.06 + (ni % 5) * 0.02} />
+                )}
+              </g>
             ))}
           </g>
         ))}
       </g>
-      <g opacity="0.25">
-        {[[0,380,800,380],[0,400,800,400],[0,420,800,420]].map(([x1,y1,x2,y2],i)=>(
-          <line key={`r${i}`} x1={x1} y1={y1} x2={x2} y2={y2}
-            stroke="#5eead4" strokeWidth="1"
-            strokeDasharray={8+i*4} opacity={0.2+i*0.1} />
-        ))}
-      </g>
-      <text x="400" y="440" textAnchor="middle" fill="#5eead4"
-        fontSize="14" fontFamily="ui-monospace,monospace"
-        letterSpacing="3" opacity="0.7">
-        THE OPERATING SYSTEM FOR A CITY
-      </text>
-    </g>
-  ),
-  "pulse-vote": (id) => (
-    <g>
-      <defs>
-        <linearGradient id={`bg3-${id}`} x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#0f172a" /><stop offset="50%" stopColor="#1e1b4b" /><stop offset="100%" stopColor="#0c0a1d" />
-        </linearGradient>
-      </defs>
-      <rect width="800" height="500" fill={`url(#bg3-${id})`} />
-      <g transform="translate(400,200)" opacity="0.12">
-        <path d="M0,-80 C30,-70 50,-50 55,-30 C60,-10 50,10 40,20 C30,30 20,50 10,60 C0,70 -10,65 -20,55 C-30,45 -40,30 -45,15 C-50,0 -45,-15 -40,-30 C-35,-45 -25,-60 -10,-70 C-5,-75 -2,-78 0,-80 Z" fill="#a78bfa" />
-      </g>
-      <g transform="translate(100,60)" opacity="0.4">
-        <rect x="0" y="60" width="20" height="40" fill="#a78bfa" rx="2" opacity="0.5" />
-        <rect x="25" y="40" width="20" height="60" fill="#5eead4" rx="2" opacity="0.5" />
-        <rect x="50" y="20" width="20" height="80" fill="#a78bfa" rx="2" opacity="0.5" />
-        <rect x="75" y="50" width="20" height="50" fill="#5eead4" rx="2" opacity="0.5" />
-      </g>
-      <g transform="translate(500,60)" opacity="0.35">
-        <rect x="0" y="0" width="200" height="120" rx="6" fill="none" stroke="#a78bfa" strokeWidth="0.8" opacity="0.4" />
-        <rect x="10" y="15" width="60" height="8" rx="2" fill="#a78bfa" opacity="0.3" />
-        <text x="10" y="50" fill="#a78bfa" fontSize="28" fontFamily="ui-monospace,monospace" fontWeight="bold" opacity="0.5">72%</text>
-        <text x="10" y="70" fill="#a78bfa" fontSize="10" fontFamily="ui-monospace,monospace" opacity="0.3">Participation</text>
-      </g>
-      <g transform="translate(280,250)" opacity="0.5">
-        <rect x="0" y="0" width="240" height="160" rx="8" fill="none" stroke="#5eead4" strokeWidth="0.8" opacity="0.3" />
-        <text x="20" y="30" fill="#5eead4" fontSize="11" fontFamily="ui-monospace,monospace" opacity="0.5">Cast Your Vote</text>
-        {["Option A","Option B","Option C"].map((opt,i)=>(
-          <g key={`vo${i}`}>
-            <rect x="20" y={45+i*30} width="200" height="22" rx="4"
-              fill="none" stroke={i===1?"#5eead4":"#a78bfa"}
-              strokeWidth={i===1?"1":"0.5"} opacity={i===1?0.5:0.2} />
-            <text x="30" y={59+i*30} fill={i===1?"#5eead4":"#a78bfa"}
-              fontSize="10" fontFamily="ui-monospace,monospace" opacity={i===1?0.6:0.3}>{opt}</text>
+
+      {/* Central concept graph */}
+      <g transform="translate(400, 190)">
+        {/* Concentric rings */}
+        <circle cx="0" cy="0" r="80" fill="none" stroke="#38bdf8" strokeWidth="0.8" opacity="0.12" strokeDasharray="4 6" />
+        <circle cx="0" cy="0" r="55" fill="none" stroke="#5eead4" strokeWidth="0.6" opacity="0.15" strokeDasharray="2 4" />
+        <circle cx="0" cy="0" r="30" fill="none" stroke="#818cf8" strokeWidth="0.5" opacity="0.2" />
+
+        {/* Concept nodes */}
+        {[
+          { x: -60, y: -40, r: 6, c: "#38bdf8", o: 0.5 },
+          { x: 50, y: -35, r: 5, c: "#5eead4", o: 0.4 },
+          { x: -30, y: 50, r: 7, c: "#818cf8", o: 0.5 },
+          { x: 60, y: 40, r: 4, c: "#38bdf8", o: 0.4 },
+          { x: 0, y: -60, r: 8, c: "#5eead4", o: 0.6 },
+          { x: -70, y: 20, r: 5, c: "#818cf8", o: 0.4 },
+          { x: 40, y: 60, r: 4, c: "#38bdf8", o: 0.35 },
+        ].map((n, i) => (
+          <g key={`con${i}`}>
+            <circle cx={n.x} cy={n.y} r={n.r + 8} fill={n.c} opacity={n.o * 0.15} filter={`url(#cif-${id})`} />
+            <circle cx={n.x} cy={n.y} r={n.r} fill={n.c} opacity={n.o} />
+            <circle cx={n.x} cy={n.y} r={n.r * 0.4} fill="#fff" opacity={n.o * 0.5} />
           </g>
         ))}
+
+        {/* Central hub */}
+        <circle cx="0" cy="0" r="12" fill="#38bdf8" opacity="0.2" filter={`url(#cif-${id})`} />
+        <circle cx="0" cy="0" r="6" fill="#5eead4" opacity="0.6" />
+        <circle cx="0" cy="0" r="2.5" fill="#fff" opacity="0.8" />
       </g>
-      <g transform="translate(400,200)" opacity="0.15">
-        <circle cx="0" cy="0" r="30" fill="none" stroke="#5eead4" strokeWidth="1" />
-        <circle cx="0" cy="0" r="60" fill="none" stroke="#a78bfa" strokeWidth="0.8" />
-        <circle cx="0" cy="0" r="90" fill="none" stroke="#5eead4" strokeWidth="0.5" opacity="0.5" />
-      </g>
-      <text x="400" y="440" textAnchor="middle" fill="#a78bfa"
-        fontSize="14" fontFamily="ui-monospace,monospace"
-        letterSpacing="3" opacity="0.7">
-        TRUST &amp; TRANSPARENCY
-      </text>
-    </g>
-  ),
-  "graph-visualizer": (id) => (
-    <g>
-      <defs>
-        <linearGradient id={`bg4-${id}`} x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#0a1628" /><stop offset="50%" stopColor="#1a0a2e" /><stop offset="100%" stopColor="#0d1b2a" />
-        </linearGradient>
-        <filter id={`g4-${id}`}><feGaussianBlur stdDeviation="3" /></filter>
-      </defs>
-      <rect width="800" height="500" fill={`url(#bg4-${id})`} />
-      <g transform="translate(400,220)">
-        {[[0,-100,-120,0],[0,-100,120,0],[0,-100,-60,60],[0,-100,60,60],[-120,0,-60,60],[120,0,60,60],[-120,0,-140,80],[120,0,140,80],[-60,60,-140,80],[60,60,140,80],[-140,80,0,130],[140,80,0,130],[-60,60,0,130],[60,60,0,130],[-120,0,-60,-70],[120,0,60,-70]].map(([x1,y1,x2,y2],i)=>(
-          <line key={`e${i}`} x1={x1} y1={y1} x2={x2} y2={y2}
-            stroke={i%3===0?"#a78bfa":i%3===1?"#5eead4":"#818cf8"}
-            strokeWidth="1.2" opacity={0.25+(i%4)*0.08} />
-        ))}
-        {[{x:0,y:-100,r:10,c:"#5eead4"},{x:-120,y:0,r:8,c:"#a78bfa"},{x:120,y:0,r:8,c:"#818cf8"},{x:-60,y:60,r:7,c:"#5eead4"},{x:60,y:60,r:7,c:"#a78bfa"},{x:-140,y:80,r:5,c:"#818cf8"},{x:140,y:80,r:5,c:"#5eead4"},{x:0,y:130,r:6,c:"#a78bfa"},{x:-60,y:-70,r:5,c:"#818cf8"},{x:60,y:-70,r:5,c:"#5eead4"}].map((n,i)=>(
-          <g key={`no${i}`}>
-            <circle cx={n.x} cy={n.y} r={n.r+4} fill={n.c} opacity="0.1" filter={`url(#g4-${id})`} />
-            <circle cx={n.x} cy={n.y} r={n.r} fill={n.c} opacity="0.5" />
-            <circle cx={n.x} cy={n.y} r={n.r*0.4} fill={n.c} opacity="0.8" />
-          </g>
-        ))}
-        <circle cx="0" cy="-100" r="16" fill="none" stroke="#5eead4"
-          strokeWidth="1.5" opacity="0.4" strokeDasharray="4 3" />
-      </g>
-      <g transform="translate(50,400)" opacity="0.3">
-        <circle cx="10" cy="0" r="4" fill="#5eead4" />
-        <text x="20" y="4" fill="#5eead4" fontSize="10" fontFamily="ui-monospace,monospace">Visited</text>
-        <circle cx="90" cy="0" r="4" fill="#a78bfa" />
-        <text x="100" y="4" fill="#a78bfa" fontSize="10" fontFamily="ui-monospace,monospace">Frontier</text>
-        <circle cx="170" cy="0" r="4" fill="#818cf8" />
-        <text x="180" y="4" fill="#818cf8" fontSize="10" fontFamily="ui-monospace,monospace">Unexplored</text>
-      </g>
-      <text x="400" y="460" textAnchor="middle" fill="#5eead4"
-        fontSize="14" fontFamily="ui-monospace,monospace"
-        letterSpacing="3" opacity="0.7">
-        BFS · DFS · SHORTEST PATH
-      </text>
-    </g>
-  ),
-  "os-scheduling": (id) => (
-    <g>
-      <defs>
-        <linearGradient id={`bg5-${id}`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#0a0e1a" /><stop offset="100%" stopColor="#1a1a2e" />
-        </linearGradient>
-      </defs>
-      <rect width="800" height="500" fill={`url(#bg5-${id})`} />
-      <g transform="translate(400,150)" opacity="0.2">
-        <rect x="-60" y="-60" width="120" height="120" rx="12" fill="none" stroke="#5eead4" strokeWidth="1" />
-        <text x="0" y="5" textAnchor="middle" fill="#5eead4" fontSize="11" fontFamily="ui-monospace,monospace" opacity="0.5">CPU</text>
-      </g>
-      <g transform="translate(50,260)">
-        <line x1="0" y1="0" x2="700" y2="0" stroke="#5eead4" strokeWidth="1" opacity="0.15" />
-        {[{x:10,w:80,l:"P1",c:"#5eead4"},{x:95,w:60,l:"P2",c:"#a78bfa"},{x:160,w:100,l:"P3",c:"#818cf8"},{x:265,w:70,l:"P1",c:"#5eead4"},{x:340,w:90,l:"P4",c:"#f472b6"},{x:435,w:55,l:"P2",c:"#a78bfa"},{x:495,w:80,l:"P5",c:"#fb923c"},{x:580,w:65,l:"P3",c:"#818cf8"},{x:650,w:45,l:"P1",c:"#5eead4"}].map((b,i)=>(
-          <g key={`g${i}`}>
-            <rect x={b.x} y="8" width={b.w} height="28" rx="4"
-              fill={b.c} opacity="0.35" stroke={b.c} strokeWidth="0.5" />
-            <text x={b.x+b.w/2} y="27" textAnchor="middle" fill={b.c}
-              fontSize="10" fontFamily="ui-monospace,monospace" opacity="0.7">{b.l}</text>
-          </g>
-        ))}
-      </g>
-      <g transform="translate(50,340)" opacity="0.35">
-        <rect x="0" y="0" width="220" height="70" rx="6" fill="none" stroke="#5eead4" strokeWidth="0.5" opacity="0.3" />
-        <text x="15" y="20" fill="#5eead4" fontSize="9" fontFamily="ui-monospace,monospace" opacity="0.4">Turnaround: 14.2ms</text>
-        <text x="15" y="38" fill="#a78bfa" fontSize="9" fontFamily="ui-monospace,monospace" opacity="0.4">Waiting: 8.7ms</text>
-        <text x="15" y="56" fill="#818cf8" fontSize="9" fontFamily="ui-monospace,monospace" opacity="0.4">Throughput: 3.1 proc/ms</text>
-      </g>
-      <g transform="translate(580,340)" opacity="0.3">
-        <rect x="0" y="0" width="170" height="70" rx="6" fill="none" stroke="#a78bfa" strokeWidth="0.5" opacity="0.3" />
-        <text x="85" y="25" textAnchor="middle" fill="#a78bfa" fontSize="10" fontFamily="ui-monospace,monospace" opacity="0.5">Round Robin</text>
-        <text x="85" y="45" textAnchor="middle" fill="#a78bfa" fontSize="9" fontFamily="ui-monospace,monospace" opacity="0.35">Quantum: 4ms</text>
-      </g>
-      <text x="400" y="460" textAnchor="middle" fill="#5eead4"
-        fontSize="14" fontFamily="ui-monospace,monospace"
-        letterSpacing="3" opacity="0.7">
-        FCFS · SJF · ROUND ROBIN · PRIORITY
-      </text>
-    </g>
-  ),
-  "page-replacement": (id) => (
-    <g>
-      <defs>
-        <linearGradient id={`bg6-${id}`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#0d1117" /><stop offset="100%" stopColor="#161b22" />
-        </linearGradient>
-      </defs>
-      <rect width="800" height="500" fill={`url(#bg6-${id})`} />
-      <g transform="translate(150,60)">
-        {Array.from({length:4},(_,row)=>Array.from({length:6},(_,col)=>{
-          const idx=row*4+col; const hc=idx<10; const act=idx===3||idx===7;
-          return (
-            <g key={`m${row}-${col}`}>
-              <rect x={col*85} y={row*95} width="75" height="85" rx="6"
-                fill={act?"#5eead4":"#1a1a2e"}
-                stroke={act?"#5eead4":hc?"#a78bfa":"#1a1a2e"}
-                strokeWidth={act?"1.5":"0.8"}
-                opacity={act?0.6:hc?0.25:0.05} />
-              {hc&&<>
-                <text x={col*85+37} y={row*95+45} textAnchor="middle"
-                  fill={act?"#5eead4":"#a78bfa"} fontSize="11"
-                  fontFamily="ui-monospace,monospace"
-                  opacity={act?0.8:0.35}>P{idx+1}</text>
-                <text x={col*85+37} y={row*95+62} textAnchor="middle"
-                  fill={act?"#5eead4":"#a78bfa"} fontSize="8"
-                  fontFamily="ui-monospace,monospace"
-                  opacity={act?0.4:0.15}>0x{String(idx*4).padStart(3,"0")}</text>
-              </>}
-            </g>
-          );
-        }))}
-      </g>
-      <g transform="translate(150,440)" opacity="0.3">
-        <rect x="0" y="0" width="12" height="12" rx="2" fill="#5eead4" opacity="0.5" />
-        <text x="18" y="10" fill="#5eead4" fontSize="10" fontFamily="ui-monospace,monospace" opacity="0.5">Cache Hit</text>
-        <rect x="100" y="0" width="12" height="12" rx="2" fill="#f87171" opacity="0.3" />
-        <text x="118" y="10" fill="#f87171" fontSize="10" fontFamily="ui-monospace,monospace" opacity="0.4">Page Fault</text>
-      </g>
-      <g transform="translate(560,80)" opacity="0.35">
-        <rect x="0" y="0" width="160" height="80" rx="6" fill="none" stroke="#f87171" strokeWidth="0.5" opacity="0.2" />
-        <text x="80" y="25" textAnchor="middle" fill="#f87171" fontSize="9" fontFamily="ui-monospace,monospace" opacity="0.4">Page Faults</text>
-        <text x="80" y="55" textAnchor="middle" fill="#f87171" fontSize="28" fontFamily="ui-monospace,monospace" fontWeight="bold" opacity="0.5">07</text>
-      </g>
-      <g transform="translate(560,180)" opacity="0.3">
-        {[{l:"FIFO",v:"12",c:"#5eead4"},{l:"LRU",v:"09",c:"#a78bfa"},{l:"OPT",v:"06",c:"#818cf8"}].map((a,i)=>(
-          <g key={`al${i}`}>
-            <rect x="0" y={i*30} width="160" height="25" rx="4" fill="none" stroke={a.c} strokeWidth="0.5" opacity="0.2" />
-            <text x="15" y={i*30+17} fill={a.c} fontSize="11" fontFamily="ui-monospace,monospace" opacity="0.5">{a.l}</text>
-            <text x="140" y={i*30+17} textAnchor="end" fill={a.c} fontSize="11" fontFamily="ui-monospace,monospace" fontWeight="bold" opacity="0.6">{a.v}</text>
-          </g>
-        ))}
-      </g>
-      <text x="400" y="470" textAnchor="middle" fill="#5eead4"
-        fontSize="14" fontFamily="ui-monospace,monospace"
-        letterSpacing="3" opacity="0.7">
-        FIFO · LRU · OPTIMAL
+
+      {/* Floating particles */}
+      {Array.from({length: 30}, (_, i) => (
+        <circle key={`p${i}`}
+          cx={40 + Math.sin(i * 1.3) * 350 + 400}
+          cy={30 + Math.cos(i * 0.9) * 160 + 100}
+          r={1 + (i % 3)}
+          fill={i % 3 === 0 ? "#38bdf8" : i % 3 === 1 ? "#5eead4" : "#818cf8"}
+          opacity={0.1 + (i % 5) * 0.04}
+        />
+      ))}
+
+      <text x="400" y="370" textAnchor="middle" fill="#5eead4"
+        fontSize="12" fontFamily="ui-monospace,monospace"
+        letterSpacing="4" opacity="0.5">
+        DIAGNOSE · UNDERSTAND · MASTER
       </text>
     </g>
   ),
 
+  "silicon-valley": (id) => (
+    <g>
+      <defs>
+        <linearGradient id={`svbg-${id}`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#060d1a" />
+          <stop offset="50%" stopColor="#0d1b2a" />
+          <stop offset="100%" stopColor="#0a0e1a" />
+        </linearGradient>
+        <linearGradient id={`svglow-${id}`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#5eead4" stopOpacity="0.12" />
+          <stop offset="100%" stopColor="#5eead4" stopOpacity="0" />
+        </linearGradient>
+      </defs>
+      <rect width="800" height="400" fill={`url(#svbg-${id})`} />
+      <rect width="800" height="280" fill={`url(#svglow-${id})`} />
+
+      {/* City skyline */}
+      <g transform="translate(0, 130)" opacity="0.6">
+        {[
+          {x: 20, w: 30, h: 180}, {x: 55, w: 25, h: 120}, {x: 85, w: 35, h: 200},
+          {x: 125, w: 20, h: 150}, {x: 150, w: 40, h: 220}, {x: 195, w: 28, h: 160},
+          {x: 228, w: 32, h: 190}, {x: 265, w: 22, h: 130}, {x: 292, w: 38, h: 240},
+          {x: 335, w: 25, h: 170}, {x: 365, w: 30, h: 210}, {x: 400, w: 35, h: 250},
+          {x: 440, w: 22, h: 180}, {x: 467, w: 28, h: 140}, {x: 500, w: 34, h: 200},
+          {x: 539, w: 26, h: 160}, {x: 570, w: 30, h: 230}, {x: 605, w: 24, h: 170},
+          {x: 634, w: 36, h: 190}, {x: 675, w: 28, h: 150}, {x: 708, w: 32, h: 210},
+          {x: 745, w: 25, h: 140}, {x: 775, w: 20, h: 100}
+        ].map((b, i) => (
+          <g key={`bld${i}`}>
+            <rect x={b.x} y={270 - b.h} width={b.w} height={b.h}
+              fill={`rgba(94,234,212,${0.03 + (i % 7) * 0.015})`}
+              stroke="#5eead4" strokeWidth="0.3" opacity={0.15 + (i % 5) * 0.04} />
+            {/* Windows */}
+            {Array.from({length: Math.floor(b.h / 18)}, (_, j) => (
+              <rect key={`w${i}-${j}`}
+                x={b.x + b.w * 0.2} y={270 - b.h + j * 18 + 6}
+                width={b.w * 0.6} height="5"
+                fill="#5eead4" opacity={0.08 + Math.sin(i + j) * 0.05} rx="1" />
+            ))}
+            {/* Spire for tallest buildings */}
+            {b.h > 200 && (
+              <line x1={b.x + b.w / 2} y1={270 - b.h} x2={b.x + b.w / 2} y2={270 - b.h - 15}
+                stroke="#5eead4" strokeWidth="0.5" opacity="0.2" />
+            )}
+          </g>
+        ))}
+      </g>
+
+      {/* Data flow lines */}
+      <g opacity="0.2">
+        {[200, 300, 400, 500, 600].map((cx, i) => (
+          <g key={`dfl${i}`}>
+            <line x1={cx - 80} y1={50 + i * 20} x2={cx + 80} y2={50 + i * 20 + 40}
+              stroke="#5eead4" strokeWidth="0.8" opacity={0.1 + i * 0.02} />
+            <circle cx={cx} cy={62 + i * 30} r="2" fill="#5eead4" opacity={0.3 + i * 0.05} />
+          </g>
+        ))}
+      </g>
+
+      {/* Circuit traces */}
+      <g opacity="0.08">
+        <path d="M50,340 L200,340 L200,310 L350,310" stroke="#5eead4" strokeWidth="0.5" fill="none" />
+        <path d="M450,310 L600,310 L600,340 L750,340" stroke="#5eead4" strokeWidth="0.5" fill="none" />
+        <circle cx="200" cy="310" r="3" fill="#5eead4" opacity="0.3" />
+        <circle cx="600" cy="310" r="3" fill="#5eead4" opacity="0.3" />
+      </g>
+
+      <text x="400" y="370" textAnchor="middle" fill="#5eead4"
+        fontSize="12" fontFamily="ui-monospace,monospace"
+        letterSpacing="4" opacity="0.5">
+        INFRASTRUCTURE · AUTOMATION · SCALE
+      </text>
+    </g>
+  ),
+
+  "pulse-vote": (id) => (
+    <g>
+      <defs>
+        <linearGradient id={`pvbg-${id}`} x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#0f0a1a" />
+          <stop offset="40%" stopColor="#1a0a2e" />
+          <stop offset="100%" stopColor="#0c0a1d" />
+        </linearGradient>
+        <radialGradient id={`pvglow-${id}`} cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0%" stopColor="#a78bfa" stopOpacity="0.1" />
+          <stop offset="100%" stopColor="#a78bfa" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      <rect width="800" height="400" fill={`url(#pvbg-${id})`} />
+      <rect width="800" height="400" fill={`url(#pvglow-${id})`} />
+
+      {/* Bar chart visualization */}
+      <g transform="translate(80, 60)" opacity="0.5">
+        {[
+          {x: 0, h: 100, c: "#a78bfa"}, {x: 40, h: 160, c: "#818cf8"},
+          {x: 80, h: 80, c: "#c4b5fd"}, {x: 120, h: 200, c: "#a78bfa"},
+          {x: 160, h: 140, c: "#818cf8"}, {x: 200, h: 110, c: "#c4b5fd"},
+          {x: 240, h: 180, c: "#a78bfa"}, {x: 280, h: 60, c: "#818cf8"},
+          {x: 320, h: 150, c: "#c4b5fd"}, {x: 360, h: 90, c: "#a78bfa"}
+        ].map((b, i) => (
+          <g key={`bar${i}`}>
+            <rect x={b.x} y={220 - b.h} width="30" height={b.h} rx="2"
+              fill={b.c} opacity={0.25 + (i % 5) * 0.05}
+              stroke={b.c} strokeWidth="0.5" strokeOpacity="0.3" />
+            <rect x={b.x} y={220 - b.h} width="30" height={Math.min(b.h, 4)} rx="1"
+              fill={b.c} opacity="0.4" />
+          </g>
+        ))}
+        <line x1="0" y1="220" x2="400" y2="220" stroke="#a78bfa" strokeWidth="0.5" opacity="0.15" />
+      </g>
+
+      {/* Voting interface mockup */}
+      <g transform="translate(420, 50)" opacity="0.45">
+        <rect x="0" y="0" width="340" height="300" rx="12" fill="none" stroke="#a78bfa" strokeWidth="0.5" opacity="0.2" />
+        <text x="170" y="30" textAnchor="middle" fill="#a78bfa" fontSize="11" fontFamily="ui-monospace,monospace" opacity="0.5">
+          Cast Your Vote
+        </text>
+
+        {["Option A: Real-time Pulse", "Option B: Anonymous", "Option C: AI Insights"].map((opt, i) => {
+          const isActive = i === 1;
+          const w = isActive ? 290 : 240;
+          return (
+            <g key={`v${i}`}>
+              <rect x="25" y={50 + i * 70} width="290" height="55" rx="6"
+                fill="none" stroke={isActive ? "#a78bfa" : "#818cf8"}
+                strokeWidth={isActive ? "1" : "0.4"} opacity={isActive ? 0.5 : 0.15} />
+              <rect x="25" y={50 + i * 70} width={w} height="55" rx="6"
+                fill={isActive ? "#a78bfa" : "#818cf8"} opacity={isActive ? 0.08 : 0.03} />
+              <text x="40" y={75 + i * 70} fill={isActive ? "#a78bfa" : "#818cf8"}
+                fontSize="10" fontFamily="ui-monospace,monospace" opacity={isActive ? 0.7 : 0.3}>{opt}</text>
+              {isActive && (
+                <text x="290" y={75 + i * 70} textAnchor="end" fill="#a78bfa"
+                  fontSize="10" fontFamily="ui-monospace,monospace" opacity="0.5">72%</text>
+              )}
+            </g>
+          );
+        })}
+      </g>
+
+      {/* Pulse animation ring */}
+      <g transform="translate(400, 150)" opacity="0.08">
+        <circle cx="0" cy="0" r="140" fill="none" stroke="#a78bfa" strokeWidth="0.5" />
+        <circle cx="0" cy="0" r="100" fill="none" stroke="#818cf8" strokeWidth="0.3" opacity="0.5" />
+      </g>
+
+      <text x="400" y="370" textAnchor="middle" fill="#a78bfa"
+        fontSize="12" fontFamily="ui-monospace,monospace"
+        letterSpacing="4" opacity="0.5">
+        TRUST · TRANSPARENCY · CONSENSUS
+      </text>
+    </g>
+  ),
+
+  "graph-visualizer": (id) => (
+    <g>
+      <defs>
+        <linearGradient id={`gvbg-${id}`} x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#0a0e1a" /><stop offset="100%" stopColor="#120a1e" />
+        </linearGradient>
+        <filter id={`gvf-${id}`}><feGaussianBlur stdDeviation="2.5" /></filter>
+      </defs>
+      <rect width="800" height="400" fill={`url(#gvbg-${id})`} />
+      <g transform="translate(400,180)">
+        {[...Array(12)].map((_,i)=>(
+          <line key={`ge${i}`}
+            x1={0} y1={0}
+            x2={Math.cos(i*Math.PI/6)*100} y2={Math.sin(i*Math.PI/6)*100}
+            stroke="#5eead4" strokeWidth="0.6" opacity={0.15+(i%4)*0.04} />
+        ))}
+        {[...Array(8)].map((_,i)=>{
+          const a = i*Math.PI/4; const r=60+Math.sin(i*1.5)*20;
+          return <circle key={`gn${i}`} cx={Math.cos(a)*r} cy={Math.sin(a)*r}
+            r={3+Math.sin(i*2)*1.5} fill="#5eead4" opacity={0.3+(i%3)*0.1} />;
+        })}
+        <circle cx="0" cy="0" r="8" fill="#a78bfa" opacity="0.4" />
+      </g>
+      <text x="400" y="370" textAnchor="middle" fill="#5eead4"
+        fontSize="12" fontFamily="ui-monospace,monospace" letterSpacing="4" opacity="0.5">
+        BFS · DFS · SHORTEST PATH
+      </text>
+    </g>
+  ),
+
+  "os-scheduling": (id) => (
+    <g>
+      <defs>
+        <linearGradient id={`osbg-${id}`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#0a0e1a" /><stop offset="100%" stopColor="#141428" />
+        </linearGradient>
+      </defs>
+      <rect width="800" height="400" fill={`url(#osbg-${id})`} />
+      <g transform="translate(50,140)" opacity="0.5">
+        <line x1="0" y1="0" x2="700" y2="0" stroke="#5eead4" strokeWidth="0.5" opacity="0.1" />
+        {[{x:10,w:70,l:"P1",c:"#5eead4"},{x:85,w:55,l:"P2",c:"#a78bfa"},{x:145,w:90,l:"P3",c:"#818cf8"},{x:240,w:65,l:"P1",c:"#5eead4"},{x:310,w:80,l:"P4",c:"#f472b6"},{x:395,w:50,l:"P2",c:"#a78bfa"},{x:450,w:75,l:"P5",c:"#fb923c"},{x:530,w:60,l:"P3",c:"#818cf8"},{x:595,w:70,l:"P1",c:"#5eead4"},{x:670,w:25,l:"P4",c:"#f472b6"}].map((b,i)=>(
+          <g key={`sg${i}`}>
+            <rect x={b.x} y="-15" width={b.w} height="30" rx="4"
+              fill={b.c} opacity="0.25" stroke={b.c} strokeWidth="0.3" />
+            <text x={b.x+b.w/2} y="5" textAnchor="middle" fill={b.c}
+              fontSize="9" fontFamily="ui-monospace,monospace" opacity="0.6">{b.l}</text>
+          </g>
+        ))}
+      </g>
+      <text x="400" y="370" textAnchor="middle" fill="#5eead4"
+        fontSize="12" fontFamily="ui-monospace,monospace" letterSpacing="4" opacity="0.5">
+        FCFS · SJF · ROUND ROBIN · PRIORITY
+      </text>
+    </g>
+  ),
+
+  "page-replacement": (id) => (
+    <g>
+      <defs>
+        <linearGradient id={`prbg-${id}`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#0d1117" /><stop offset="100%" stopColor="#161b22" />
+        </linearGradient>
+      </defs>
+      <rect width="800" height="400" fill={`url(#prbg-${id})`} />
+      <g transform="translate(150,40)" opacity="0.4">
+        {[0,1,2,3].map(row=>[0,1,2,3,4,5].map(col=>{
+          const idx=row*4+col; const hc=idx<12; const act=idx===2||idx===6||idx===10;
+          return (
+            <g key={`pm${row}-${col}`}>
+              <rect x={col*85} y={row*85} width="75" height="75" rx="5"
+                fill={act?"#5eead4":"#141428"}
+                stroke={act?"#5eead4":hc?"#a78bfa":"transparent"}
+                strokeWidth={act?"1.2":"0.5"}
+                opacity={act?0.4:hc?0.15:0.04} />
+              {hc&&<text x={col*85+37} y={row*85+42} textAnchor="middle"
+                fill={act?"#5eead4":"#a78bfa"} fontSize="9"
+                fontFamily="ui-monospace,monospace"
+                opacity={act?0.6:0.25}>P{idx+1}</text>}
+            </g>
+          );
+        }))}
+      </g>
+      <text x="400" y="370" textAnchor="middle" fill="#5eead4"
+        fontSize="12" fontFamily="ui-monospace,monospace" letterSpacing="4" opacity="0.5">
+        FIFO · LRU · OPTIMAL
+      </text>
+    </g>
+  ),
 };
 
 export default ProjectCover;

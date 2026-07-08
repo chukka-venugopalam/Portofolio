@@ -12,7 +12,7 @@ interface FrameworkNode {
 }
 
 const CuriosityIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
     <circle cx="12" cy="12" r="10" />
     <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
     <path d="M12 17h.01" />
@@ -20,20 +20,20 @@ const CuriosityIcon = () => (
 );
 
 const LearningIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
     <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
   </svg>
 );
 
 const UnderstandingIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
     <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
     <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
   </svg>
 );
 
 const BuildingIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
     <path d="M12 2L2 7l10 5 10-5-10-5z" />
     <path d="M2 17l10 5 10-5" />
     <path d="M2 12l10 5 10-5" />
@@ -41,7 +41,7 @@ const BuildingIcon = () => (
 );
 
 const ImpactIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
     <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
   </svg>
 );
@@ -104,116 +104,97 @@ export function FrameworkStrip() {
 
   return (
     <div onMouseLeave={handleMouseLeave} className="relative">
-      {/* Timeline line — visible in both modes */}
-      <div
-        aria-hidden="true"
-        className={cn(
-          "hidden desktop:block absolute left-[31px] right-[31px] top-[18px] h-[2px]",
-          "bg-gradient-to-r from-border-subtle via-accent/30 to-border-subtle"
-        )}
-      />
-
-      {/* Nodes row */}
-      <div
-        className={cn(
-          "flex items-start gap-0",
-          "overflow-x-auto desktop:overflow-visible",
-          "scrollbar-none",
-          "-mx-5 px-5 tablet:mx-0 tablet:px-0"
-        )}
-      >
+      {/* Thin connecting lines between milestones */}
+      <div className="relative flex items-start justify-between">
         {NODES.map((node, index) => {
           const isActive = activeId === node.id;
           const isLast = index === NODES.length - 1;
           const panelId = `${idPrefix}-panel-${node.id}`;
 
           return (
-            <div key={node.id} className="flex shrink-0 items-start desktop:flex-1">
-              <div className="flex flex-col items-start">
-                <button
-                  ref={(el) => { nodeRefs.current[index] = el; }}
-                  type="button"
-                  aria-expanded={isActive}
-                  aria-controls={panelId}
-                  aria-label={`${node.label}${isActive ? " — currently selected" : ""}`}
-                  onClick={() => handleClick(node.id)}
-                  onMouseEnter={() => handleMouseEnter(node.id)}
-                  onFocus={() => handleFocus(node.id)}
-                  onKeyDown={(e) => handleKeyDown(e, index)}
+            <div key={node.id} className="flex-1 flex flex-col items-center relative">
+              {/* Connecting line (except after last node) */}
+              {!isLast && (
+                <div
+                  aria-hidden="true"
                   className={cn(
-                    "group relative flex w-28 tablet:w-auto shrink-0 flex-col items-center gap-3 rounded-card",
-                    "px-4 py-4 -mx-2 -my-3",
-                    "text-center",
-                    "transition-all duration-fast ease-standard",
-                    "focus-visible:outline-none focus-visible:focus-ring"
+                    "absolute top-[28px] left-[60%] right-0 h-px",
+                    "transition-colors duration-slow ease-standard",
+                    isActive
+                      ? "bg-gradient-to-r from-accent/60 to-border-subtle"
+                      : activeId
+                        ? "bg-border-subtle/30"
+                        : "bg-border-subtle"
+                  )}
+                />
+              )}
+
+              <button
+                ref={(el) => { nodeRefs.current[index] = el; }}
+                type="button"
+                aria-expanded={isActive}
+                aria-controls={panelId}
+                aria-label={`${node.label}${isActive ? " — currently selected" : ""}`}
+                onClick={() => handleClick(node.id)}
+                onMouseEnter={() => handleMouseEnter(node.id)}
+                onFocus={() => handleFocus(node.id)}
+                onKeyDown={(e) => handleKeyDown(e, index)}
+                className={cn(
+                  "group relative flex flex-col items-center gap-3",
+                  "px-3 py-2",
+                  "transition-all duration-fast ease-standard",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 rounded-xl"
+                )}
+              >
+                {/* Icon container with glass effect */}
+                <motion.div
+                  aria-hidden="true"
+                  animate={shouldReduce ? {} : {
+                    scale: isActive ? 1.15 : 1,
+                  }}
+                  transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                  className={cn(
+                    "relative flex h-14 w-14 items-center justify-center rounded-xl",
+                    "transition-all duration-slow ease-standard",
+                    isActive
+                      ? "glass shadow-[0_0_24px_rgba(20,184,166,0.15)] border-accent/30 text-accent"
+                      : "bg-bg-tertiary/50 border border-border-subtle text-text-tertiary group-hover:border-accent/20 group-hover:text-accent"
                   )}
                 >
-                  {/* Icon container with glow */}
-                  <motion.div
-                    aria-hidden="true"
-                    animate={shouldReduce ? {} : {
-                      scale: isActive ? 1.1 : 1,
-                    }}
-                    transition={{ type: "spring", stiffness: 400, damping: 20 }}
-                    className={cn(
-                      "relative flex h-10 w-10 items-center justify-center rounded-full",
-                      "transition-all duration-fast ease-standard",
-                      isActive
-                        ? "bg-accent/15 text-accent shadow-[0_0_16px_rgba(94,234,212,0.2)]"
-                        : "bg-bg-tertiary text-text-tertiary group-hover:text-accent group-hover:bg-accent/8"
-                    )}
-                  >
-                    {node.icon}
-                    {/* Glow ring */}
-                    {isActive && (
-                      <span
-                        aria-hidden="true"
-                        className="absolute inset-0 rounded-full animate-ping opacity-20"
-                        style={{ backgroundColor: "var(--color-accent)" }}
-                      />
-                    )}
-                  </motion.div>
+                  {node.icon}
+                  {/* Active glow ring */}
+                  {isActive && (
+                    <span
+                      aria-hidden="true"
+                      className="absolute inset-0 rounded-xl animate-ping opacity-20"
+                      style={{ backgroundColor: "var(--color-accent)" }}
+                    />
+                  )}
+                </motion.div>
 
-                  {/* Label */}
-                  <span
-                    className={cn(
-                      "text-body-sm font-medium",
-                      "transition-colors duration-fast ease-standard",
-                      isActive ? "text-accent" : "text-text-primary"
-                    )}
-                  >
-                    {node.label}
-                  </span>
+                {/* Label */}
+                <span
+                  className={cn(
+                    "text-body-sm font-medium whitespace-nowrap",
+                    "transition-colors duration-fast ease-standard",
+                    isActive ? "text-accent" : "text-text-secondary group-hover:text-text-primary"
+                  )}
+                >
+                  {node.label}
+                </span>
 
-                  {/* Active indicator dot on timeline */}
-                  <span
-                    aria-hidden="true"
-                    className={cn(
-                      "hidden desktop:block absolute -bottom-2 left-1/2 -translate-x-1/2",
-                      "h-2 w-2 rounded-full",
-                      "transition-all duration-fast ease-standard",
-                      isActive
-                        ? "bg-accent shadow-[0_0_6px_rgba(94,234,212,0.5)]"
-                        : "bg-border-default group-hover:bg-accent/50"
-                    )}
-                  />
-                </button>
-              </div>
-
-              {/* Connecting line between nodes (visible on desktop) */}
-              {!isLast && (
+                {/* Active dot indicator */}
                 <span
                   aria-hidden="true"
                   className={cn(
-                    "hidden desktop:block h-[2px] flex-1 self-center mx-1 rounded-full",
+                    "h-1.5 w-1.5 rounded-full",
                     "transition-all duration-fast ease-standard",
                     isActive
-                      ? "bg-accent/40"
-                      : "bg-border-subtle"
+                      ? "bg-accent shadow-[0_0_8px_rgba(20,184,166,0.5)]"
+                      : "bg-border-default group-hover:bg-accent/40"
                   )}
-                  style={{ marginTop: "20px" }}
                 />
-              )}
+              </button>
             </div>
           );
         })}
@@ -231,28 +212,27 @@ export function FrameworkStrip() {
               id={panelId}
               role="region"
               aria-label={`${node.label}: ${node.example}`}
-              initial={shouldReduce ? false : { opacity: 0, y: -8, scale: 0.97, filter: "blur(4px)" }}
-              animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
-              exit={shouldReduce ? undefined : { opacity: 0, y: -8, scale: 0.97, filter: "blur(4px)" }}
+              initial={shouldReduce ? false : { opacity: 0, y: -6, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={shouldReduce ? undefined : { opacity: 0, y: -6, scale: 0.98 }}
               transition={{
-                duration: shouldReduce ? 0 : 0.4,
+                duration: shouldReduce ? 0 : 0.35,
                 ease: [0.16, 1, 0.3, 1],
               }}
               className="overflow-hidden"
             >
               <div
                 className={cn(
-                  "mt-6 rounded-card",
+                  "mt-8 rounded-xl",
                   "glass",
                   "px-6 py-5 desktop:px-8 desktop:py-6",
-                  "transition-all duration-fast ease-standard",
-                  "hover:shadow-[0_0_30px_rgba(94,234,212,0.06)]"
+                  "border border-accent/10"
                 )}
               >
                 <div className="flex items-center gap-3 mb-2">
                   <span
                     aria-hidden="true"
-                    className="flex h-6 w-6 items-center justify-center rounded-full bg-accent/10 text-accent"
+                    className="flex h-6 w-6 items-center justify-center rounded-md bg-accent/10 text-accent"
                   >
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                       <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10H14.017zM0 21v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151C7.563 6.068 6 8.789 6 11h4v10H0z" />
@@ -265,7 +245,7 @@ export function FrameworkStrip() {
                 <motion.p
                   initial={shouldReduce ? false : { opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  transition={{ duration: shouldReduce ? 0 : 0.3, delay: shouldReduce ? 0 : 0.1 }}
+                  transition={{ duration: shouldReduce ? 0 : 0.3, delay: shouldReduce ? 0 : 0.08 }}
                   className="text-body-md text-text-secondary leading-relaxed"
                 >
                   &ldquo;{node.example}&rdquo;
@@ -276,7 +256,7 @@ export function FrameworkStrip() {
         })}
       </AnimatePresence>
 
-      {/* Inactive state — subtle hint with entrance animation */}
+      {/* Inactive state hint */}
       {activeId === null && (
         <motion.p
           initial={shouldReduce ? false : { opacity: 0, y: 4 }}
@@ -284,7 +264,7 @@ export function FrameworkStrip() {
           transition={{ delay: 1, duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
           className="mt-6 text-body-sm text-text-tertiary text-center desktop:text-left"
         >
-          Hover or tap a step to learn more
+          Hover or tap a milestone to explore
         </motion.p>
       )}
     </div>

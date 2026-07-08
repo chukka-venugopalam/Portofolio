@@ -32,55 +32,30 @@ export function ProjectCard({
       whileInView={shouldReduce ? undefined : { opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.15 }}
       transition={{
-        duration: 0.5,
+        duration: 0.6,
         ease: [0.16, 1, 0.3, 1],
       }}
       className={cn(
-        "group relative rounded-2xl overflow-hidden",
+        "group relative overflow-hidden",
         "card-premium",
         isFlagship
-          ? cn(
-              "bg-bg-secondary border border-border-default",
-              "hover:border-accent/40",
-              "shadow-[0_1px_3px_rgba(0,0,0,0.2),0_0_0_1px_rgba(255,255,255,0.02)]",
-              "hover:shadow-[0_8px_32px_rgba(94,234,212,0.1),0_0_0_1px_rgba(94,234,212,0.15)]",
-              "hover:-translate-y-1.5"
-            )
-          : cn(
-              "bg-bg-secondary border border-border-subtle",
-              "hover:border-accent/25",
-              "shadow-[0_1px_2px_rgba(0,0,0,0.1)]",
-              "hover:shadow-[0_12px_32px_rgba(0,0,0,0.15),0_0_0_1px_rgba(94,234,212,0.06)]",
-              "hover:-translate-y-1"
-            ),
+          ? "hover:border-accent/30"
+          : "hover:border-accent/20",
         className
       )}
     >
-      {/* Featured Ribbon for Flagship */}
-      {isFlagship && (
-        <div className="absolute top-4 right-4 z-20">
-          <span
-            className={cn(
-              "inline-flex items-center gap-1.5",
-              "rounded-full bg-accent/10 border border-accent/25",
-              "px-3 py-1.5",
-              "text-mono-sm text-accent",
-              "backdrop-blur-sm"
-            )}
-          >
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-            </svg>
-            Featured
-          </span>
-        </div>
-      )}
+      {/* Premium glass accent overlay */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 ease-standard"
+        style={{ background: "var(--glass-accent)" }}
+      />
 
-      {/* Cover Art with premium glass overlay and hover zoom */}
+      {/* Cover Art with cinematic treatment */}
       {project.coverArt && (
         <Link
           href={detailHref}
-          className="block relative overflow-hidden aspect-[16/9]"
+          className="block relative overflow-hidden aspect-[2/1] desktop:aspect-[21/9]"
           tabIndex={-1}
           aria-hidden="true"
         >
@@ -90,19 +65,12 @@ export function ProjectCard({
               className="w-full h-full"
             />
           </div>
-          {/* Glass overlay on hover */}
-          <div className={cn(
-            "absolute inset-0 opacity-0 transition-opacity duration-500 ease-standard",
-            "group-hover:opacity-100",
-            "bg-gradient-to-t from-bg-glass/60 via-bg-glass/20 to-transparent",
-            "backdrop-blur-[2px]"
-          )} />
-          {/* Gradient overlay */}
+          {/* Gradient fade to content */}
           <div className={cn(
             "absolute inset-0",
-            "bg-gradient-to-t from-bg-secondary/80 via-transparent to-transparent"
+            "bg-gradient-to-t from-bg-card/90 via-bg-card/20 to-transparent"
           )} />
-          {/* Hover accent glow overlay */}
+          {/* Hover glow */}
           <div className={cn(
             "absolute inset-0 opacity-0 transition-opacity duration-500 ease-standard",
             "group-hover:opacity-100",
@@ -113,13 +81,14 @@ export function ProjectCard({
 
       {/* Content */}
       <div className={cn(
-        isFlagship ? "p-6 desktop:p-8" : "p-6"
+        isFlagship ? "p-6 desktop:p-8" : "p-5",
+        !project.coverArt && "pt-0"
       )}>
         {/* Header row */}
         <div className="flex items-start justify-between gap-4">
           <h3
             className={cn(
-              isFlagship ? "text-heading-lg" : "text-heading-md",
+              isFlagship ? "text-heading-xl" : "text-heading-lg",
               "text-text-primary font-semibold tracking-tight",
               "transition-colors duration-fast ease-standard",
               "group-hover:text-accent"
@@ -129,7 +98,7 @@ export function ProjectCard({
               href={detailHref}
               className={cn(
                 "transition-all duration-fast ease-standard",
-                "focus-visible:outline-none focus-visible:focus-ring rounded-pill"
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-md"
               )}
             >
               {project.name}
@@ -143,7 +112,7 @@ export function ProjectCard({
           {project.oneLiner}
         </p>
 
-        {/* Subtle separator */}
+        {/* Divider */}
         <div className="mt-5 h-px bg-gradient-to-r from-border-subtle via-transparent to-transparent" />
 
         {/* Tech tags */}
@@ -153,7 +122,6 @@ export function ProjectCard({
 
         {/* Action buttons */}
         <div className="mt-6 flex flex-wrap items-center gap-3">
-          {/* Improved CTA buttons with subtle entrance */}
           {/* Read Case Study — primary CTA for flagships */}
           {isFlagship && (
             <Button
@@ -167,7 +135,7 @@ export function ProjectCard({
                 </svg>
               }
             >
-              Read Case Study
+              Case Study
             </Button>
           )}
           {project.links.live && (
@@ -185,7 +153,6 @@ export function ProjectCard({
               }
             >
               Live
-              <span className="sr-only"> demo of {project.name}</span>
             </Button>
           )}
           {project.links.code && (
@@ -201,7 +168,6 @@ export function ProjectCard({
               }
             >
               Code
-              <span className="sr-only"> repository for {project.name}</span>
             </Button>
           )}
           {!isFlagship && (
@@ -215,8 +181,7 @@ export function ProjectCard({
                 </svg>
               }
             >
-              Writeup
-              <span className="sr-only"> for {project.name}</span>
+              Read more
             </Button>
           )}
         </div>
