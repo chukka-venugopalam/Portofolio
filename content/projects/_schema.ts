@@ -7,6 +7,9 @@ export const coverArtSchema = z.enum([
   "graph-visualizer",
   "os-scheduling",
   "page-replacement",
+  "darkroom",
+  "grove",
+  "fracture",
 ]);
 
 export type CoverArtVariant = z.infer<typeof coverArtSchema>;
@@ -90,6 +93,9 @@ export const projectFrontmatterSchema = z.object({
       "graph-visualizer",
       "os-scheduling",
       "page-replacement",
+      "darkroom",
+      "grove",
+      "fracture",
     ])
     .optional(),
 

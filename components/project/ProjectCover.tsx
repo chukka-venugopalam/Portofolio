@@ -294,6 +294,76 @@ const COVERS: Record<CoverArtVariant, CoverRenderer> = {
       </text>
     </g>
   ),
+
+  "darkroom": (id) => (
+    <g>
+      <defs>
+        <linearGradient id={`drbg-${id}`} x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#1a080a" />
+          <stop offset="100%" stopColor="#0a0405" />
+        </linearGradient>
+        <radialGradient id={`drred-${id}`} cx="0.5" cy="0.4" r="0.5">
+          <stop offset="0%" stopColor="#f43f5e" stopOpacity="0.25" />
+          <stop offset="100%" stopColor="#f43f5e" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      <rect width="800" height="400" fill={`url(#drbg-${id})`} />
+      <rect width="800" height="400" fill={`url(#drred-${id})`} />
+      {/* Framed photo print tray */}
+      <g transform="translate(250, 80)">
+        <rect x="0" y="0" width="300" height="200" rx="6" fill="#120608" stroke="#f43f5e" strokeWidth="1" opacity="0.4" />
+        <rect x="20" y="20" width="260" height="160" rx="3" fill="#260c10" stroke="#f43f5e" strokeWidth="0.5" opacity="0.6" />
+        <path d="M 40 140 Q 100 60, 160 110 T 260 80" fill="none" stroke="#f43f5e" strokeWidth="1.5" opacity="0.5" />
+        <circle cx="160" cy="110" r="4" fill="#f43f5e" opacity="0.8" />
+      </g>
+      <text x="400" y="370" textAnchor="middle" fill="#f43f5e" fontSize="12" fontFamily="ui-monospace,monospace" letterSpacing="4" opacity="0.6">
+        ANALOG · RED SAFELIGHT · PHOTOGRAPHY
+      </text>
+    </g>
+  ),
+
+  "grove": (id) => (
+    <g>
+      <defs>
+        <linearGradient id={`grbg-${id}`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#041210" />
+          <stop offset="100%" stopColor="#08211b" />
+        </linearGradient>
+      </defs>
+      <rect width="800" height="400" fill={`url(#grbg-${id})`} />
+      {/* Path curve */}
+      <g opacity="0.5">
+        <path d="M 100 350 C 250 250, 300 150, 500 120 T 700 60" fill="none" stroke="#2dd4bf" strokeWidth="2" strokeDasharray="6 4" />
+        {[100, 220, 340, 460, 580, 700].map((cx, i) => (
+          <circle key={`gw${i}`} cx={cx} cy={280 - i * 36} r="4" fill="#2dd4bf" opacity="0.7" />
+        ))}
+      </g>
+      <text x="400" y="370" textAnchor="middle" fill="#2dd4bf" fontSize="12" fontFamily="ui-monospace,monospace" letterSpacing="4" opacity="0.6">
+        BIOLUMINESCENT · 3D GARDEN · PATHWAY
+      </text>
+    </g>
+  ),
+
+  "fracture": (id) => (
+    <g>
+      <defs>
+        <linearGradient id={`frbg-${id}`} x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#090a14" />
+          <stop offset="100%" stopColor="#111322" />
+        </linearGradient>
+      </defs>
+      <rect width="800" height="400" fill={`url(#frbg-${id})`} />
+      {/* Crystal sphere with subtle light crack */}
+      <g transform="translate(400, 180)">
+        <circle cx="0" cy="0" r="70" fill="none" stroke="#818cf8" strokeWidth="1" opacity="0.4" />
+        <circle cx="0" cy="0" r="68" fill="#818cf8" opacity="0.08" />
+        <path d="M -30 -40 L 10 -10 L -5 20 L 35 50" fill="none" stroke="#c084fc" strokeWidth="1.5" opacity="0.8" />
+      </g>
+      <text x="400" y="370" textAnchor="middle" fill="#818cf8" fontSize="12" fontFamily="ui-monospace,monospace" letterSpacing="4" opacity="0.6">
+        CRYSTAL · REFRACTION · GEOMETRY
+      </text>
+    </g>
+  ),
 };
 
 export default ProjectCover;

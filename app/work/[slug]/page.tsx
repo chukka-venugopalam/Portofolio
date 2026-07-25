@@ -18,7 +18,6 @@ import { TradeoffsBlock } from "@/components/project/TradeoffsBlock";
 import { StatusFooter } from "@/components/project/StatusFooter";
 import { BackLink } from "@/components/project/BackLink";
 import { ProjectCover } from "@/components/project/ProjectCover";
-import { Button } from "@/components/ui/Button";
 import { getMDXComponents } from "@/mdx-components";
 import { cn } from "@/lib/utils";
 

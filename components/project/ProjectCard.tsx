@@ -20,11 +20,6 @@ export function ProjectCard({ project, className }: ProjectCardProps) {
   const detailHref = `/work/${project.slug}`;
   const shouldReduce = useReducedMotion();
 
-  const hasCodeLink = Boolean(project.links?.code);
-  const hasLiveLink = Boolean(project.links?.live);
-  const codeUrl = project.links?.code;
-  const liveUrl = project.links?.live;
-
   return (
     <motion.article
       initial={shouldReduce ? false : { opacity: 0, y: 20 }}
