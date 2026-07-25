@@ -35,9 +35,9 @@ interface SectionProps {
 }
 
 const spacingClasses: Record<SectionSpacing, string> = {
-  home: "py-space-9 tablet:py-20 mobile:py-16",
-  secondary: "py-space-8 tablet:py-16 mobile:py-12",
-  tight: "py-space-7 tablet:py-10 mobile:py-8",
+  home: "py-space-10 tablet:py-24 mobile:py-16",
+  secondary: "py-space-9 tablet:py-20 mobile:py-14",
+  tight: "py-space-7 tablet:py-12 mobile:py-10",
   none: "",
 };
 

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { motion, useReducedMotion } from "motion/react";
 import { StatusTag } from "@/components/ui/StatusTag";
 import { TechTagList } from "@/components/ui/TechTag";
@@ -9,180 +10,145 @@ import { ProjectCover } from "@/components/project/ProjectCover";
 import { cn } from "@/lib/utils";
 import type { ProjectFrontmatter } from "@/content/projects/_schema";
 
-type ProjectCardVariant = "flagship" | "grid";
-
 interface ProjectCardProps {
   project: ProjectFrontmatter;
-  variant?: ProjectCardVariant;
+  variant?: string;
   className?: string;
 }
 
-export function ProjectCard({
-  project,
-  variant = "grid",
-  className,
-}: ProjectCardProps) {
-  const isFlagship = variant === "flagship";
+export function ProjectCard({ project, className }: ProjectCardProps) {
   const detailHref = `/work/${project.slug}`;
   const shouldReduce = useReducedMotion();
 
+  const hasCodeLink = Boolean(project.links?.code);
+  const hasLiveLink = Boolean(project.links?.live);
+  const codeUrl = project.links?.code;
+  const liveUrl = project.links?.live;
+
   return (
     <motion.article
-      initial={shouldReduce ? false : { opacity: 0, y: 30 }}
+      initial={shouldReduce ? false : { opacity: 0, y: 20 }}
       whileInView={shouldReduce ? undefined : { opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.15 }}
-      transition={{
-        duration: 0.6,
-        ease: [0.16, 1, 0.3, 1],
-      }}
+      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
       className={cn(
-        "group relative overflow-hidden",
-        "card-premium",
-        isFlagship
-          ? "hover:border-accent/30"
-          : "hover:border-accent/20",
+        "group relative overflow-hidden flex flex-col justify-between h-full",
+        "rounded-2xl border border-border-subtle bg-bg-card/90 glass",
+        "transition-all duration-medium ease-standard",
+        "hover:border-accent/30 hover:shadow-[0_8px_32px_rgba(20,184,166,0.12)]",
         className
       )}
     >
-      {/* Premium glass accent overlay */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 ease-standard"
-        style={{ background: "var(--glass-accent)" }}
-      />
-
-      {/* Cover Art with cinematic treatment */}
-      {project.coverArt && (
-        <Link
-          href={detailHref}
-          className="block relative overflow-hidden aspect-[2/1] desktop:aspect-[21/9]"
-          tabIndex={-1}
-          aria-hidden="true"
-        >
-          <div className="absolute inset-0 transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105">
-            <ProjectCover
-              variant={project.coverArt}
-              className="w-full h-full"
+      <div>
+        {/* 1. Thumbnail image frame (16:9 fixed aspect ratio) */}
+        <div className="relative w-full aspect-[16/9] overflow-hidden bg-bg-tertiary border-b border-border-subtle">
+          {project.thumbnail ? (
+            <Image
+              src={project.thumbnail}
+              alt={project.name}
+              fill
+              sizes="(max-width: 768px) 100vw, 50vw"
+              className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+              loading="lazy"
             />
-          </div>
-          {/* Gradient fade to content */}
-          <div className={cn(
-            "absolute inset-0",
-            "bg-gradient-to-t from-bg-card/90 via-bg-card/20 to-transparent"
-          )} />
-          {/* Hover glow */}
-          <div className={cn(
-            "absolute inset-0 opacity-0 transition-opacity duration-500 ease-standard",
-            "group-hover:opacity-100",
-            "bg-gradient-to-t from-accent/8 to-transparent"
-          )} />
-        </Link>
-      )}
+          ) : project.coverArt ? (
+            <div className="w-full h-full transition-transform duration-700 ease-out group-hover:scale-105">
+              <ProjectCover variant={project.coverArt} className="w-full h-full" />
+            </div>
+          ) : (
+            // Stylized procedural fallback thumbnail frame
+            <div className="relative w-full h-full flex items-center justify-center bg-gradient-to-br from-bg-tertiary via-bg-secondary to-bg-tertiary p-6 overflow-hidden">
+              <div className="absolute inset-0 bg-accent/5 opacity-50 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="text-center z-10">
+                <span className="text-mono-xs uppercase tracking-widest text-accent/70 font-semibold block mb-1">
+                  {project.category}
+                </span>
+                <span className="text-heading-md font-bold text-text-primary group-hover:text-accent transition-colors">
+                  {project.name}
+                </span>
+              </div>
+            </div>
+          )}
 
-      {/* Content */}
-      <div className={cn(
-        isFlagship ? "p-6 desktop:p-8" : "p-5",
-        !project.coverArt && "pt-0"
-      )}>
-        {/* Header row */}
-        <div className="flex items-start justify-between gap-4">
-          <h3
-            className={cn(
-              isFlagship ? "text-heading-xl" : "text-heading-lg",
-              "text-text-primary font-semibold tracking-tight",
-              "transition-colors duration-fast ease-standard",
-              "group-hover:text-accent"
-            )}
-          >
+          <div className="absolute top-3 right-3 z-10">
+            <StatusTag status={project.status} />
+          </div>
+        </div>
+
+        {/* Card Body */}
+        <div className="p-5 desktop:p-6 flex flex-col flex-1">
+          {/* 2. Project Title */}
+          <h3 className="text-heading-md desktop:text-heading-lg font-bold text-text-primary tracking-tight group-hover:text-accent transition-colors">
             <Link
               href={detailHref}
-              className={cn(
-                "transition-all duration-fast ease-standard",
-                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-md"
-              )}
+              className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-md"
             >
               {project.name}
             </Link>
           </h3>
-          <StatusTag status={project.status} className="shrink-0" />
+
+          {/* 3. One-line description (truncated with ellipsis) */}
+          <p className="mt-2 text-body-sm text-text-secondary line-clamp-1 truncate" title={project.oneLiner}>
+            {project.oneLiner}
+          </p>
+
+          {/* Tech tags */}
+          <div className="mt-4">
+            <TechTagList tags={project.techTags.slice(0, 4)} />
+          </div>
         </div>
+      </div>
 
-        {/* One-liner */}
-        <p className="mt-3 text-body-md text-text-secondary leading-relaxed line-clamp-2">
-          {project.oneLiner}
-        </p>
+      {/* 4. Action buttons row: Case Study, Code, Live */}
+      <div className="p-5 desktop:p-6 pt-0 mt-auto">
+        <div className="grid grid-cols-3 gap-2 pt-4 border-t border-border-subtle/60">
+          {/* Button 1: Case Study */}
+          <Button
+            variant="secondary"
+            href={detailHref}
+            className="w-full h-8 desktop:h-9 px-2 text-[11px] desktop:text-body-xs font-medium justify-center text-accent border-accent/20 hover:border-accent/40"
+          >
+            Case Study
+          </Button>
 
-        {/* Divider */}
-        <div className="mt-5 h-px bg-gradient-to-r from-border-subtle via-transparent to-transparent" />
-
-        {/* Tech tags */}
-        <div className="mt-4">
-          <TechTagList tags={project.techTags} />
-        </div>
-
-        {/* Action buttons */}
-        <div className="mt-6 flex flex-wrap items-center gap-3">
-          {/* Read Case Study — primary CTA for flagships */}
-          {isFlagship && (
-            <Button
-              variant="primary"
-              href={detailHref}
-              className="h-9 desktop:h-9 px-4 text-body-sm"
-              icon={
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
-                  <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
-                </svg>
-              }
-            >
-              Case Study
-            </Button>
-          )}
-          {project.links.live && (
+          {/* Button 2: Code */}
+          {hasCodeLink && codeUrl ? (
             <Button
               variant="secondary"
-              href={project.links.live}
+              href={codeUrl}
               external
-              className="h-9 desktop:h-9 px-4 text-body-sm"
-              icon={
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                  <path d="M15 3h6v6" />
-                  <path d="M10 14L21 3" />
-                </svg>
-              }
-            >
-              Live
-            </Button>
-          )}
-          {project.links.code && (
-            <Button
-              variant="secondary"
-              href={project.links.code}
-              external
-              className="h-9 desktop:h-9 px-4 text-body-sm"
-              icon={
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
-                </svg>
-              }
+              className="w-full h-8 desktop:h-9 px-2 text-[11px] desktop:text-body-xs font-medium justify-center"
             >
               Code
             </Button>
-          )}
-          {!isFlagship && (
-            <Button
-              variant="secondary"
-              href={detailHref}
-              className="h-9 desktop:h-9 px-4 text-body-sm"
-              icon={
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <path d="M5 12h14M13 6l6 6-6 6" />
-                </svg>
-              }
+          ) : (
+            <button
+              disabled
+              title="Not public yet"
+              className="w-full h-8 desktop:h-9 px-2 text-[11px] desktop:text-body-xs font-medium justify-center rounded-lg border border-border-subtle/40 bg-bg-tertiary/30 text-text-quaternary cursor-not-allowed opacity-60 flex items-center"
             >
-              Read more
+              Code
+            </button>
+          )}
+
+          {/* Button 3: Live */}
+          {hasLiveLink && liveUrl ? (
+            <Button
+              variant="primary"
+              href={liveUrl}
+              external
+              className="w-full h-8 desktop:h-9 px-2 text-[11px] desktop:text-body-xs font-medium justify-center"
+            >
+              Live
             </Button>
+          ) : (
+            <button
+              disabled
+              title="No live demo"
+              className="w-full h-8 desktop:h-9 px-2 text-[11px] desktop:text-body-xs font-medium justify-center rounded-lg border border-border-subtle/40 bg-bg-tertiary/30 text-text-quaternary cursor-not-allowed opacity-60 flex items-center"
+            >
+              Live
+            </button>
           )}
         </div>
       </div>

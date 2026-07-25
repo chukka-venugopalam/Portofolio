@@ -15,6 +15,7 @@ export const engineeringProjectSchema = z.object({
   github: z.string().url(),
   liveDemo: z.string().url(),
   whatILearned: z.string().min(1),
+  pullQuote: z.string().min(1),
 });
 
 export const engineeringProjectsSchema = z.array(engineeringProjectSchema);

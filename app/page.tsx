@@ -10,7 +10,7 @@ import { ProjectCard } from "@/components/project/ProjectCard";
 import { LearningEntry } from "@/components/learning/LearningEntry";
 import { ConnectStrip } from "@/components/connect/ConnectStrip";
 import { Button } from "@/components/ui/Button";
-import { SOCIAL_LINKS, SITE_TAGLINE } from "@/lib/constants";
+import { NOW_STATUS, SOCIAL_LINKS, SITE_TAGLINE } from "@/lib/constants";
 
 export const metadata = buildHomeMetadata();
 
@@ -225,10 +225,17 @@ export default function HomePage() {
                 systems, and measure success by the depth of insight created &mdash; not
                 by lines of code or GitHub stars.
               </p>
-              <p className="text-body-md text-text-tertiary pt-4 border-t border-border-subtle">
-                Currently exploring: AI-driven diagnostics, real-time collective intelligence,
-                and learning systems that adapt to how engineers actually think.
-              </p>
+            </div>
+
+            {/* Now status */}
+            <div className="mt-8 flex items-center gap-2 rounded-card border border-border-subtle bg-bg-secondary px-5 py-3">
+              <span className="relative flex h-2.5 w-2.5 shrink-0">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-40" />
+                <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-accent" />
+              </span>
+              <span className="text-mono-sm text-text-tertiary uppercase tracking-[0.08em]">Now &mdash;</span>
+              <span className="text-body-sm text-text-secondary">{NOW_STATUS.line}</span>
+              <span className="text-mono-sm text-text-quaternary shrink-0 ml-auto">{NOW_STATUS.date}</span>
             </div>
           </div>
         </Container>

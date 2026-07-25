@@ -135,7 +135,6 @@ Organized by domain, not by type.
 | `content/projects/_schema.ts` | Zod schemas for project frontmatter |
 | `content/projects/concept-intelligence-platform.mdx` | Flagship: AI diagnostic for DSA |
 | `content/projects/silicon-valley-learning-os.mdx` | Flagship: AI learning operating system |
-| `content/projects/pulse-vote.mdx` | Flagship: real-time decision-making platform |
 | `content/projects/silicon-city.mdx` | Production: urban data dashboard |
 | `content/learning/_schema.ts` | Zod schema for learning entries |
 | `content/also-building.json` | JSON array of one-liner entries |
@@ -432,13 +431,6 @@ All content is read from the filesystem at build time. No database, no CMS, no A
 - **Tech**: Next.js, FastAPI, PostgreSQL, Redis, Gemini 2.0 Pro, Docker, Kubernetes, Python
 - **Architecture**: 5 microservices — Context Ingestion, Learning Graph, Curriculum Engine, Delivery, Analytics
 - **Roadmap**: Context Ingestion → Learning Graph → MVP → GitLab/Bitbucket support → Analytics → API
-
-### PulseVote
-- **Status**: Building
-- **Vision**: Real-time collective decision-making that surfaces authentic consensus, not just the loudest voice
-- **Tech**: Next.js, FastAPI, WebSockets, PostgreSQL, Redis, Tailwind, Python
-- **Architecture**: Session Service, Voting Engine, Real-time Broadcast (Redis Pub/Sub), Frontend, Persistence
-- **Roadmap**: Core voting → real-group validation → recurring sessions → facilitator dashboard → pricing
 
 ---
 

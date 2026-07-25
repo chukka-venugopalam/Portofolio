@@ -16,35 +16,35 @@ featured: false
 
 Most interview prep tools measure completion, not understanding. You can watch every NeetCode video, solve two hundred LeetCode problems, and mark every topic done, and still freeze the moment an interviewer asks you to explain why your solution works, or what would break if one assumption changed.
 
-I noticed this in my own prep. I could pass LeetCode's test cases on a binary search tree problem and still not be able to cleanly explain, out loud, why the BST property applies to every descendant and not just direct children. That gap between I can solve it and I can explain it is exactly what technical interviews actually test, and exactly what existing tools dont measure.
+I noticed this in my own prep. I could pass LeetCode's test cases on a binary search tree problem and still not be able to cleanly explain, out loud, why the BST property applies to every descendant and not just direct children. That gap between I can solve it and I can explain it is exactly what technical interviews actually test, and exactly what existing tools don't measure.
 
-The question that started this: how do you measure understanding when the answer isnt right or wrong?
+The question that started this: how do you measure understanding when the answer isn't right or wrong?
 
 ## What It Does
 
-I spent a month trying different approaches before I found one that felt honest. The first idea was to build yet another coding platform with harder problems. The second was to use an LLM to grade free-text explanations and return a score. Both felt wrong, because neither solved the real problem: the tools werent measuring understanding at all, they were measuring output quality and calling it understanding.
+I spent a month trying different approaches before I found one that felt honest. The first idea was to build yet another coding platform with harder problems. The second was to use an LLM to grade free-text explanations and return a score. Both felt wrong, because neither solved the real problem: the tools weren't measuring understanding at all, they were measuring output quality and calling it understanding.
 
-I wanted to build something that could tell me, specifically, what I thought I understood but actually didnt. Not a score. Not a rank. A concrete list: here is what you know, here is what you think you know but dont, and here is where your reasoning has invisible gaps.
+I wanted to build something that could tell me, specifically, what I thought I understood but actually didn't. Not a score. Not a rank. A concrete list: here is what you know, here is what you think you know but don't, and here is where your reasoning has invisible gaps.
 
-Existing platforms like LeetCode and NeetCode are excellent at what they do, but what they do is test recall of patterns and speed of implementation. They dont test whether you could explain the concept to someone who hasnt seen it before. They dont test whether you could defend your design choices. They dont test whether you could predict how the data structure behaves when you change the input conditions.
+Existing platforms like LeetCode and NeetCode are excellent at what they do, but what they do is test recall of patterns and speed of implementation. They don't test whether you could explain the concept to someone who hasn't seen it before. They don't test whether you could defend your design choices. They don't test whether you could predict how the data structure behaves when you change the input conditions.
 
-I realized the missing piece wasnt better content. It was a diagnostic layer that sits between learning and practicing, confirming that understanding exists before the learner moves to the next topic.
+I realized the missing piece wasn't better content. It was a diagnostic layer that sits between learning and practicing, confirming that understanding exists before the learner moves to the next topic.
 
 ## How It's Built
 
 I made a deliberate choice to split the AI and the logic into two separate layers rather than asking one model call to grade the explanation and return a score. The AI only ever extracts and generates language. Every actual scoring and gap-detection computation is deterministic Python running against a hand-curated expert concept graph.
 
-The tradeoff is more upfront engineering. Designing a real concept ontology by hand instead of letting a model improvise one means slower initial development, but it produces a result thats explainable. A score of 71 should always be traceable to 14 of 22 concepts covered, 3 explained weakly, 1 misconception flagged, not a black-box number a model produced once and cant reproduce.
+The tradeoff is more upfront engineering. Designing a real concept ontology by hand instead of letting a model improvise one means slower initial development, but it produces a result that's explainable. A score of 71 should always be traceable to 14 of 22 concepts covered, 3 explained weakly, 1 misconception flagged, not a black-box number a model produced once and can't reproduce.
 
-I chose Gemini 1.5 Flash specifically for cost, not capability ceiling. At roughly $0.00046 per session, the AI layers job, concept extraction and follow-up generation, doesnt need a larger, more expensive model. But I also know this is the part most likely to need revisiting once real sessions are tested.
+I chose Gemini 1.5 Flash specifically for cost, not capability ceiling. At roughly $0.00046 per session, the AI layer's job, concept extraction and follow-up generation, doesn't need a larger, more expensive model. But I also know this is the part most likely to need revisiting once real sessions are tested.
 
 ## Decisions & Tradeoffs
 
-1. The hardest challenge hasnt been technical. Its been defining what understanding actually means in a way thats both rigorous enough to be useful and flexible enough to handle the way people actually learn. Should understanding a binary tree mean being able to implement insertion from memory? Or should it mean being able to explain why the recursive traversal uses O(h) space without being prompted? Or both? The answer depends on the context, and building a system that adapts its standards to the learners goals without becoming inconsistent is the design problem I keep coming back to.
+1. The hardest challenge hasn't been technical. It's been defining what understanding actually means in a way that's both rigorous enough to be useful and flexible enough to handle the way people actually learn. Should understanding a binary tree mean being able to implement insertion from memory? Or should it mean being able to explain why the recursive traversal uses O(h) space without being prompted? Or both? The answer depends on the context, and building a system that adapts its standards to the learner's goals without becoming inconsistent is the design problem I keep coming back to.
 
 2. The four-topic MVP scope is another uncertainty. Arrays and Hashing, Linked Lists, Binary Trees, and Graphs cover a reasonable spread of difficulty, but I picked them before testing whether the concept-graph-authoring effort scales linearly per topic or gets harder for messier prerequisite structures.
 
-3. I learned that most educational tools optimize for engagement metrics because those are easy to measure. Time spent, problems solved, streaks maintained. Understanding is hard to measure, so it gets proxied by completion. Building a tool that directly measures understanding means accepting that your metrics wont look as impressive as a gamified platforms, but they will be honest.
+3. I learned that most educational tools optimize for engagement metrics because those are easy to measure. Time spent, problems solved, streaks maintained. Understanding is hard to measure, so it gets proxied by completion. Building a tool that directly measures understanding means accepting that your metrics won't look as impressive as a gamified platform's, but they will be honest.
 
 4. I also learned that when you design for explainability first, every decision becomes harder but the result is more durable. Every time I was tempted to let an LLM do more work and call it a day, I had to stop and ask: can I trace why this system produced this output for this specific user? If the answer was no, I had to redesign.
 

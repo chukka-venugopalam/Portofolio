@@ -28,6 +28,16 @@ export const NAV_ITEMS = [
   { href: "/connect", label: "Connect" },
 ] as const;
 
+/**
+ * Shared "Now" status line — current focus area + date, displayed
+ * consistently across Home, Work, and Connect pages. Update this one
+ * value when focus shifts, and every page stays in sync.
+ */
+export const NOW_STATUS = {
+  line: "Building AI-driven diagnostics, real-time collective intelligence, and adaptive learning systems.",
+  date: "Jul 2026",
+} as const;
+
 export const SOCIAL_LINKS = {
   github: "https://github.com/chukka-venugopalam",
   linkedin: "https://linkedin.com/in/chukka-venugopalam",

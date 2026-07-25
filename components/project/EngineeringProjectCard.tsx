@@ -3,7 +3,9 @@ import { type CoverArtVariant } from "@/content/projects/_schema";
 import { StatusTag } from "@/components/ui/StatusTag";
 import { Button } from "@/components/ui/Button";
 import { ProjectCover } from "@/components/project/ProjectCover";
+import { MiniDemo } from "@/components/project/MiniDemo";
 import { cn } from "@/lib/utils";
+import { useTilt } from "@/lib/use-tilt";
 import type { EngineeringProject } from "@/lib/content/engineering-projects";
 
 interface EngineeringProjectCardProps {
@@ -19,6 +21,13 @@ function getCoverForProject(name: string): CoverArtVariant | null {
   return null;
 }
 
+function getDemoVariant(name: string): "scheduling" | "graph" | "page-replacement" | null {
+  if (name.toLowerCase().includes("scheduling")) return "scheduling";
+  if (name.toLowerCase().includes("graph")) return "graph";
+  if (name.toLowerCase().includes("page replacement")) return "page-replacement";
+  return null;
+}
+
 export function EngineeringProjectCard({
   project,
   className,
@@ -26,24 +35,34 @@ export function EngineeringProjectCard({
   const parsed = projectStatusSchema.safeParse(project.status);
   const status: ProjectStatus = parsed.success ? parsed.data : "building";
   const coverArt = getCoverForProject(project.name);
+  const demoVariant = getDemoVariant(project.name);
+  const tiltRef = useTilt<HTMLElement>({ maxTilt: 5, scale: 1.005 });
 
   return (
     <article
+      ref={tiltRef as React.Ref<HTMLDivElement>}
       className={cn(
         "group relative rounded-card bg-bg-secondary overflow-hidden",
         "border border-border-subtle",
         "transition-all duration-base ease-standard",
-        "hover:-translate-y-1 hover:border-border-default",
+        "hover:-translate-y-1 hover:scale-[1.01] hover:border-border-default",
         "hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)]",
         className
       )}
     >
-      {/* Cover Art */}
+      {/* Cover Art with live mini demo overlay */}
       {coverArt && (
         <div className="relative overflow-hidden aspect-[16/8]">
           <div className="absolute inset-0 transition-transform duration-700 ease-standard group-hover:scale-105">
             <ProjectCover variant={coverArt} className="w-full h-full" />
           </div>
+          {demoVariant && (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="relative w-full h-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-standard">
+                <MiniDemo variant={demoVariant} className="w-full h-full" />
+              </div>
+            </div>
+          )}
           <div className={cn(
             "absolute inset-0 opacity-0 transition-opacity duration-base ease-standard",
             "group-hover:opacity-100",
@@ -67,6 +86,15 @@ export function EngineeringProjectCard({
         <p className="mt-3 text-body-md text-text-secondary leading-relaxed">
           {project.motivation}
         </p>
+
+        {/* Pull quote */}
+        {project.pullQuote && (
+          <div className="mt-5 relative pl-4 border-l-2 border-accent/40">
+            <p className="text-body-sm text-text-primary leading-relaxed italic">
+              &ldquo;{project.pullQuote}&rdquo;
+            </p>
+          </div>
+        )}
 
         <div className="mt-4">
           <span className="text-mono-sm uppercase tracking-[0.08em] text-text-tertiary">

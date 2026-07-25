@@ -1,0 +1,45 @@
+---
+name: "Page Replacement Algorithm Simulator"
+slug: "page-replacement-simulator"
+status: "shipped"
+category: "other"
+oneLiner: "An interactive OS memory management tool comparing FIFO, LRU, and Optimal page replacement algorithms and page fault rates."
+techTags: ["HTML", "CSS", "JavaScript"]
+links:
+  live: "https://chukka-venugopalam.github.io/Page_replacement-simulator-/"
+  code: "https://github.com/chukka-venugopalam/Page_replacement-simulator-"
+startedDate: "2026-04-01"
+lastUpdated: "2026-05-01"
+---
+
+## The Problem
+
+Page replacement feels abstract in an OS textbook. You read about FIFO, LRU, and Optimal algorithms, and the differences seem obvious on paper. But I wanted to understand why LRU is so hard to implement efficiently in practice, and why the theoretically optimal algorithm can't actually be built. There's a gap between knowing the definition of an algorithm and understanding why real systems make the tradeoffs they do.
+
+## What It Does
+
+A simulator comparing virtual memory page replacement strategies under custom reference streams:
+
+- **Algorithm Comparison**: FIFO, Least Recently Used (LRU), and Optimal page replacement.
+- **Page Fault Tracking**: Real-time indicators showing page hits, page faults, and memory frame allocation.
+- **Belady's Anomaly Demonstration**: Interactive frame-size adjustments demonstrating why FIFO can produce more faults with more memory frames.
+- **Side-by-Side Analytics**: Fault count comparisons across all three algorithms for identical memory access strings.
+
+## How It's Built
+
+Implemented in vanilla JavaScript with CSS grid visualization tables.
+
+- **Virtual Memory Frame State**: Simulates physical RAM frames and virtual page tables.
+- **LRU Recency Stack**: Tracks timestamp updates on memory hits.
+- **Look-Ahead Optimal Engine**: Pre-scans future page reference strings to identify the optimal page to evict.
+
+## Decisions & Tradeoffs
+
+1. **The cost of knowledge in algorithm design**: Optimal replacement assumes future knowledge. LRU approximates it with recency tracking overhead. FIFO is cheap but inefficient.
+2. **Textbook simplicity vs Practical reality**: Building the tool revealed that real-world LRU is an approximation due to hardware timestamp tracking costs.
+3. **Vanilla Web Technologies**: Built without external frameworks for lightweight execution and immediate loading.
+
+## What's Next
+
+- Adding Second-Chance (Clock) and LFU (Least Frequently Used) algorithm options.
+- Visualizing thrashing under high memory contention.

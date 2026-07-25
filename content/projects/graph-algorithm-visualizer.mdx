@@ -1,0 +1,45 @@
+---
+name: "Interactive Graph Algorithm Visualizer"
+slug: "graph-algorithm-visualizer"
+status: "shipped"
+category: "other"
+oneLiner: "A step-by-step visualizer for BFS, DFS, and Dijkstra's algorithm with interactive graph creation and frontier tracking."
+techTags: ["HTML", "CSS", "JavaScript", "Canvas API"]
+links:
+  live: "https://chukka-venugopalam.github.io/Interactive-Graph-Algorithm-Visualizer/"
+  code: "https://github.com/chukka-venugopalam/Interactive-Graph-Algorithm-Visualizer"
+startedDate: "2026-03-15"
+lastUpdated: "2026-04-20"
+---
+
+## The Problem
+
+Graph algorithms are taught as abstract procedures. You trace through BFS, DFS, and Dijkstra's on paper and memorize the steps. But I kept wondering what the algorithm was actually seeing at each step. What does the frontier look like to BFS as it expands? How does Dijkstra's perception of the graph change as it discovers shorter paths? I wanted to see the algorithm's state, not just its output.
+
+## What It Does
+
+An interactive visual exploration canvas for core graph traversal algorithms:
+
+- **Algorithm Visualizations**: BFS, DFS, and Dijkstra's algorithm with speed control sliders.
+- **Interactive Graph Builder**: Add, drag, connect, and remove nodes and weighted edges directly on screen.
+- **Frontier & Traversal State**: Color-coded visual states distinguishing unexplored, active frontier, and finalized nodes.
+- **Step-by-Step Inspector**: Real-time queue and stack inspectors explaining why each node is chosen next.
+
+## How It's Built
+
+Powered by HTML5 Canvas API and JavaScript data structures.
+
+- **Custom Adjacency Representation**: Implements graph adjacency lists for dynamic node linking.
+- **Canvas Rendering Engine**: Smooth 60fps canvas redraws with animated node pulses and path highlighting.
+- **Step Controller**: Pause, play, step forward, and reset controls for algorithm debugging.
+
+## Decisions & Tradeoffs
+
+1. **The gap between understanding an algorithm and implementing it is wider than expected**: Writing a correct BFS is easy. Writing a visualization that faithfully shows what BFS is doing at each step forced a deeper understanding.
+2. **Stack vs Queue Dynamics**: Visualizing exploration step by step clarified why DFS uses a stack and BFS uses a queue as a natural consequence of traversal strategy.
+3. **HTML Canvas vs DOM Nodes**: Canvas API provided high-performance rendering for dense graph connections without DOM node inflation.
+
+## What's Next
+
+- Adding A* Search algorithm visualization with customizable heuristic functions.
+- Supporting graph import/export via JSON files.

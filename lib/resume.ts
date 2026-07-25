@@ -6,20 +6,18 @@ export interface ResumeContent {
   statusLine: string;
   currentFocus: string;
   highlights: string[];
-  lastUpdated: string;
 }
 
 export const RESUME_CONTENT: ResumeContent = {
   name: "Venugopalam Chukka",
   statusLine: "Student and builder, Computer Science",
   currentFocus:
-    "Designing Concept Intelligence Platform, a diagnostic tool that surfaces gaps in DSA understanding by analyzing how you explain concepts, not just whether you can solve problems. Also building Silicon Valley Learning OS and PulseVote, three long-term projects exploring AI-assisted learning, real-time decision-making, and developer growth.",
+    "Designing Concept Intelligence Platform, a diagnostic tool that surfaces gaps in DSA understanding by analyzing how you explain concepts, not just whether you can solve problems. Also building Silicon Valley Learning OS, long-term projects exploring AI-assisted learning and developer growth.",
   highlights: [
-    "Designed and building three systems: Concept Intelligence Platform (diagnosing DSA understanding gaps), Silicon Valley Learning OS (context-aware learning), and PulseVote (anonymous real-time decision-making).",
+    "Designed and building two systems: Concept Intelligence Platform (diagnosing DSA understanding gaps) and Silicon Valley Learning OS (context-aware learning).",
     "Comfortable across the stack: Next.js and FastAPI for applications, PostgreSQL and Redis for data, Python for AI integration.",
     "Learning philosophy: build prototypes to find gaps in understanding, then study deeper. Every project on this site is an answer to a question I was curious about.",
   ],
-  lastUpdated: "2026-06-28",
 };
 
 const RESUME_PDF_RELATIVE_PATH = "/resume.pdf";

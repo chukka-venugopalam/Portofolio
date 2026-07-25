@@ -4,7 +4,6 @@ import { z } from "zod";
 export const coverArtSchema = z.enum([
   "concept-intelligence",
   "silicon-valley",
-  "pulse-vote",
   "graph-visualizer",
   "os-scheduling",
   "page-replacement",
@@ -33,7 +32,14 @@ export const projectStatusSchema = z.enum([
   "exploring",
 ]);
 
-export const projectCategorySchema = z.enum(["flagship", "production", "experiment", "engineering"]);
+export const projectCategorySchema = z.enum([
+  "flagship",
+  "frontend",
+  "other",
+  "production",
+  "experiment",
+  "engineering",
+]);
 
 export const projectFrontmatterSchema = z.object({
   name: z.string().min(1, "name is required"),
@@ -73,13 +79,14 @@ export const projectFrontmatterSchema = z.object({
 
   lastUpdated: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "lastUpdated must be ISO format (YYYY-MM-DD)"),
 
+  thumbnail: z.string().optional(),
+
   // Cover art variant — determines which SVG illustration to show
   // on the project card. If omitted, no cover art is shown.
   coverArt: z
     .enum([
       "concept-intelligence",
       "silicon-valley",
-      "pulse-vote",
       "graph-visualizer",
       "os-scheduling",
       "page-replacement",

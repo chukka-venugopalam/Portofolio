@@ -1,4 +1,5 @@
 import { buildMetadata } from "@/lib/seo/metadata";
+import { NOW_STATUS, SOCIAL_LINKS } from "@/lib/constants";
 import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
 import { SectionHeader } from "@/components/ui/SectionHeader";
@@ -159,6 +160,38 @@ export default function LearningPage() {
             <blockquote className="mt-3 text-body-lg leading-relaxed text-text-primary">
               I don&rsquo;t collect certificates. I collect understanding. Every project I build is an answer to a question I was genuinely curious about. Every learning area I study is motivated by a system I want to build but cannot yet.
             </blockquote>
+
+            <div className="mt-5 pt-4 border-t border-border-subtle">
+              <a
+                href={SOCIAL_LINKS.leetcode}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-body-sm text-text-secondary hover:text-text-primary transition-colors duration-fast ease-standard focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-md"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125.513 5.527 5.527 0 0 0 .062 2.362 5.83 5.83 0 0 0 .349 1.017 5.938 5.938 0 0 0 1.271 1.818l4.277 4.193.039.038c2.248 2.165 5.852 2.133 8.063-.074l2.396-2.392c.54-.54.54-1.414.003-1.955a1.378 1.378 0 0 0-1.951-.003l-2.396 2.392a3.021 3.021 0 0 1-4.205.038l-.02-.019-4.276-4.193c-.652-.64-.972-1.47-.948-2.263a2.68 2.68 0 0 1 .066-.523 2.545 2.545 0 0 1 .619-1.164L8.452 8.72l3.813-3.993c.538-.549.538-1.437.005-1.989a1.376 1.376 0 0 0-.787-.737zm-1.434 6.418 1.717 1.718-3.004 3.005a1.369 1.369 0 0 0 .01 1.937 1.38 1.38 0 0 0 1.95.01l3.006-3.006 1.69 1.688a1.37 1.37 0 0 0 1.464.282c.25-.1.464-.273.614-.5.15-.229.222-.49.209-.755a1.34 1.34 0 0 0-.655-.96 1.37 1.37 0 0 0-.402-.169l-.035-.01L17.1 9.364l.002-.001-1.798-1.796a1.378 1.378 0 0 0-1.95-.001 1.374 1.374 0 0 0-.348.612 1.3 1.3 0 0 0-.055.343v.001l.1.1z" />
+                </svg>
+                <span>LeetCode profile &mdash; solving DSA problems systematically</span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M7 17l9.2-9.2M17 17V7H7" />
+                </svg>
+              </a>
+            </div>
+          </div>
+        </Container>
+      </Section>
+
+      {/* Now status */}
+      <Section spacing="tight" className="pb-0">
+        <Container className="max-w-[760px]" wide={false}>
+          <div className="flex items-center gap-2 rounded-card border border-border-subtle bg-bg-secondary px-5 py-3">
+            <span className="relative flex h-2.5 w-2.5 shrink-0">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-40" />
+              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-accent" />
+            </span>
+            <span className="text-mono-sm text-text-tertiary uppercase tracking-[0.08em]">Now &mdash;</span>
+            <span className="text-body-sm text-text-secondary">{NOW_STATUS.line}</span>
+            <span className="text-mono-sm text-text-quaternary shrink-0 ml-auto">{NOW_STATUS.date}</span>
           </div>
         </Container>
       </Section>

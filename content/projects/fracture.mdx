@@ -1,0 +1,48 @@
+---
+name: "Fracture"
+slug: "fracture"
+status: "shipped"
+category: "frontend"
+oneLiner: "A single 3D core that shatters, reforms, and morphs through five material states as you scroll — one shader system, zero shortcuts."
+techTags: ["Three.js", "WebGL", "GLSL Shaders", "Next.js", "Motion", "TypeScript"]
+links:
+  live: "https://fracture-wheat.vercel.app/"
+  code: "https://github.com/chukka-venugopalam/Fracture"
+startedDate: "2026-06-12"
+lastUpdated: "2026-07-02"
+---
+
+## The Problem
+
+Most scroll-driven web animations swap between pre-rendered video clips or separate 3D models per section. This causes visual pop-in, heavy asset downloads, and rigid transitions that break when scrolling backward or at non-standard speeds.
+
+Fracture was designed to solve this with a single persistent WebGL object that morphs continuously across material and structural states without swapping meshes or loading new assets.
+
+## What It Does
+
+Fracture features a central 3D geometric core that transforms across 5 material states as the user scrolls down the page:
+
+1. **State 1 — Solid Crystalline Core**: High-refraction obsidian glass with sharp facets.
+2. **State 2 — Voronoi Shatter**: The core fragments into dozens of floating polygonal shards driven by Voronoi math.
+3. **State 3 — Liquid Mercury Morph**: Shards melt into a fluid, reflective metallic blob with organic noise deformation.
+4. **State 4 — Wireframe Lattice**: The liquid crystallizes into a glowing holographic wireframe grid.
+5. **State 5 — Re-assembled Monolith**: Particles condense back into a unified, polished monolith.
+
+## How It's Built
+
+Fracture is driven by a single custom GLSL Fragment and Vertex Shader applied to a single instanced buffer geometry.
+
+- **GPU Fragment Shatter**: Voronoi cell decomposition calculated entirely inside the GPU fragment shader.
+- **Simplex Noise Deformation**: Morphing between liquid and solid states powered by 3D Perlin/Simplex noise fields.
+- **Seamless Scroll Sync**: Scroll delta maps directly to shader uniforms for frame-accurate forward and reverse scrubbing.
+
+## Decisions & Tradeoffs
+
+1. **Single Mesh & Shader System over Multiple Scene Swaps**: Eliminates loading hitches and memory spikes between sections.
+2. **GPU Vertex Instancing over CPU Matrix Calculations**: Keeps main-thread execution free for 60fps UI layout updates.
+3. **Ray-marched Glass Refraction**: Custom ray marching in fragment shader for authentic optical dispersion without heavy environment maps.
+
+## What's Next
+
+- Interactive cursor force fields that push shards away on mouse hover.
+- Adding custom audio synthesis harmonics tied to shatter distance.

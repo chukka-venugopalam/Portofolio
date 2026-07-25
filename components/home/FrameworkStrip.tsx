@@ -82,13 +82,13 @@ const NODES: FrameworkNode[] = [
 export function FrameworkStrip() {
   const shouldReduce = useReducedMotion();
   const idPrefix = useId();
-  const [activeId, setActiveId] = useState<string | null>(null);
+  const [activeId, setActiveId] = useState<string>(NODES[0]!.id);
   const nodeRefs = useRef<Array<HTMLButtonElement | null>>([]);
 
   const handleMouseEnter = (id: string) => setActiveId(id);
-  const handleMouseLeave = () => setActiveId(null);
+  const handleMouseLeave = () => setActiveId(NODES[0]!.id);
   const handleFocus = (id: string) => setActiveId(id);
-  const handleClick = (id: string) => setActiveId((current) => (current === id ? null : id));
+  const handleClick = (id: string) => setActiveId(id);
 
   const handleKeyDown = (e: React.KeyboardEvent, index: number) => {
     if (e.key === "ArrowRight") {
@@ -256,17 +256,7 @@ export function FrameworkStrip() {
         })}
       </AnimatePresence>
 
-      {/* Inactive state hint */}
-      {activeId === null && (
-        <motion.p
-          initial={shouldReduce ? false : { opacity: 0, y: 4 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1, duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
-          className="mt-6 text-body-sm text-text-tertiary text-center desktop:text-left"
-        >
-          Hover or tap a milestone to explore
-        </motion.p>
-      )}
+
     </div>
   );
 }

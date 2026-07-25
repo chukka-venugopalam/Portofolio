@@ -1,0 +1,45 @@
+---
+name: "Operating System Scheduling Simulator"
+slug: "os-scheduling-simulator"
+status: "shipped"
+category: "other"
+oneLiner: "An interactive visualization tool simulating FCFS, SJF, Round Robin, and Priority CPU scheduling algorithms with animated Gantt charts."
+techTags: ["HTML", "CSS", "JavaScript"]
+links:
+  live: "https://chukka-venugopalam.github.io/os-scheduling-simulator/"
+  code: "https://github.com/chukka-venugopalam/os-scheduling-simulator"
+startedDate: "2026-03-01"
+lastUpdated: "2026-04-15"
+---
+
+## The Problem
+
+I wanted to understand why different CPU scheduling algorithms produce radically different performance profiles under the same workload. Textbooks explain FCFS, SJF, Round Robin, and Priority Scheduling with throughput tables and turnaround-time averages, but those numbers never made me feel the scheduling decisions the way watching a Gantt chart animate did.
+
+## What It Does
+
+This tool simulates four core CPU scheduling algorithms with real-time animated execution graphs:
+
+- **Algorithm Suite**: First-Come First-Served (FCFS), Shortest Job First (SJF - preemptive & non-preemptive), Round Robin, and Priority Scheduling.
+- **Animated Gantt Chart**: Visualizes process timeline execution, context switches, and CPU idle time dynamically.
+- **Performance Metrics**: Calculates and compares average waiting time, turnaround time, and response time side by side.
+- **Workload Customization**: Configurable process arrival times, burst durations, and priority rankings.
+
+## How It's Built
+
+Built using vanilla JavaScript, HTML5, and CSS to guarantee zero dependencies, fast load times, and lightweight rendering performance.
+
+- **Queue Management Engine**: Simulates process state transitions (Ready, Running, Waiting) step by step.
+- **Dynamic CSS Gantt Rendering**: Rendered using CSS Flexbox layout blocks calculating pixel-precise execution slice widths.
+- **Interactive Metric Graphs**: Side-by-side performance bar comparisons.
+
+## Decisions & Tradeoffs
+
+1. **Visualization is a thinking tool, not just a presentation tool**: Watching a Gantt chart stretch and compress under different algorithms made the textbook formulas click in a way they hadn't before.
+2. **Tradeoffs over one-size-fits-all**: FCFS works well for long jobs but punishes interactive processes. SJF minimizes wait time but requires future burst length prediction. Round Robin ensures fairness but incurs context switch overhead.
+3. **Vanilla JS over UI Frameworks**: Kept the codebase small and portable without build tools or framework overhead.
+
+## What's Next
+
+- Adding Multi-Level Queue (MLQ) and Multi-Level Feedback Queue (MLFQ) algorithm support.
+- Simulating realistic context switch time overhead penalties.

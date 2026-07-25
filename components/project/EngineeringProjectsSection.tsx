@@ -22,7 +22,7 @@ export function EngineeringProjectsSection() {
         Engineering Projects
       </SectionHeader>
       <p className="mt-3 max-w-[600px] text-body-sm text-text-secondary">
-        These arent products. They are engineering explorations I built to answer questions I was curious about, each one focused on understanding a specific systems concept deeply enough to implement it from scratch.
+        These aren&rsquo;t products. They are engineering explorations I built to answer questions I was curious about, each one focused on understanding a specific systems concept deeply enough to implement it from scratch.
       </p>
 
       <div className="mt-8 flex flex-col gap-8">

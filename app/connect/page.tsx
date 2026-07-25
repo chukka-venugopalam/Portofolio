@@ -1,7 +1,7 @@
 import { buildMetadata } from "@/lib/seo/metadata";
 import { getFlagshipProject, getStrongestInProgressProject } from "@/lib/content/projects";
 import { getResumePdfStatus } from "@/lib/resume";
-import { SOCIAL_LINKS } from "@/lib/constants";
+import { NOW_STATUS, SOCIAL_LINKS } from "@/lib/constants";
 import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
 import { SectionHeader } from "@/components/ui/SectionHeader";
@@ -39,7 +39,7 @@ export default function ConnectPage() {
             level="h1"
             subline="Open to internship and full-time conversations, hackathon teams, and collaborations on something real."
           >
-            Lets talk.
+            Let&rsquo;s talk.
           </SectionHeader>
         </Container>
       </Section>
@@ -114,7 +114,7 @@ export default function ConnectPage() {
             </>
           ) : (
             <p className="mt-4 text-body-md text-text-secondary">
-              Between projects right now, see the Learning page for what is actively being worked through.
+              Between projects right now, see the Learning page for what&rsquo;s actively being worked through.
             </p>
           )}
         </Container>
@@ -138,6 +138,24 @@ export default function ConnectPage() {
                 Connect on LinkedIn
               </Button>
             </div>
+            <p className="mt-4 text-body-sm text-text-tertiary">
+              I usually reply within 24 hours.
+            </p>
+          </div>
+        </Container>
+      </Section>
+
+      {/* Now status */}
+      <Section spacing="tight" className="pb-0">
+        <Container className="max-w-[600px]" wide={false}>
+          <div className="flex items-center gap-2 rounded-card border border-border-subtle bg-bg-secondary px-5 py-3">
+            <span className="relative flex h-2.5 w-2.5 shrink-0">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-40" />
+              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-accent" />
+            </span>
+            <span className="text-mono-sm text-text-tertiary uppercase tracking-[0.08em]">Now &mdash;</span>
+            <span className="text-body-sm text-text-secondary">{NOW_STATUS.line}</span>
+            <span className="text-mono-sm text-text-quaternary shrink-0 ml-auto">{NOW_STATUS.date}</span>
           </div>
         </Container>
       </Section>

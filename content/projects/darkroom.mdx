@@ -1,0 +1,46 @@
+---
+name: "Darkroom"
+slug: "darkroom"
+status: "shipped"
+category: "frontend"
+oneLiner: "A working darkroom where finished work develops in full color, work-in-progress stalls at midtones, and abandoned ideas stay in shadow — literally."
+techTags: ["Next.js", "React", "Tailwind CSS", "Canvas API", "WebGL", "TypeScript"]
+links:
+  live: "https://darkroom-seven.vercel.app/"
+  code: "https://github.com/chukka-venugopalam/Darkroom"
+startedDate: "2026-06-01"
+lastUpdated: "2026-07-15"
+---
+
+## The Problem
+
+Digital portfolios treat all projects identically. A finished product, a half-baked weekend prototype, and an abandoned experiment sit side by side in uniform grid cards with equal saturation and weight. This flat hierarchy fails to reflect how software is actually created: through distinct stages of development, iteration, and chemical reaction.
+
+I wanted to build an interactive portfolio experience that uses analog photography developing as a metaphor for creative process—where work-in-progress is literally mid-development, and finished work achieves full clarity.
+
+## What It Does
+
+Darkroom transforms the portfolio browsing experience into an interactive red-light darkroom. 
+
+- **Chemical Tray Interaction**: Visitors submerge project negatives in chemical baths to reveal hidden details.
+- **Exposure Mechanics**: Finished projects render in vibrant full-color density, active prototypes pause at silver-halide midtones, and archived ideas remain shadowed.
+- **Precision Enlarging**: Hovering acts as an enlarger lens, boosting grain, contrast, and technical specs dynamically.
+
+## How It's Built
+
+The application is built on Next.js 15 and Tailwind CSS, backed by a custom HTML5 Canvas shader engine.
+
+- **Red-light Darkroom Palette**: A dark ambient theme built with deep slate, crimson Safelight accents (`#dc2626`), and halide silver text tones.
+- **Custom Processing Shaders**: Image rendering uses canvas pixel manipulation to simulate silver halide grain, contrast bath curves, and developer chemical dynamics in real time.
+- **Responsive Layout**: Designed for seamless touch and mouse interactions across desktop and mobile screens.
+
+## Decisions & Tradeoffs
+
+1. **Canvas Pixel Manipulation over CSS Filters**: CSS filters like `contrast()` and `grayscale()` felt synthetic. Custom canvas pixel sampling delivered authentic photo-chemical grain and exposure dynamics.
+2. **Selective Saturation over Binary Toggle**: Instead of simple monochrome vs color, exposure state calculates HSL saturation based on project completion metrics.
+3. **Optimized Render Loops**: Applied requestAnimationFrame throttle logic to ensure chemical fluid animations maintain 60fps on mobile viewports.
+
+## What's Next
+
+- Adding custom darkroom sound effects for tray movement and enlarger timer clicks.
+- Supporting user-uploaded custom photo negatives to let visitors experience the chemical bath interactive developer directly.

@@ -1,6 +1,5 @@
 import { buildMetadata } from "@/lib/seo/metadata";
 import { RESUME_CONTENT, getResumePdfStatus } from "@/lib/resume";
-import { formatFullDate } from "@/lib/utils";
 import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
 import { SectionHeader } from "@/components/ui/SectionHeader";
@@ -76,12 +75,6 @@ export default function ResumePage() {
           <SectionHeader mode="page" level="h1">
             Resume
           </SectionHeader>
-          <p className="mt-3 text-mono-sm text-text-tertiary">
-            Last updated{" "}
-            <time dateTime={RESUME_CONTENT.lastUpdated}>
-              {formatFullDate(RESUME_CONTENT.lastUpdated)}
-            </time>
-          </p>
         </Container>
       </Section>
 
@@ -144,24 +137,7 @@ export default function ResumePage() {
         </Container>
       </Section>
 
-      {/* ── 6. Last Updated Footer ──
-          Restates the same date shown in the hero — a visitor who's
-          scrolled the full page and is now deciding whether to leave
-          benefits from seeing this trust signal again without
-          scrolling back to the top. */}
-      <Section spacing="tight">
-        <Container className="max-w-[760px]" wide={false}>
-          <div className="border-t border-border-subtle pt-5">
-            <p className="text-mono-sm text-text-tertiary">
-              This resume was last updated on{" "}
-              <time dateTime={RESUME_CONTENT.lastUpdated}>
-                {formatFullDate(RESUME_CONTENT.lastUpdated)}
-              </time>
-              .
-            </p>
-          </div>
-        </Container>
-      </Section>
+
     </>
   );
 }

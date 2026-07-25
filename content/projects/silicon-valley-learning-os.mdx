@@ -6,7 +6,8 @@ category: "flagship"
 oneLiner: "A learning operating system that adapts your curriculum, schedule, and study strategy in real time, built for how engineers actually learn on the job."
 techTags: ["Next.js", "FastAPI", "PostgreSQL", "Redis", "Gemini 2.0 Pro", "Docker", "Kubernetes", "Python"]
 links:
-  code: "https://github.com/your-username/sv-learning-os"
+  live: "https://sv-os-web.vercel.app/"
+  code: "https://github.com/chukka-venugopalam/SV_OS"
 startedDate: "2026-04-15"
 lastUpdated: "2026-06-28"
 coverArt: "silicon-valley"
@@ -17,7 +18,7 @@ featured: false
 
 The way engineers learn on the job is broken in three specific ways that compound into a much bigger problem.
 
-First, learning resources are decoupled from engineering context. You read a blog post about system design patterns in the morning, but by the time you actually encounter a problem that calls for that pattern in your codebase, the context window has closed and the knowledge doesnt transfer.
+First, learning resources are decoupled from engineering context. You read a blog post about system design patterns in the morning, but by the time you actually encounter a problem that calls for that pattern in your codebase, the context window has closed and the knowledge doesn't transfer.
 
 Second, every engineers learning curve is different. One person needs depth in distributed systems but can pick up a new framework in a day. Another is the exact opposite. Yet every learning platform serves the same curriculum to everyone, at the same pace, in the same order.
 
@@ -31,25 +32,25 @@ I spent six months as a teaching assistant for a full-stack engineering program,
 
 I wanted to understand why that moment of just-in-time learning is so effective and so rare. The answer, I think, is that it is structurally hard to produce. It requires connecting two systems, what you are building and what you are learning, that currently have no reason to know about each other.
 
-Existing learning platforms optimize for content delivery and completion tracking. They know how many videos you watched and how many quizzes you passed. They dont know what you are building at work, what problems you are debugging, or what concepts you just needed to look up for the third time this week.
+Existing learning platforms optimize for content delivery and completion tracking. They know how many videos you watched and how many quizzes you passed. They don't know what you are building at work, what problems you are debugging, or what concepts you just needed to look up for the third time this week.
 
-The gap isnt a content gap. It is a context gap. The knowledge exists. The timing is wrong.
+The gap isn't a content gap. It is a context gap. The knowledge exists. The timing is wrong.
 
 ## How It's Built
 
 I chose a microservice architecture over a monolith despite the operational complexity because each of the five services has fundamentally different scaling profiles and latency requirements. The Context Ingestion Service can lag by minutes. The Curriculum Engine needs to respond to a new signal in under a second to feel real-time. Running them as separate services with independent scaling policies is the honest engineering choice, even though it adds deployment complexity.
 
-I chose Redis Streams over Kafka for the event backbone because the throughput requirements, a few hundred events per second per organization, not millions, do not justify Kafkas operational overhead. Redis Streams with consumer groups provide exactly the exactly-once delivery semantics the Learning Graph Service needs without requiring a dedicated Kafka cluster.
+I chose Redis Streams over Kafka for the event backbone because the throughput requirements, a few hundred events per second per organization, not millions, do not justify Kafka's operational overhead. Redis Streams with consumer groups provide exactly the exactly-once delivery semantics the Learning Graph Service needs without requiring a dedicated Kafka cluster.
 
-I picked Neo4j for the Learning Graph because prerequisite chains and mastery propagation are fundamentally graph operations. Transitive closure on a DAG of concepts is a single Cypher query in Neo4j and a recursive CTE in PostgreSQL that becomes unreadable past depth 3. The tradeoff is operational, now we run two databases instead of one. But the Learning Graph is the systems core intelligence, and forcing it into a relational mold would produce worse recommendations.
+I picked Neo4j for the Learning Graph because prerequisite chains and mastery propagation are fundamentally graph operations. Transitive closure on a DAG of concepts is a single Cypher query in Neo4j and a recursive CTE in PostgreSQL that becomes unreadable past depth 3. The tradeoff is operational, now we run two databases instead of one. But the Learning Graph is the system's core intelligence, and forcing it into a relational mold would produce worse recommendations.
 
 ## Decisions & Tradeoffs
 
-1. The hardest decision was what not to track. We deliberately dont track what code users write inside their editor, what websites they visit, or what Slack messages they send. That data would improve the Learning Graphs accuracy, probably significantly. But it would also make the system feel like surveillance, not a learning tool.
+1. The hardest decision was what not to track. We deliberately don't track what code users write inside their editor, what websites they visit, or what Slack messages they send. That data would improve the Learning Graphs accuracy, probably significantly. But it would also make the system feel like surveillance, not a learning tool.
 
 2. I would rather ship a system that is 80 percent as effective and feels like a collaborator than one that is 95 percent effective and feels like spyware.
 
-3. The Curriculum Engine being written in Go is another choice I keep revisiting. Go isnt normally my first choice, but for this specific subproblem, sub-second scheduling recalculations, its the right tool because of its predictable pause-free GC. A Python service would spend enough time in GC pauses at the scheduling frequency we need that the user would feel the latency.
+3. The Curriculum Engine being written in Go is another choice I keep revisiting. Go isn't normally my first choice, but for this specific subproblem, sub-second scheduling recalculations, it's the right tool because of its predictable pause-free GC. A Python service would spend enough time in GC pauses at the scheduling frequency we need that the user would feel the latency.
 
 4. I learned that designing a system that adapts to a person means accepting that you will never have complete information. Every model of what someone knows is an approximation. The temptation is to collect more data to make the approximation better, but at some point the cost of collecting that data exceeds the value of the improved approximation.
 

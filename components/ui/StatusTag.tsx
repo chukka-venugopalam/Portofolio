@@ -41,9 +41,9 @@ const STATUS_COLOR_CLASSES: Record<ProjectStatus, string> = {
   building: "text-status-building",
   exploring: "text-status-exploring",
   designing: "text-status-exploring",
-  "architecture-complete": "text-status-building",
-  "mvp-development": "text-status-building",
-  "in-progress": "text-status-building",
+  "architecture-complete": "text-status-architecture",
+  "mvp-development": "text-status-mvp",
+  "in-progress": "text-status-in-progress",
   "production-ready": "text-status-shipped",
 };
 
@@ -52,9 +52,9 @@ const STATUS_DOT_CLASSES: Record<ProjectStatus, string> = {
   building: "bg-status-building",
   exploring: "bg-status-exploring",
   designing: "bg-status-exploring",
-  "architecture-complete": "bg-status-building",
-  "mvp-development": "bg-status-building",
-  "in-progress": "bg-status-building",
+  "architecture-complete": "bg-status-architecture",
+  "mvp-development": "bg-status-mvp",
+  "in-progress": "bg-status-in-progress",
   "production-ready": "bg-status-shipped",
 };
 

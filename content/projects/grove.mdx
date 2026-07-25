@@ -1,0 +1,50 @@
+---
+name: "Grove"
+slug: "grove"
+status: "shipped"
+category: "frontend"
+oneLiner: "A scroll-driven walk through a living 3D garden — seven interactive stations, each one a working demo of a real frontend technique."
+techTags: ["Three.js", "React Three Fiber", "Next.js", "GSAP", "Tailwind CSS", "TypeScript"]
+links:
+  live: "https://drift-weld-three.vercel.app/"
+  code: "https://github.com/chukka-venugopalam/Grove"
+startedDate: "2026-05-10"
+lastUpdated: "2026-06-20"
+---
+
+## The Problem
+
+Interactive 3D on the web often feels like a gimmick—fancy visuals disconnected from real utility or clear design principles. Developers build spinning 3D cubes or particle fields that look cool for 5 seconds but communicate nothing meaningful about frontend engineering depth or interactive techniques.
+
+Grove was created to bridge this gap: a spatial presentation where every 3D object and camera milestone is a working demo of a fundamental web design pattern.
+
+## What It Does
+
+Grove guides the user along a winding 3D pathway through a stylized procedural garden across 7 interactive stations:
+
+1. **Station 1 — Spatial Camera Pathing**: Smooth scroll-linked spline camera movements.
+2. **Station 2 — Shader Foliage**: Custom vertex shaders driving organic wind animation.
+3. **Station 3 — Dynamic Lighting & Shadows**: Real-time directional sunlight and ambient occlusion maps.
+4. **Station 4 — Interactive Physics**: Rigid-body collision on hover and drag elements.
+5. **Station 5 — Post-Processing Optics**: Depth-of-field focus and chromatic aberration.
+6. **Station 6 — Audio Synthesis**: Web Audio API ambient reactive soundscapes.
+7. **Station 7 — Responsive Performance**: Dynamic Level-of-Detail (LOD) degradation for mobile hardware.
+
+## How It's Built
+
+Grove uses React Three Fiber (`@react-three/fiber`), Three.js, and GSAP ScrollTrigger for camera timeline control.
+
+- **Spline Curves**: Camera path is computed along 3D Catmull-Rom splines synchronized with scroll displacement.
+- **Custom GLSL Shaders**: Procedural leaf movement and wind ripples computed in GPU vertex shaders.
+- **Adaptive Level-of-Detail**: Geometry resolution scales dynamically based on measured device frame rates.
+
+## Decisions & Tradeoffs
+
+1. **Scroll-Driven Camera over Orbit Controls**: Unrestricted camera navigation confuses users; guided pathing ensures narrative flow while retaining 3D perspective.
+2. **Procedural Vegetation over Heavy Models**: Procedural GLSL geometries reduced initial 3D model asset bundle size by over 80%.
+3. **Graceful Fallbacks for Low-End GPUs**: Disables post-processing depth-of-field automatically on mobile chipsets to guarantee 60fps.
+
+## What's Next
+
+- Expanding seasonal weather triggers (rain particle systems and snow accumulation).
+- Adding spatial spatialized 3D audio positional nodes.
