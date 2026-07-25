@@ -5,7 +5,7 @@ import Image from "next/image";
 import { motion, useReducedMotion } from "motion/react";
 import { StatusTag } from "@/components/ui/StatusTag";
 import { TechTagList } from "@/components/ui/TechTag";
-import { Button } from "@/components/ui/Button";
+import { ProjectActionButtons } from "@/components/project/ProjectActionButtons";
 import { ProjectCover } from "@/components/project/ProjectCover";
 import { cn } from "@/lib/utils";
 import type { ProjectFrontmatter } from "@/content/projects/_schema";
@@ -99,57 +99,10 @@ export function ProjectCard({ project, className }: ProjectCardProps) {
         </div>
       </div>
 
-      {/* 4. Action buttons row: Case Study, Code, Live */}
+      {/* 4. Action buttons row */}
       <div className="p-5 desktop:p-6 pt-0 mt-auto">
-        <div className="grid grid-cols-3 gap-2 pt-4 border-t border-border-subtle/60">
-          {/* Button 1: Case Study */}
-          <Button
-            variant="secondary"
-            href={detailHref}
-            className="w-full h-8 desktop:h-9 px-2 text-[11px] desktop:text-body-xs font-medium justify-center text-accent border-accent/20 hover:border-accent/40"
-          >
-            Case Study
-          </Button>
-
-          {/* Button 2: Code */}
-          {hasCodeLink && codeUrl ? (
-            <Button
-              variant="secondary"
-              href={codeUrl}
-              external
-              className="w-full h-8 desktop:h-9 px-2 text-[11px] desktop:text-body-xs font-medium justify-center"
-            >
-              Code
-            </Button>
-          ) : (
-            <button
-              disabled
-              title="Not public yet"
-              className="w-full h-8 desktop:h-9 px-2 text-[11px] desktop:text-body-xs font-medium justify-center rounded-lg border border-border-subtle/40 bg-bg-tertiary/30 text-text-quaternary cursor-not-allowed opacity-60 flex items-center"
-            >
-              Code
-            </button>
-          )}
-
-          {/* Button 3: Live */}
-          {hasLiveLink && liveUrl ? (
-            <Button
-              variant="primary"
-              href={liveUrl}
-              external
-              className="w-full h-8 desktop:h-9 px-2 text-[11px] desktop:text-body-xs font-medium justify-center"
-            >
-              Live
-            </Button>
-          ) : (
-            <button
-              disabled
-              title="No live demo"
-              className="w-full h-8 desktop:h-9 px-2 text-[11px] desktop:text-body-xs font-medium justify-center rounded-lg border border-border-subtle/40 bg-bg-tertiary/30 text-text-quaternary cursor-not-allowed opacity-60 flex items-center"
-            >
-              Live
-            </button>
-          )}
+        <div className="pt-4 border-t border-border-subtle/60">
+          <ProjectActionButtons project={project} variant="card" />
         </div>
       </div>
     </motion.article>

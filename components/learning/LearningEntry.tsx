@@ -40,6 +40,7 @@ interface LearningEntryProps {
   body?: string;
   link?: string;
   variant?: "preview" | "full";
+  showDate?: boolean;
   className?: string;
 }
 
@@ -49,21 +50,24 @@ export function LearningEntry({
   body,
   link,
   variant = "full",
+  showDate = false,
   className,
 }: LearningEntryProps) {
   const content = (
     <>
-      <time
-        dateTime={date}
-        className={cn(
-          "shrink-0",
-          "text-mono-sm text-text-tertiary",
-          // Desktop/tablet: fixed-width column for vertical date alignment
-          "tablet:w-14"
-        )}
-      >
-        {formatCompactDate(date)}
-      </time>
+      {showDate && (
+        <time
+          dateTime={date}
+          className={cn(
+            "shrink-0",
+            "text-mono-sm text-text-tertiary",
+            // Desktop/tablet: fixed-width column for vertical date alignment
+            "tablet:w-14"
+          )}
+        >
+          {formatCompactDate(date)}
+        </time>
+      )}
 
       <div className="min-w-0">
         <span className="text-body-md text-text-primary">{headline}</span>
