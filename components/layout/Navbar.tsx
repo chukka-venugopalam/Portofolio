@@ -4,8 +4,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useReducedMotion } from "motion/react";
-import { NAV_ITEMS, SITE_NAME } from "@/lib/constants";
+import { NAV_ITEMS } from "@/lib/constants";
 import { Container } from "@/components/ui/Container";
+import { Logo } from "@/components/ui/Logo";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { MobileNavOverlay } from "@/components/layout/MobileNavOverlay";
 import { cn } from "@/lib/utils";
@@ -59,28 +60,8 @@ export function Navbar() {
         )}
       >
         <Container className="flex h-full items-center justify-between">
-          {/* Wordmark */}
-          <Link
-            href="/"
-            aria-label={`${SITE_NAME} — home`}
-            className={cn(
-              "relative text-heading-sm font-semibold tracking-tight",
-              "text-text-primary",
-              "hover:text-accent",
-              "transition-colors duration-fast ease-standard",
-              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 rounded-md"
-            )}
-          >
-            {SITE_NAME}
-            <span
-              aria-hidden="true"
-              className={cn(
-                "absolute -bottom-1 left-0 h-[2px] w-0 bg-accent rounded-full",
-                "transition-all duration-slow ease-out-expo",
-                "group-hover:w-full"
-              )}
-            />
-          </Link>
+          {/* Brand Logo */}
+          <Logo size="md" />
 
           {/* Desktop + Tablet nav */}
           <nav

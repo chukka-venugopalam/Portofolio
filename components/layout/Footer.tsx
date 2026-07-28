@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
-import { SITE_NAME, SOCIAL_LINKS } from "@/lib/constants";
+import { Logo } from "@/components/ui/Logo";
+import { SOCIAL_LINKS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
 /**
@@ -40,10 +41,8 @@ export function Footer() {
       <Container>
         {/* Desktop: single row */}
         <div className="hidden tablet:flex items-center justify-between gap-4">
-          {/* Left: wordmark */}
-          <span className="text-mono-sm text-text-tertiary font-medium">
-            {SITE_NAME}
-          </span>
+          {/* Left: Logo */}
+          <Logo size="sm" />
 
           {/* Center: copyright */}
           <span className="text-mono-sm text-text-tertiary">
@@ -56,9 +55,7 @@ export function Footer() {
 
         {/* Mobile: stacked + centered */}
         <div className="flex tablet:hidden flex-col items-center gap-4">
-          <span className="text-mono-sm text-text-tertiary font-medium">
-            {SITE_NAME}
-          </span>
+          <Logo size="sm" />
           <span className="text-mono-sm text-text-tertiary">
             © {year}
           </span>
