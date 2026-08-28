@@ -40,7 +40,7 @@ export const NOW_STATUS = {
 
 export const SOCIAL_LINKS = {
   github: "https://github.com/chukka-venugopalam",
-  linkedin: "https://linkedin.com/in/chukka-venugopalam",
+  linkedin: "https://linkedin.com/in/venugopal-chukka-baa17a402",
   email: "chukkavenugopalam@gmail.com",
   leetcode: "https://leetcode.com/u/xifpLOmHqY/",
 } as const;
