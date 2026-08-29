@@ -364,6 +364,63 @@ const COVERS: Record<CoverArtVariant, CoverRenderer> = {
       </text>
     </g>
   ),
+
+  "workflow-orchestrator": (id) => (
+    <g>
+      <defs>
+        <linearGradient id={`wobg-${id}`} x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#090e17" />
+          <stop offset="50%" stopColor="#0f172a" />
+          <stop offset="100%" stopColor="#070a12" />
+        </linearGradient>
+        <radialGradient id={`woglow-${id}`} cx="0.5" cy="0.45" r="0.55">
+          <stop offset="0%" stopColor="#6690b3" stopOpacity="0.18" />
+          <stop offset="100%" stopColor="#6690b3" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      <rect width="800" height="400" fill={`url(#wobg-${id})`} />
+      <rect width="800" height="400" fill={`url(#woglow-${id})`} />
+
+      {/* Orchestration Network: Central Kernel node with distributed desktop worker processes */}
+      <g transform="translate(400, 185)">
+        {/* Orbital Process Rails */}
+        <circle cx="0" cy="0" r="110" fill="none" stroke="#6690b3" strokeWidth="1" strokeDasharray="6 8" opacity="0.25" />
+        <circle cx="0" cy="0" r="70" fill="none" stroke="#38bdf8" strokeWidth="0.8" opacity="0.2" />
+
+        {/* Task dispatch vectors to 5 workers */}
+        {[
+          { a: -90, label: "IDE", c: "#6690b3" },
+          { a: -18, label: "TERMINAL", c: "#38bdf8" },
+          { a: 54, label: "BROWSER", c: "#a78bfa" },
+          { a: 126, label: "GIT", c: "#f59e0b" },
+          { a: 198, label: "FS", c: "#5eead4" },
+        ].map((w, i) => {
+          const rad = (w.a * Math.PI) / 180;
+          const wx = Math.cos(rad) * 110;
+          const wy = Math.sin(rad) * 110;
+          return (
+            <g key={`wk-${i}`}>
+              <line x1="0" y1="0" x2={wx} y2={wy} stroke={w.c} strokeWidth="1.2" opacity="0.35" strokeDasharray="3 3" />
+              <circle cx={wx} cy={wy} r="18" fill="#0f172a" stroke={w.c} strokeWidth="1.2" opacity="0.85" />
+              <circle cx={wx} cy={wy} r="4" fill={w.c} opacity="0.9" />
+              <text x={wx} y={wy + (wy > 0 ? 30 : -24)} textAnchor="middle" fill={w.c} fontSize="9" fontFamily="ui-monospace,monospace" fontWeight="600" opacity="0.75" letterSpacing="1">
+                {w.label}
+              </text>
+            </g>
+          );
+        })}
+
+        {/* Central Kernel Core */}
+        <circle cx="0" cy="0" r="28" fill="#1e293b" stroke="#6690b3" strokeWidth="2" opacity="0.95" />
+        <circle cx="0" cy="0" r="10" fill="#6690b3" opacity="0.8" />
+        <circle cx="0" cy="0" r="4" fill="#ffffff" opacity="0.95" />
+      </g>
+
+      <text x="400" y="370" textAnchor="middle" fill="#6690b3" fontSize="12" fontFamily="ui-monospace,monospace" letterSpacing="4" opacity="0.65">
+        AI OS KERNEL · DESKTOP AUTOMATION · MULTI-AGENT REPAIR LOOP
+      </text>
+    </g>
+  ),
 };
 
 export default ProjectCover;

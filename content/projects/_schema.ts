@@ -10,6 +10,7 @@ export const coverArtSchema = z.enum([
   "darkroom",
   "grove",
   "fracture",
+  "workflow-orchestrator",
 ]);
 
 export type CoverArtVariant = z.infer<typeof coverArtSchema>;
@@ -86,18 +87,7 @@ export const projectFrontmatterSchema = z.object({
 
   // Cover art variant — determines which SVG illustration to show
   // on the project card. If omitted, no cover art is shown.
-  coverArt: z
-    .enum([
-      "concept-intelligence",
-      "silicon-valley",
-      "graph-visualizer",
-      "os-scheduling",
-      "page-replacement",
-      "darkroom",
-      "grove",
-      "fracture",
-    ])
-    .optional(),
+  coverArt: coverArtSchema.optional(),
 
   // Flagship projects use the category field now instead of featured.
   // Kept for backward compatibility — defaults to false.

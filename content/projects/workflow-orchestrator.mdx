@@ -1,0 +1,59 @@
+---
+name: "Workflow Orchestrator"
+slug: "workflow-orchestrator"
+status: "mvp-development"
+category: "flagship"
+oneLiner: "An AI OS kernel that coordinates multiple desktop coding tools through one goal, instead of asking a single AI to build the whole thing alone."
+techTags: ["Python", "Desktop Automation", "Multi-Agent Coordination"]
+links:
+  code: "https://github.com/chukka-venugopalam/WorkflowOrchestrator"
+startedDate: "2026-06-01"
+lastUpdated: "2026-08-15"
+coverArt: "workflow-orchestrator"
+featured: false
+---
+
+## The Problem
+
+Most modern AI development workflows rely on a single general-purpose AI tool to build an entire codebase from scratch. Developers prompt one model (whether inside an IDE, a chat interface, or a terminal agent) and expect it to handle high-level architectural planning, deep logic implementation, browser verification, terminal execution, and Git version control simultaneously.
+
+In practice, this creates a severe bottleneck. A single general AI agent easily loses context, hallucinates on complex multi-step refactors, and gets stuck in repetitive error loops when a command fails. Instead of leveraging specialized tools that excel at specific tasks—such as Claude Code for terminal workflows, Cursor for codebase refactors, and browser automation for validation—developers are forced to manually bridge the gap between fragmented tools.
+
+The core question: what if an AI operating system kernel could coordinate existing desktop tools toward a single objective, letting each specialized agent do what it does best?
+
+## What It Does
+
+Workflow Orchestrator acts as an AI kernel that turns a single natural-language goal into a coordinated multi-agent execution pipeline across local desktop environments.
+
+Instead of running in isolation, the orchestrator:
+1. **Decomposes Objectives**: Breaks down a high-level project goal into a dependency-ordered directed acyclic graph (DAG) of actionable subtasks.
+2. **Assigns Specialized Workers**: Dispatches each subtask to the best-suited local tool or AI worker (IDE, terminal agent, browser tester, or file system operator).
+3. **Runs a Monitor–Verify–Repair Loop**: Actively monitors process outputs, verifies build and test states against expected acceptance criteria, and automatically intervenes with targeted repair actions or worker reassignments when execution stalls or fails.
+
+## How It's Built
+
+The architecture is built from the ground up to operate locally without requiring cloud LLM API keys or third-party hosted agent infrastructure.
+
+Key architectural foundations:
+- **Desktop Automation Layer**: Programmatically interfaces with the native operating system environment—controlling terminal sessions, browser windows, IDE workspaces, system clipboards, the local filesystem, and Git trees directly.
+- **Process Supervisor & Kernel**: Implemented in Python with an asynchronous event loop managing process lifecycles, stdout/stderr stream parsing, timeout enforcement, and state transitions.
+- **Deterministic Verification Engine**: Separates reasoning from state evaluation. Build outputs, test results, and exit codes are deterministically evaluated by local verification scripts rather than relying on probabilistic model guesses.
+
+## Decisions & Tradeoffs
+
+1. **Coordinating Specialized Agents vs. Single Monolithic LLM**:
+   Coordinating multiple specialized tools introduces more moving parts that must be kept in synchronization (inter-process communication, window focus management, state reconciliations). However, it eliminates single points of failure and prevents the context degradation common when a single model attempts to juggle planning, coding, and debugging at once.
+
+2. **Local Desktop Automation vs. Cloud API Orchestration**:
+   Operating through local desktop automation requires handling OS-level quirks and window detection edge cases, but it provides total privacy, zero API key dependency, and direct access to the developer's real environment, tools, and local configuration.
+
+3. **Deterministic Repair Loop vs. Open-Ended Re-Prompting**:
+   Rather than endlessly feeding raw error logs back into a chat context, the repair engine analyzes specific failure classes (syntax error, missing dependency, broken import, timeout) and issues targeted recovery recipes.
+
+## What's Next
+
+The current active milestone is hardening reliable desktop application detection and window control across varied operating systems and multi-monitor setups.
+
+Following that, the roadmap includes:
+- Expanding the repair engine's heuristic database for common build system failures.
+- Implementing cross-tool memory persistence so context learned during terminal debugging is instantly accessible to IDE refactoring agents.
