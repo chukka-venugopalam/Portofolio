@@ -12,52 +12,53 @@
    ───────────────────────────────────────────────────────────────────── */
 
 :root {
-  /* ── Dark theme (default) — premium charcoal ── */
+  /* ── Dark theme (default) — warm-neutral near-black & steel-blue ── */
 
   /* Backgrounds — deep, rich, layered */
-  --color-bg-primary:       #0a0a0b;
-  --color-bg-secondary:     #111113;
-  --color-bg-tertiary:      #18181b;
-  --color-bg-glass:         rgba(17, 17, 19, 0.78);
+  --color-bg-primary:       #0c0c0f;
+  --color-bg-secondary:     #17171b;
+  --color-bg-tertiary:      #26262b;
+  --color-bg-glass:         rgba(23, 23, 27, 0.78);
   --color-bg-glass-border:  rgba(255, 255, 255, 0.06);
-  --color-bg-elevated:      #1a1a1d;
-  --color-bg-card:          #121214;
+  --color-bg-elevated:      #1e1e24;
+  --color-bg-card:          #17171b;
+  --color-bg-card-building: #131316;
 
   /* Borders — refined, muted */
-  --color-border-subtle:  #1e1e22;
-  --color-border-default: #2a2a30;
-  --color-border-strong:  #3a3a42;
+  --color-border-subtle:  #26262b;
+  --color-border-default: #323238;
+  --color-border-strong:  #42424b;
 
   /* Text — high contrast, warm */
-  --color-text-primary:   #f5f5f0;
-  --color-text-secondary: #a1a1aa;
-  --color-text-tertiary:  #6b6b76;
-  --color-text-quaternary:#454550;
+  --color-text-primary:   #ececea;
+  --color-text-secondary: #97969c;
+  --color-text-tertiary:  #6b6b74;
+  --color-text-quaternary:#45454e;
 
-  /* Accent — refined teal with emerald warmth */
-  --color-accent:       #14b8a6;
-  --color-accent-light: #5eead4;
-  --color-accent-dim:   #0d9488;
-  --color-accent-dark:  #0f766e;
-  --color-accent-glow:  rgba(20, 184, 166, 0.1);
-  --color-accent-glow-strong: rgba(20, 184, 166, 0.2);
+  /* Accent — steel-blue */
+  --color-accent:       #6690b3;
+  --color-accent-light: #8db1d1;
+  --color-accent-dim:   #3f5f78;
+  --color-accent-dark:  #2c465a;
+  --color-accent-glow:  rgba(102, 144, 179, 0.1);
+  --color-accent-glow-strong: rgba(102, 144, 179, 0.2);
 
-  /* Emerald highlight accent */
-  --color-emerald:       #34d399;
-  --color-emerald-dim:   #059669;
+  /* Highlight accent */
+  --color-emerald:       #3f5f78;
+  --color-emerald-dim:   #2c465a;
 
   /* Status — refined palette */
-  --color-status-shipped:         #34d399;
-  --color-status-building:        #a78bfa;
-  --color-status-in-progress:     #f59e0b;
-  --color-status-mvp:             #f59e0b;
-  --color-status-architecture:    #60a5fa;
-  --color-status-exploring:       #6b6b76;
+  --color-status-shipped:         #6690b3;
+  --color-status-building:        #8b9cb0;
+  --color-status-in-progress:     #b59c76;
+  --color-status-mvp:             #b59c76;
+  --color-status-architecture:    #6690b3;
+  --color-status-exploring:       #6b6b74;
 
   /* Utility */
   --color-success: #22c55e;
   --color-danger:  #ef4444;
-  --color-warning: #f59e0b;
+  --color-warning: #b59c76;
 
   /* Elevation — premium, layered shadows */
   --elevation-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
@@ -67,77 +68,78 @@
                   0 2px 8px rgba(0, 0, 0, 0.25);
   --elevation-xl: 0 20px 60px rgba(0, 0, 0, 0.35),
                   0 4px 16px rgba(0, 0, 0, 0.25);
-  --elevation-glow: 0 0 20px rgba(20, 184, 166, 0.08),
-                    0 0 40px rgba(20, 184, 166, 0.04);
-  --elevation-glow-strong: 0 0 24px rgba(20, 184, 166, 0.15),
-                           0 0 48px rgba(20, 184, 166, 0.08);
+  --elevation-glow: 0 0 20px rgba(102, 144, 179, 0.08),
+                    0 0 40px rgba(102, 144, 179, 0.04);
+  --elevation-glow-strong: 0 0 24px rgba(102, 144, 179, 0.15),
+                           0 0 48px rgba(102, 144, 179, 0.08);
 
   /* Glass accent for cards */
   --glass-accent: linear-gradient(
     135deg,
-    rgba(20, 184, 166, 0.03) 0%,
-    rgba(52, 211, 153, 0.02) 50%,
+    rgba(102, 144, 179, 0.03) 0%,
+    rgba(63, 95, 120, 0.02) 50%,
     transparent 100%
   );
 }
 
 [data-theme="light"] {
-  /* ── Light theme — warm white ── */
+  /* ── Light theme — warm off-white & steel-blue ── */
 
-  --color-bg-primary:       #fafaf9;
-  --color-bg-secondary:     #ffffff;
-  --color-bg-tertiary:      #f3f3f0;
-  --color-bg-glass:         rgba(255, 255, 255, 0.78);
+  --color-bg-primary:       #f2f1ee;
+  --color-bg-secondary:     #e9e8e3;
+  --color-bg-tertiary:      #d8d6cf;
+  --color-bg-glass:         rgba(233, 232, 227, 0.78);
   --color-bg-glass-border:  rgba(0, 0, 0, 0.06);
-  --color-bg-elevated:      #ffffff;
-  --color-bg-card:          #ffffff;
+  --color-bg-elevated:      #e9e8e3;
+  --color-bg-card:          #e9e8e3;
+  --color-bg-card-building: #edece7;
 
-  --color-border-subtle:  #e4e4e1;
-  --color-border-default: #d4d4d0;
-  --color-border-strong:  #b8b8b2;
+  --color-border-subtle:  #d8d6cf;
+  --color-border-default: #c6c4bc;
+  --color-border-strong:  #b0ada3;
 
-  --color-text-primary:   #18181b;
-  --color-text-secondary: #52525b;
-  --color-text-tertiary:  #8b8b95;
-  --color-text-quaternary:#b8b8c2;
+  --color-text-primary:   #1e1e1f;
+  --color-text-secondary: #6e6d72;
+  --color-text-tertiary:  #8c8a90;
+  --color-text-quaternary:#b4b2b8;
 
-  --color-accent:       #0d9488;
-  --color-accent-light: #14b8a6;
-  --color-accent-dim:   #0f766e;
-  --color-accent-dark:  #115e59;
-  --color-accent-glow:  rgba(13, 148, 136, 0.08);
-  --color-accent-glow-strong: rgba(13, 148, 136, 0.15);
+  --color-accent:       #35566f;
+  --color-accent-light: #4b708d;
+  --color-accent-dim:   #547187;
+  --color-accent-dark:  #243c4f;
+  --color-accent-glow:  rgba(53, 86, 111, 0.08);
+  --color-accent-glow-strong: rgba(53, 86, 111, 0.15);
 
-  --color-emerald:       #059669;
-  --color-emerald-dim:   #047857;
+  --color-emerald:       #547187;
+  --color-emerald-dim:   #35566f;
 
-  --color-status-shipped:         #059669;
-  --color-status-building:        #7c3aed;
-  --color-status-in-progress:     #d97706;
-  --color-status-mvp:             #d97706;
-  --color-status-architecture:    #2563eb;
-  --color-status-exploring:       #8b8b95;
+  --color-status-shipped:         #35566f;
+  --color-status-building:        #547187;
+  --color-status-in-progress:     #8c734b;
+  --color-status-mvp:             #8c734b;
+  --color-status-architecture:    #35566f;
+  --color-status-exploring:       #8c8a90;
 
   --color-success: #16a34a;
   --color-danger:  #dc2626;
-  --color-warning: #d97706;
+  --color-warning: #8c734b;
 
-  --elevation-sm: 0 1px 2px rgba(24, 24, 27, 0.04);
-  --elevation-md: 0 4px 12px rgba(24, 24, 27, 0.06),
-                  0 1px 3px rgba(24, 24, 27, 0.04);
-  --elevation-lg: 0 8px 30px rgba(24, 24, 27, 0.08),
-                  0 2px 8px rgba(24, 24, 27, 0.05);
-  --elevation-xl: 0 20px 60px rgba(24, 24, 27, 0.1),
-                  0 4px 16px rgba(24, 24, 27, 0.06);
-  --elevation-glow: 0 0 20px rgba(13, 148, 136, 0.06),
-                    0 0 40px rgba(13, 148, 136, 0.03);
-  --elevation-glow-strong: 0 0 24px rgba(13, 148, 136, 0.12),
-                           0 0 48px rgba(13, 148, 136, 0.06);
+  --elevation-sm: 0 1px 2px rgba(30, 30, 31, 0.04);
+  --elevation-md: 0 4px 12px rgba(30, 30, 31, 0.06),
+                  0 1px 3px rgba(30, 30, 31, 0.04);
+  --elevation-lg: 0 8px 30px rgba(30, 30, 31, 0.08),
+                  0 2px 8px rgba(30, 30, 31, 0.05);
+  --elevation-xl: 0 20px 60px rgba(30, 30, 31, 0.1),
+                  0 4px 16px rgba(30, 30, 31, 0.06);
+  --elevation-glow: 0 0 20px rgba(53, 86, 111, 0.06),
+                    0 0 40px rgba(53, 86, 111, 0.03);
+  --elevation-glow-strong: 0 0 24px rgba(53, 86, 111, 0.12),
+                           0 0 48px rgba(53, 86, 111, 0.06);
 
   --glass-accent: linear-gradient(
     135deg,
-    rgba(13, 148, 136, 0.04) 0%,
-    rgba(5, 150, 105, 0.02) 50%,
+    rgba(53, 86, 111, 0.04) 0%,
+    rgba(84, 113, 135, 0.02) 50%,
     transparent 100%
   );
 }
@@ -156,6 +158,7 @@
   --color-bg-glass-border:   var(--color-bg-glass-border);
   --color-bg-elevated:       var(--color-bg-elevated);
   --color-bg-card:           var(--color-bg-card);
+  --color-bg-card-building:  var(--color-bg-card-building);
   --color-border-subtle:     var(--color-border-subtle);
   --color-border-default:    var(--color-border-default);
   --color-border-strong:     var(--color-border-strong);

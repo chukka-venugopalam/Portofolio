@@ -13,7 +13,12 @@ export const SITE_URL =
 export const SITE_NAME = "Venugopalam Chukka";
 
 export const SITE_TAGLINE =
-  "Building AI systems that transform curiosity into understanding.";
+  "Systems that reason. Interfaces that feel considered.";
+
+export const HERO_TAGLINE_LINE_1 = "Systems that reason.";
+export const HERO_TAGLINE_LINE_2 = "Interfaces that feel considered.";
+export const HERO_STATUS_SUBLINE =
+  "Project status below isn't a badge — shipped work renders at full clarity, active work renders a shade softer.";
 
 /**
  * Navigation source of truth — per Implementation Blueprint Section

@@ -10,7 +10,13 @@ import { ProjectCard } from "@/components/project/ProjectCard";
 import { LearningEntry } from "@/components/learning/LearningEntry";
 import { ConnectStrip } from "@/components/connect/ConnectStrip";
 import { Button } from "@/components/ui/Button";
-import { NOW_STATUS, SOCIAL_LINKS, SITE_TAGLINE } from "@/lib/constants";
+import {
+  NOW_STATUS,
+  SOCIAL_LINKS,
+  HERO_TAGLINE_LINE_1,
+  HERO_TAGLINE_LINE_2,
+  HERO_STATUS_SUBLINE,
+} from "@/lib/constants";
 
 export const metadata = buildHomeMetadata();
 
@@ -25,7 +31,9 @@ export default function HomePage() {
         <Container>
           <Hero
             name="Venugopalam Chukka"
-            tagline={SITE_TAGLINE}
+            taglineLine1={HERO_TAGLINE_LINE_1}
+            taglineLine2={HERO_TAGLINE_LINE_2}
+            statusSubline={HERO_STATUS_SUBLINE}
             roles="Student &amp; Builder • AI/ML • Full Stack • Cloud"
             currentFocus={
               flagshipProjects.length > 0

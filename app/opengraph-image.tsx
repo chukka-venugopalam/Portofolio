@@ -14,8 +14,8 @@ export default async function Image() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
-          backgroundColor: "#090d16",
-          color: "#f2f2f0",
+          backgroundColor: "#0c0c0f",
+          color: "#ececea",
           padding: "80px",
         }}
       >
@@ -26,7 +26,7 @@ export default async function Image() {
             viewBox="0 0 40 40"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            style={{ color: "#14b8a6" }}
+            style={{ color: "#6690b3" }}
           >
             <path
               d="M 27 8 A 14.5 14.5 0 1 0 27 32"
@@ -59,7 +59,7 @@ export default async function Image() {
           </svg>
           <div style={{ fontSize: 56, fontWeight: 600 }}>{SITE_NAME}</div>
         </div>
-        <div style={{ fontSize: 28, color: "#a3a3aa" }}>
+        <div style={{ fontSize: 28, color: "#97969c" }}>
           {SITE_TAGLINE}
         </div>
       </div>

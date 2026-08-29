@@ -3,7 +3,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import { motion, useReducedMotion } from "motion/react";
-import { StatusTag } from "@/components/ui/StatusTag";
 import { TechTagList } from "@/components/ui/TechTag";
 import { ProjectActionButtons } from "@/components/project/ProjectActionButtons";
 import { ProjectCover } from "@/components/project/ProjectCover";
@@ -20,6 +19,11 @@ export function ProjectCard({ project, className }: ProjectCardProps) {
   const detailHref = `/work/${project.slug}`;
   const shouldReduce = useReducedMotion();
 
+  const isShipped =
+    project.status === "shipped" || project.status === "production-ready";
+
+  const statusLabel = isShipped ? "Shipped" : "Building";
+
   return (
     <motion.article
       initial={shouldReduce ? false : { opacity: 0, y: 20 }}
@@ -28,9 +32,10 @@ export function ProjectCard({ project, className }: ProjectCardProps) {
       transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
       className={cn(
         "group relative overflow-hidden flex flex-col justify-between h-full",
-        "rounded-2xl border border-border-subtle bg-bg-card/90 glass",
-        "transition-all duration-medium ease-standard",
-        "hover:border-accent/30 hover:shadow-[0_8px_32px_rgba(20,184,166,0.12)]",
+        "rounded-2xl glass transition-all duration-medium ease-standard",
+        isShipped
+          ? "border border-solid border-border-subtle bg-bg-card/90 hover:border-accent/40 hover:shadow-[0_8px_32px_rgba(102,144,179,0.12)]"
+          : "border border-dashed border-border-default bg-bg-card-building/90 opacity-90 hover:opacity-100 hover:border-accent/40",
         className
       )}
     >
@@ -43,7 +48,10 @@ export function ProjectCard({ project, className }: ProjectCardProps) {
               alt={project.name}
               fill
               sizes="(max-width: 768px) 100vw, 50vw"
-              className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+              className={cn(
+                "object-cover transition-transform duration-700 ease-out group-hover:scale-105",
+                !isShipped && "opacity-90 group-hover:opacity-100 transition-opacity duration-500"
+              )}
               loading="lazy"
             />
           ) : project.coverArt ? (
@@ -65,15 +73,32 @@ export function ProjectCard({ project, className }: ProjectCardProps) {
             </div>
           )}
 
+          {/* Minimal text status label (NOT a pill badge) */}
           <div className="absolute top-3 right-3 z-10">
-            <StatusTag status={project.status} />
+            <span
+              className={cn(
+                "text-mono-xs uppercase tracking-wider font-semibold px-2 py-0.5 rounded bg-bg-primary/75 backdrop-blur-sm",
+                isShipped
+                  ? "text-accent drop-shadow-sm"
+                  : "text-text-tertiary"
+              )}
+            >
+              {statusLabel}
+            </span>
           </div>
         </div>
 
         {/* Card Body */}
         <div className="p-5 desktop:p-6 flex flex-col flex-1">
           {/* 2. Project Title */}
-          <h3 className="text-heading-md desktop:text-heading-lg font-bold text-text-primary tracking-tight group-hover:text-accent transition-colors">
+          <h3
+            className={cn(
+              "text-heading-md desktop:text-heading-lg tracking-tight transition-colors",
+              isShipped
+                ? "font-bold text-text-primary group-hover:text-accent"
+                : "font-semibold text-text-secondary group-hover:text-text-primary"
+            )}
+          >
             <Link
               href={detailHref}
               className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-md"
@@ -83,7 +108,13 @@ export function ProjectCard({ project, className }: ProjectCardProps) {
           </h3>
 
           {/* 3. One-line description (truncated with ellipsis) */}
-          <p className="mt-2 text-body-sm text-text-secondary line-clamp-1 truncate" title={project.oneLiner}>
+          <p
+            className={cn(
+              "mt-2 text-body-sm line-clamp-1 truncate",
+              isShipped ? "text-text-secondary" : "text-text-tertiary"
+            )}
+            title={project.oneLiner}
+          >
             {project.oneLiner}
           </p>
 

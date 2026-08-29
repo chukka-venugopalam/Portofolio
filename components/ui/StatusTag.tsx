@@ -28,12 +28,12 @@ import type { ProjectStatus } from "@/content/projects/_schema";
 const STATUS_LABEL: Record<ProjectStatus, string> = {
   shipped: "Shipped",
   building: "Building",
-  exploring: "Exploring",
-  designing: "Designing",
-  "architecture-complete": "Architecture Complete",
-  "mvp-development": "MVP Development",
-  "in-progress": "In Progress",
-  "production-ready": "Production Ready",
+  exploring: "Building",
+  designing: "Building",
+  "architecture-complete": "Building",
+  "mvp-development": "Building",
+  "in-progress": "Building",
+  "production-ready": "Shipped",
 };
 
 const STATUS_COLOR_CLASSES: Record<ProjectStatus, string> = {

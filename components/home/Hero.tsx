@@ -13,12 +13,23 @@ const KnowledgeNetwork = dynamic(
 
 interface HeroProps {
   name: string;
-  tagline: string;
+  tagline?: string;
+  taglineLine1?: string;
+  taglineLine2?: string;
+  statusSubline?: string;
   roles: string;
   currentFocus?: string;
 }
 
-export function Hero({ name, tagline, roles, currentFocus }: HeroProps) {
+export function Hero({
+  name,
+  tagline,
+  taglineLine1,
+  taglineLine2,
+  statusSubline,
+  roles,
+  currentFocus,
+}: HeroProps) {
   const shouldReduce = useReducedMotion();
 
   return (
@@ -82,15 +93,34 @@ export function Hero({ name, tagline, roles, currentFocus }: HeroProps) {
           </motion.h1>
 
           {/* Tagline */}
-          <motion.p
+          <motion.div
             initial={shouldReduce ? false : { opacity: 0, y: 20 }}
             whileInView={shouldReduce ? undefined : { opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: shouldReduce ? 0 : 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="mt-6 text-body-xl text-text-secondary max-w-[520px] leading-relaxed"
+            className="mt-6 max-w-[540px]"
           >
-            {tagline}
-          </motion.p>
+            {taglineLine1 ? (
+              <p className="text-body-xl text-text-primary font-medium leading-snug">
+                {taglineLine1}{" "}
+                {taglineLine2 && (
+                  <span className="text-text-secondary italic font-normal">
+                    {taglineLine2}
+                  </span>
+                )}
+              </p>
+            ) : (
+              <p className="text-body-xl text-text-secondary leading-relaxed">
+                {tagline}
+              </p>
+            )}
+
+            {statusSubline && (
+              <p className="mt-3 text-body-sm text-text-tertiary leading-relaxed">
+                {statusSubline}
+              </p>
+            )}
+          </motion.div>
 
           {/* Role tags */}
           <motion.div
