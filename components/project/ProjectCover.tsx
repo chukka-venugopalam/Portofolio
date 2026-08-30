@@ -421,6 +421,64 @@ const COVERS: Record<CoverArtVariant, CoverRenderer> = {
       </text>
     </g>
   ),
+
+  "celonis": (id) => (
+    <g>
+      <defs>
+        <linearGradient id={`clbg-${id}`} x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#08141e" />
+          <stop offset="50%" stopColor="#0a202a" />
+          <stop offset="100%" stopColor="#051016" />
+        </linearGradient>
+        <radialGradient id={`clglow-${id}`} cx="0.5" cy="0.4" r="0.6">
+          <stop offset="0%" stopColor="#10b981" stopOpacity="0.16" />
+          <stop offset="100%" stopColor="#10b981" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      <rect width="800" height="400" fill={`url(#clbg-${id})`} />
+      <rect width="800" height="400" fill={`url(#clglow-${id})`} />
+
+      {/* Process mining flow & carbon reduction curve */}
+      <g transform="translate(100, 70)">
+        {/* Background Grid & Axes */}
+        <line x1="40" y1="210" x2="560" y2="210" stroke="#6690b3" strokeWidth="0.8" opacity="0.25" />
+        <line x1="40" y1="30" x2="40" y2="210" stroke="#6690b3" strokeWidth="0.8" opacity="0.25" />
+
+        {/* Process mining flow paths (65K+ Corporate Trips) */}
+        <path d="M 60 170 Q 180 80, 300 130 T 540 60" fill="none" stroke="#6690b3" strokeWidth="1.2" strokeDasharray="4 4" opacity="0.35" />
+        <path d="M 60 140 C 160 50, 260 180, 380 90 S 500 40, 540 40" fill="none" stroke="#38bdf8" strokeWidth="1.5" opacity="0.4" />
+        {/* Decarbonisation trajectory to Net Zero 2030 */}
+        <path d="M 60 60 C 200 80, 350 160, 540 195" fill="none" stroke="#10b981" strokeWidth="2.5" opacity="0.85" />
+
+        {/* Process Milestones / Hub Nodes */}
+        {[
+          { x: 60, y: 60, r: 6, label: "2024 Baseline", c: "#10b981" },
+          { x: 200, y: 85, r: 5, label: "Policy Shift", c: "#38bdf8" },
+          { x: 350, y: 155, r: 5, label: "Rail-First", c: "#10b981" },
+          { x: 540, y: 195, r: 7, label: "Net Zero 2030", c: "#10b981" },
+        ].map((pt, i) => (
+          <g key={`pt-${i}`}>
+            <circle cx={pt.x} cy={pt.y} r={pt.r + 6} fill={pt.c} opacity="0.2" />
+            <circle cx={pt.x} cy={pt.y} r={pt.r} fill={pt.c} />
+            <text x={pt.x} y={pt.y - 14} textAnchor="middle" fill={pt.c} fontSize="10" fontFamily="ui-monospace,monospace" fontWeight="600" opacity="0.9">
+              {pt.label}
+            </text>
+          </g>
+        ))}
+
+        {/* Data points along mining path */}
+        {[
+          { cx: 130, cy: 150 }, { cx: 240, cy: 110 }, { cx: 420, cy: 115 }, { cx: 480, cy: 75 }
+        ].map((dp, i) => (
+          <circle key={`dp-${i}`} cx={dp.cx} cy={dp.cy} r="3" fill="#38bdf8" opacity="0.6" />
+        ))}
+      </g>
+
+      <text x="400" y="370" textAnchor="middle" fill="#10b981" fontSize="12" fontFamily="ui-monospace,monospace" letterSpacing="4" opacity="0.75">
+        PROCESS MINING · CARBON INTELLIGENCE · NET ZERO 2030
+      </text>
+    </g>
+  ),
 };
 
 export default ProjectCover;

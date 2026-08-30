@@ -1,0 +1,58 @@
+---
+name: "Sustainability Capstone: Decarbonising Travel"
+slug: "celonis-sustainability-capstone"
+status: "shipped"
+category: "flagship"
+oneLiner: "A process-mining view of Celonis' travel carbon footprint and the fastest path to Net Zero 2030."
+techTags: ["Python", "Celonis", "Process Mining", "scikit-learn"]
+links: {}
+startedDate: "2026-07-01"
+lastUpdated: "2026-07-17"
+coverArt: "celonis"
+featured: false
+---
+
+## The Problem
+
+Corporate business travel represents a substantial, tangible share of enterprise carbon emissions, yet organizations frequently treat it as unmeasured overhead or rely on generic annual averages. Without granular visibility into trip-level routes, cabin choices, and booking behaviors, sustainability teams struggle to pinpoint where emissions originate or evaluate the true impact of policy interventions.
+
+Measuring carbon footprints at enterprise scale requires moving beyond static post-hoc spreadsheets to dynamic process analysis across tens of thousands of individual journeys.
+
+The core objective: how do we leverage process mining and predictive modeling across real-world travel data to expose inefficiency and chart a viable, data-backed trajectory toward Net Zero?
+
+## What It Does
+
+This capstone analysis examines enterprise business travel operations through the lens of Celonis process mining and machine learning.
+
+Across the dataset, the system:
+1. **Process-Mines Travel Footprints**: Ingests and analyzes over 65,000 corporate trip records to uncover patterns in journey routing, booking lead times, hotel stays, and policy compliance.
+2. **Predicts Trip-Level Emissions**: Trains a `RandomForestRegressor` model to predict carbon emissions ($\text{CO}_2\text{e}$) on a per-journey basis, achieving an $R^2$ of 0.999 and a Mean Absolute Percentage Error ($\text{MAPE}$) of 3.0%.
+3. **Simulates Reduction Scenarios**: Models concrete reduction pathways through 2030—evaluating the cumulative impact of shifting short-haul flights to rail, enforcing cabin class caps, eliminating out-of-policy bookings, and establishing departmental carbon budgets.
+
+## How It's Built
+
+The pipeline combines process mining extraction with Python-based regression modeling using `scikit-learn` and `pandas`.
+
+### Feature Engineering & Modeling
+The predictive model was trained on the verified enterprise feature set extracted from the booking logs:
+- **Location Attributes**: `DepartureLocationCountry`, `DepartureLocationCity`, `ArrivalLocationCountry`, `ArrivalLocationCity`
+- **Transport & Service Details**: `ShippingType`, `ShippingTypeDescription`
+- **Trip Metadata & Policy**: `Purpose`, `OutOfPolicy`, `BusinessUnit`
+- **Cost & Duration Variables**: `HotelNights`, `NetCosts`
+
+The dataset was partitioned into an 80/20 train-test split (`test_size=0.2`, `random_state=42`), allowing robust evaluation against unseen journey configurations.
+
+## Decisions & Tradeoffs
+
+1. **Proxying Distance via Service Categorization**:
+   The source dataset lacked explicit point-to-point mileage or distance coordinates. Rather than discarding location data or attempting external API imputation, `ShippingTypeDescription` (e.g., specific flight tiers, train classes) was leveraged alongside departure and arrival cities as a reliable proxy for journey distance, transport modality, and cabin class tier.
+
+2. **Selecting Random Forest for Multi-Type Tabular Data**:
+   The feature matrix contained a mix of high-cardinality categorical attributes (city pairs, business units, booking purposes) and skewed numeric distributions (`NetCosts`, `HotelNights`). A Random Forest regressor naturally accommodated these non-linear interactions and mixed data types with minimal artificial encoding distortion, delivering high predictive accuracy without requiring extensive feature scaling.
+
+## What's Next
+
+The capstone synthesizes its empirical findings into a structured, three-phase recommendation roadmap:
+- **0–3 Months (Visibility & Monitoring)**: Roll out department-level carbon tracking dashboards in Celonis to benchmark baseline emissions across teams.
+- **3–12 Months (Policy Automation)**: Implement automated booking alerts that flag carbon-intensive itineraries and enforce out-of-policy exceptions before ticket issuance.
+- **1–3 Years (Structural Decarbonisation)**: Mandate rail-first booking for high-speed corridors and link departmental travel budgets directly to Net Zero 2030 reduction targets.

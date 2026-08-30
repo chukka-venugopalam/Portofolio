@@ -11,6 +11,7 @@ export const coverArtSchema = z.enum([
   "grove",
   "fracture",
   "workflow-orchestrator",
+  "celonis",
 ]);
 
 export type CoverArtVariant = z.infer<typeof coverArtSchema>;
