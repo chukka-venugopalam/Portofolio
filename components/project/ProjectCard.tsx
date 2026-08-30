@@ -43,17 +43,33 @@ export function ProjectCard({ project, className }: ProjectCardProps) {
         {/* 1. Thumbnail image frame (16:9 fixed aspect ratio) */}
         <div className="relative w-full aspect-[16/9] overflow-hidden bg-bg-tertiary border-b border-border-subtle">
           {project.thumbnail ? (
-            <Image
-              src={project.thumbnail}
-              alt={project.name}
-              fill
-              sizes="(max-width: 768px) 100vw, 50vw"
-              className={cn(
-                "object-cover transition-transform duration-700 ease-out group-hover:scale-105",
-                !isShipped && "opacity-90 group-hover:opacity-100 transition-opacity duration-500"
+            <>
+              <Image
+                src={project.thumbnail}
+                alt={project.name}
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className={cn(
+                  "object-cover transition-transform duration-700 ease-out group-hover:scale-105",
+                  !isShipped && "opacity-90 group-hover:opacity-100 transition-opacity duration-500"
+                )}
+                loading="lazy"
+              />
+              {project.thumbnailCallout && (
+                <div className="absolute bottom-3 left-3 z-10">
+                  <span
+                    className={cn(
+                      "text-mono-xs uppercase tracking-wider font-semibold px-2 py-0.5 rounded bg-bg-primary/75 backdrop-blur-sm",
+                      isShipped
+                        ? "text-accent drop-shadow-sm"
+                        : "text-text-tertiary"
+                    )}
+                  >
+                    {project.thumbnailCallout}
+                  </span>
+                </div>
               )}
-              loading="lazy"
-            />
+            </>
           ) : project.coverArt ? (
             <div className="w-full h-full transition-transform duration-700 ease-out group-hover:scale-105">
               <ProjectCover variant={project.coverArt} className="w-full h-full" />

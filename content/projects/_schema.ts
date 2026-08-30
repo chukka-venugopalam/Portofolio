@@ -86,6 +86,8 @@ export const projectFrontmatterSchema = z.object({
 
   thumbnail: z.string().optional(),
 
+  thumbnailCallout: z.string().optional(),
+
   // Cover art variant — determines which SVG illustration to show
   // on the project card. If omitted, no cover art is shown.
   coverArt: coverArtSchema.optional(),
