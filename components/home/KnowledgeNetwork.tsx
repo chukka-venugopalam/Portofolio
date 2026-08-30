@@ -24,7 +24,7 @@ const PHILOSOPHY_STAGES: PhilosophyStage[] = [
   {
     id: "curiosity",
     label: "Curiosity",
-    color: "#F5A623",
+    color: "#7a95b3",
     description: "Every project starts with a question I can't stop thinking about.",
     rotationZ: 0,
     speed: 0.42,
@@ -33,7 +33,7 @@ const PHILOSOPHY_STAGES: PhilosophyStage[] = [
   {
     id: "learning",
     label: "Learning",
-    color: "#4A90D9",
+    color: "#4a6d94",
     description: "Learning isn't collecting tutorials—it's turning ideas into working systems.",
     rotationZ: (Math.PI / 5) * 1, // 36°
     speed: 0.34,
@@ -42,7 +42,7 @@ const PHILOSOPHY_STAGES: PhilosophyStage[] = [
   {
     id: "understanding",
     label: "Understanding",
-    color: "#2CB1BC",
+    color: "#1e3a5f",
     description: "Optimizing for deep mental models so durable knowledge compounds.",
     rotationZ: (Math.PI / 5) * 2, // 72°
     speed: 0.28,
@@ -51,7 +51,7 @@ const PHILOSOPHY_STAGES: PhilosophyStage[] = [
   {
     id: "building",
     label: "Building",
-    color: "#8B5CF6",
+    color: "#5a7fa6",
     description: "Every concept becomes a prototype. Every prototype becomes a product.",
     rotationZ: (Math.PI / 5) * 3, // 108°
     speed: 0.23,
@@ -60,7 +60,7 @@ const PHILOSOPHY_STAGES: PhilosophyStage[] = [
   {
     id: "impact",
     label: "Impact",
-    color: "#F0654D",
+    color: "#33526f",
     description: "Building AI systems that help people learn, think, and make better decisions.",
     rotationZ: (Math.PI / 5) * 4, // 144°
     speed: 0.18,
@@ -117,7 +117,7 @@ function NucleusCore() {
         <sphereGeometry args={[0.55, 32, 32]} />
         <meshStandardMaterial
           color="#ffffff"
-          emissive="#14b8a6"
+          emissive="#6690b3"
           emissiveIntensity={0.4}
           roughness={0.15}
           metalness={0.85}

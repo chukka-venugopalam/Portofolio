@@ -15,35 +15,35 @@ const STAGES: Stage[] = [
   {
     id: "curiosity",
     label: "Curiosity",
-    color: "#F5A623",
+    color: "#7a95b3",
     description: "Every project starts with a question I can't stop thinking about.",
     rotation: 0,
   },
   {
     id: "learning",
     label: "Learning",
-    color: "#4A90D9",
+    color: "#4a6d94",
     description: "Learning isn't collecting tutorials—it's turning ideas into working systems.",
     rotation: 36,
   },
   {
     id: "understanding",
     label: "Understanding",
-    color: "#2CB1BC",
+    color: "#1e3a5f",
     description: "Optimizing for deep mental models so durable knowledge compounds.",
     rotation: 72,
   },
   {
     id: "building",
     label: "Building",
-    color: "#8B5CF6",
+    color: "#5a7fa6",
     description: "Every concept becomes a prototype. Every prototype becomes a product.",
     rotation: 108,
   },
   {
     id: "impact",
     label: "Impact",
-    color: "#F0654D",
+    color: "#33526f",
     description: "Building AI systems that help people learn, think, and make better decisions.",
     rotation: 144,
   },
@@ -68,8 +68,8 @@ export default function PhilosophyOrbitFallback() {
         <defs>
           <radialGradient id="fallback-center-glow-atomic" cx="50%" cy="50%" r="50%">
             <stop offset="0%" stopColor="#ffffff" stopOpacity="0.9" />
-            <stop offset="50%" stopColor="#14b8a6" stopOpacity="0.4" />
-            <stop offset="100%" stopColor="#14b8a6" stopOpacity="0" />
+            <stop offset="50%" stopColor="#6690b3" stopOpacity="0.4" />
+            <stop offset="100%" stopColor="#6690b3" stopOpacity="0" />
           </radialGradient>
         </defs>
 
