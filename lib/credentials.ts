@@ -21,6 +21,7 @@ export interface CertificationItem {
   id: string;
   title: string;
   issuer: string;
+  verifyUrl?: string;
 }
 
 export const ACHIEVEMENTS: AchievementItem[] = [
@@ -61,6 +62,7 @@ export const EXPERIENCES: ExperienceItem[] = [
     role: "Frontend Developer Intern",
     company: "DriftSync Solutions Pvt. Ltd.",
     period: "May – Jun 2026",
+    link: "https://driftsync.in/verification",
     bullets: [
       "Fixed ~10–15 UI bugs on EatssApp (rural food delivery platform) using Git branch workflows and code review in a 3-member team, incorporating direct client feedback into fix cycles",
       "Learned client-server architecture fundamentals — implemented server-side data loading to reduce client-side fetch latency — and assisted with company website development on Next.js",
@@ -83,5 +85,17 @@ export const CERTIFICATIONS: CertificationItem[] = [
     id: "anthropic-claude-101",
     title: "Claude 101",
     issuer: "Anthropic Academy",
+  },
+  {
+    id: "coursera-ai-essentials",
+    title: "Google AI Essentials",
+    issuer: "Coursera (5 courses)",
+    verifyUrl: "https://coursera.org/verify/specialization/934C8SKOKPX2",
+  },
+  {
+    id: "coursera-prompting-essentials",
+    title: "Google Prompting Essentials",
+    issuer: "Coursera (4 courses)",
+    verifyUrl: "https://coursera.org/verify/specialization/JA25ANEY6K8B",
   },
 ];

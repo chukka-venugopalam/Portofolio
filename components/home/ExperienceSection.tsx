@@ -47,6 +47,20 @@ export function ExperienceSection() {
                     </li>
                   ))}
                 </ul>
+
+                {exp.link && (
+                  <div className="mt-6 pt-4 border-t border-border-subtle/60">
+                    <a
+                      href={exp.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 text-body-sm font-medium text-accent hover:text-accent-light transition-colors group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded"
+                    >
+                      <span>Verify Experience</span>
+                      <span aria-hidden="true" className="transition-transform group-hover:translate-x-0.5">&rarr;</span>
+                    </a>
+                  </div>
+                )}
               </div>
             ))}
           </div>
