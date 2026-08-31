@@ -4,8 +4,13 @@ import { getRecentLearningEntries } from "@/lib/content/learning";
 import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
 import { SectionHeader } from "@/components/ui/SectionHeader";
-import { Hero } from "@/components/home/Hero";
-import { FrameworkStrip } from "@/components/home/FrameworkStrip";
+import {
+  Hero,
+  FrameworkStrip,
+  AchievementsSection,
+  ExperienceSection,
+  CertificationsSection,
+} from "@/components/home";
 import { ProjectCard } from "@/components/project/ProjectCard";
 import { LearningEntry } from "@/components/learning/LearningEntry";
 import { ConnectStrip } from "@/components/connect/ConnectStrip";
@@ -100,6 +105,15 @@ export default function HomePage() {
           </Container>
         </Section>
       )}
+
+      {/* ── Achievements ── */}
+      <AchievementsSection />
+
+      {/* ── Experience ── */}
+      <ExperienceSection />
+
+      {/* ── Certifications ── */}
+      <CertificationsSection />
 
       {/* ── Learning Roadmap ── */}
       {recentLearning.length > 0 && (
