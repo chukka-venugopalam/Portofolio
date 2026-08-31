@@ -1,4 +1,5 @@
 import { Fragment, Suspense } from "react";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import Script from "next/script";
 import { MDXRemote } from "next-mdx-remote-client/rsc";
@@ -55,7 +56,6 @@ export default async function ProjectDetailPage({
   const decisions = parseTradeoffs(sections.tradeoffs, frontmatter.slug);
   const projectJsonLd = buildProjectJsonLd(project);
   const mdxComponents = getMDXComponents({});
-  const isFlagship = frontmatter.category === "flagship";
 
   return (
     <>
@@ -74,15 +74,26 @@ export default async function ProjectDetailPage({
         </Container>
       </Section>
 
-      {/* ── Cover Art Banner (flagship only) ── */}
-      {isFlagship && frontmatter.coverArt && (
+      {/* ── Cover / Hero Banner ── */}
+      {(frontmatter.thumbnail || frontmatter.coverArt) && (
         <Section spacing="tight">
           <Container wide>
-            <div className="relative overflow-hidden rounded-2xl aspect-[21/9] max-h-[420px]">
-              <ProjectCover
-                variant={frontmatter.coverArt}
-                className="w-full h-full"
-              />
+            <div className="relative overflow-hidden rounded-2xl aspect-[21/9] max-h-[420px] bg-bg-tertiary border border-border-subtle">
+              {frontmatter.thumbnail ? (
+                <Image
+                  src={frontmatter.thumbnail}
+                  alt={frontmatter.name}
+                  fill
+                  className="object-cover"
+                  priority
+                  sizes="(max-width: 1200px) 100vw, 1200px"
+                />
+              ) : frontmatter.coverArt ? (
+                <ProjectCover
+                  variant={frontmatter.coverArt}
+                  className="w-full h-full"
+                />
+              ) : null}
               <div className="absolute inset-0 bg-gradient-to-t from-bg-primary/60 via-transparent to-transparent" />
             </div>
           </Container>
